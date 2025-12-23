@@ -23,7 +23,9 @@ export const ReadoutPanel: React.FC<{
             </h2>
             <div className="space-y-1">
                 {toggles.sin && <ValueDisplay label="sin(θ)" value={trigValues.sin} color={theme.sin} />}
+                {toggles.showXY && toggles.sin && <ValueDisplay label="y" value={trigValues.sin} color={theme.sin} />}
                 {toggles.cos && <ValueDisplay label="cos(θ)" value={trigValues.cos} color={theme.cos} />}
+                {toggles.showXY && toggles.cos && <ValueDisplay label="x" value={trigValues.cos} color={theme.cos} />}
                 {toggles.tan && <ValueDisplay label="tan(θ)" value={trigValues.tan} color={theme.tan} />}
                 {toggles.cot && <ValueDisplay label="cot(θ)" value={trigValues.cot} color={theme.cot} />}
                 {toggles.sec && <ValueDisplay label="sec(θ)" value={trigValues.sec} color={theme.sec} />}

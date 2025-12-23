@@ -6,8 +6,8 @@ import { LessonPanel, LessonId, LESSONS } from './LessonPanel';
 import { toRad, toDeg, normalizeAngle } from '../../utils/math';
 import { TrigGraph } from '../TrigGraph';
 import { DiagramPanel } from './DiagramPanel';
-
 import { ReadoutPanel } from './ReadoutPanel';
+import { LIGHT_THEME, DARK_THEME } from '../../theme/colors';
 
 export const UnitCircle: React.FC = () => {
     // State
@@ -27,6 +27,7 @@ export const UnitCircle: React.FC = () => {
         similarCsc: false,
         hypotenuse: true,
         quadrants: false,
+        showXY: false,
     });
 
     // Lesson State
@@ -80,32 +81,8 @@ export const UnitCircle: React.FC = () => {
         });
     };
 
-    // Theme Configuration
-    const theme = useMemo(() => isDarkMode ? {
-        sin: '#ff6b6b', // Softer red
-        cos: '#4dabf7', // Softer blue
-        tan: '#ff922b', // Softer orange
-        cot: '#51cf66', // Softer green
-        sec: '#cc5de8', // Softer purple
-        csc: '#fcc419', // Softer yellow
-        grid: '#343a40', // Dark grid
-        axis: '#ced4da', // Light axis
-        text: '#f8f9fa', // White text
-        bg: '#212529',   // Dark bg
-        comp: '#adb5bd'  // Grey for comp
-    } : {
-        sin: '#e74c3c',
-        cos: '#3498db',
-        tan: '#e67e22',
-        cot: '#27ae60',
-        sec: '#8e44ad',
-        csc: '#f1c40f',
-        grid: '#e1e4e8',
-        axis: '#333333',
-        text: '#333333',
-        bg: '#ffffff',
-        comp: '#888888'
-    }, [isDarkMode]);
+    // Theme Configuration (using centralized theme)
+    const theme = useMemo(() => isDarkMode ? DARK_THEME : LIGHT_THEME, [isDarkMode]);
 
     // Canvas Draw Callback
     const draw = useCallback((ctx: CanvasRenderingContext2D) => {

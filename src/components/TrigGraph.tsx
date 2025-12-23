@@ -42,10 +42,10 @@ const SingleGraph: React.FC<{
         ctx.fillRect(0, 0, W, H);
 
         // Config
-        const PADDING_TOP = 10;
-        const PADDING_BOTTOM = 20;
+        const PADDING_TOP = 15;
+        const PADDING_BOTTOM = 25;
         const PADDING_LEFT = 35; // Space for Y-axis labels
-        const PADDING_RIGHT = 10;
+        const PADDING_RIGHT = 15;
 
         const GRAPH_W = W - PADDING_LEFT - PADDING_RIGHT;
 

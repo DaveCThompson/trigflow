@@ -15,7 +15,7 @@ interface LessonData {
 
 export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
-    hypotenuse: false, quadrants: false, geoTan: false, geoCot: false,
+    hypotenuse: false, quadrants: false, showXY: false, geoTan: false, geoCot: false,
     similarSec: false, similarCsc: false, comp: false,
     proof_sin_tri: false, proof_tan_tri: false,
     proof_pythag_squares: false, proof_pythag_general: false

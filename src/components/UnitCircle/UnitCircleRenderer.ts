@@ -17,6 +17,7 @@ export interface UnitCircleState {
         similarCsc: boolean;
         hypotenuse: boolean;
         quadrants: boolean;
+        showXY: boolean;
         proof_sin_tri?: boolean;
         proof_tan_tri?: boolean;
         proof_general_unit?: boolean;
@@ -871,6 +872,17 @@ export const drawUnitCircle = (
         drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: origin.y - 10 }, theme.text); // Above/Below axis?
         drawText(ctx, "b", { x: pXAxis.x + (dir * 10), y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
         drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    }
+
+    // --- Show X,Y Coordinates ---
+    if (toggles.showXY) {
+        const xVal = cos.toFixed(2);
+        const yVal = sin.toFixed(2);
+        const label = `(${xVal}, ${yVal})`;
+        // Offset label based on quadrant to avoid overlap with point
+        const offsetX = cos >= 0 ? 15 : -15;
+        const offsetY = sin >= 0 ? -20 : 20;
+        drawText(ctx, label, { x: pCircle.x + offsetX, y: pCircle.y + offsetY }, theme.text, cos >= 0 ? 'left' : 'right');
     }
 
     // Draw point P if we are not in pure abstraction mode, but maybe skip for clarity
