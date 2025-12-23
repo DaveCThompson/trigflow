@@ -1,7 +1,6 @@
-
 import React, { useRef, useEffect } from 'react';
 import { UnitCircleState } from './UnitCircle/UnitCircleRenderer';
-import { mapRange } from '../utils/math';
+import { mapRange, toRad } from '../utils/math';
 
 interface TrigGraphProps {
     trace: Array<{ angle: number, values: { sin: number, cos: number, tan: number, cot: number, sec: number, csc: number } }>;
@@ -9,6 +8,7 @@ interface TrigGraphProps {
     theme: UnitCircleState['theme'];
     angleUnit: 'deg' | 'rad';
     onReset: () => void;
+    currentAngle: number;
 }
 
 const SingleGraph: React.FC<{
@@ -18,7 +18,8 @@ const SingleGraph: React.FC<{
     trace: TrigGraphProps['trace'];
     theme: UnitCircleState['theme'];
     angleUnit: 'deg' | 'rad';
-}> = ({ dataKey, label, color, trace, theme, angleUnit }) => {
+    currentAngle: number;
+}> = ({ dataKey, label, color, trace, theme, angleUnit, currentAngle }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -50,7 +51,6 @@ const SingleGraph: React.FC<{
 
 
         // Y-Axis Range
-        // Y-Axis Range
         // Sin/Cos: Max 1 (use 1.1 for padding)
         // Others: Max 10
         const isBounded = dataKey === 'sin' || dataKey === 'cos';
@@ -70,6 +70,10 @@ const SingleGraph: React.FC<{
         let displayY = [1, -1];
         if (!isBounded) displayY = [10, -10];
 
+        // Specific fix for Sine/Cosine Min/Max markers requested by user
+        // For Sine: Min at 270 (-1), Max at 90 (1)
+        // For Cosine: Min at 180 (-1), Max at 0 (1)
+
         displayY.forEach(val => {
             const y = mapY(val);
             ctx.moveTo(PADDING_LEFT, y);
@@ -86,7 +90,6 @@ const SingleGraph: React.FC<{
         ctx.lineTo(W - PADDING_RIGHT, y0);
 
         // Zero vertical line (Y-axis visually)
-        // Zero vertical line (Y-axis visually)
         // Since we map 0..360, x=0 is at PADDING_LEFT
         const x0 = mapX(0);
         ctx.moveTo(x0, PADDING_TOP);
@@ -94,14 +97,14 @@ const SingleGraph: React.FC<{
 
         ctx.stroke();
 
-        // X-Axis Labels (0, 180, 360)
+        // X-Axis Labels (0, 90, 180, 270, 360)
         ctx.fillStyle = theme.text;
         ctx.font = "10px sans-serif";
         ctx.textAlign = "center";
 
-        [0, 180, 360].forEach(deg => {
+        [0, 90, 180, 270, 360].forEach(deg => {
             const labelTxt = angleUnit === 'rad'
-                ? (deg === 0 ? "0" : (deg / 180).toFixed(0) + "π")
+                ? (deg === 0 ? "0" : (deg === 90 ? "π/2" : (deg === 180 ? "π" : (deg === 270 ? "3π/2" : "2π"))))
                 : deg + "°";
             ctx.fillText(labelTxt, mapX(deg), H - 5);
         });
@@ -152,7 +155,31 @@ const SingleGraph: React.FC<{
             ctx.stroke();
         }
 
-    }, [trace, theme, angleUnit, color, dataKey]);
+        // --- Current Value Dot ---
+        const currentRad = toRad(currentAngle);
+        let currentVal = 0;
+        if (dataKey === 'sin') currentVal = Math.sin(currentRad);
+        else if (dataKey === 'cos') currentVal = Math.cos(currentRad);
+        else if (dataKey === 'tan') currentVal = Math.tan(currentRad);
+        else if (dataKey === 'cot') currentVal = 1 / Math.tan(currentRad);
+        else if (dataKey === 'sec') currentVal = 1 / Math.cos(currentRad);
+        else if (dataKey === 'csc') currentVal = 1 / Math.sin(currentRad);
+
+        // Only draw if within visual range
+        if (Math.abs(currentVal) <= Y_RANGE) {
+            const dotX = mapX(currentAngle);
+            const dotY = mapY(currentVal);
+
+            ctx.beginPath();
+            ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+    }, [trace, theme, angleUnit, color, dataKey, currentAngle]);
 
     return (
         <div className="mb-2 last:mb-0">
@@ -167,7 +194,7 @@ const SingleGraph: React.FC<{
     );
 };
 
-export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, angleUnit, onReset }) => {
+export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, angleUnit, onReset, currentAngle }) => {
     // Collect active graphs
     const activeGraphs = [];
     if (toggles.sin) activeGraphs.push({ key: 'sin', label: 'Sine', color: theme.sin });
@@ -204,6 +231,7 @@ export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, ang
                         trace={trace}
                         theme={theme}
                         angleUnit={angleUnit}
+                        currentAngle={currentAngle}
                     />
                 ))}
             </div>

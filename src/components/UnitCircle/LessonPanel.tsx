@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react';
 import { UnitCircleState } from './UnitCircleRenderer';
+import { DiagramType } from './DiagramPanel';
 
-interface LessonPanelProps {
-    toggles: UnitCircleState['toggles'];
-    setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
-    setAngle: (angle: number) => void;
-}
-
-type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'secant';
+export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean';
 
 interface LessonData {
     id: LessonId;
     title: string;
     quote: React.ReactNode;
     details: React.ReactNode[];
+    diagram: DiagramType;
     apply: (setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>) => void;
 }
 
-const LESSONS: LessonData[] = [
+export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
+    sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
+    hypotenuse: false, quadrants: false, geoTan: false, geoCot: false,
+    similarSec: false, similarCsc: false, comp: false,
+    proof_sin_tri: false, proof_tan_tri: false
+};
+
+export const LESSONS: LessonData[] = [
     {
         id: 'unit_circle',
         title: 'Unit Circle',
@@ -26,10 +29,11 @@ const LESSONS: LessonData[] = [
             "A circle with a radius of exactly 1.",
             "Centered at the origin (0,0) of the Cartesian plane."
         ],
+        diagram: 'none',
         apply: (set) => set(prev => ({
             ...prev,
-            sin: true, cos: true, tan: false, cot: false, sec: false, csc: false,
-            hypotenuse: true, quadrants: false, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
+            ...RESET_DEFAULTS,
+            sin: true, cos: true, hypotenuse: true
         }))
     },
     {
@@ -42,12 +46,13 @@ const LESSONS: LessonData[] = [
             "Range: [-1, 1]",
             "Positive in Quadrants I and II (upper half).",
             "Zero at 0° and 180°.",
-            "Maximum at 90° (1)."
+            "Minimum at 270° (-1). Maximum at 90° (1)."
         ],
+        diagram: 'none',
         apply: (set) => set(prev => ({
             ...prev,
             sin: true, cos: false, tan: false, cot: false, sec: false, csc: false,
-            quadrants: true,
+            quadrants: true, comp: true,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
         }))
     },
@@ -61,12 +66,13 @@ const LESSONS: LessonData[] = [
             "Range: [-1, 1]",
             "Positive in Quadrants I and IV (right half).",
             "Zero at 90° and 270°.",
-            "Maximum at 0° (1)."
+            "Maximum at 0° (1). Minimum at 180° (-1)."
         ],
+        diagram: 'none',
         apply: (set) => set(prev => ({
             ...prev,
             sin: false, cos: true, tan: false, cot: false, sec: false, csc: false,
-            quadrants: true,
+            quadrants: true, comp: true,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
         }))
     },
@@ -79,13 +85,33 @@ const LESSONS: LessonData[] = [
         details: [
             <>From Latin <em>tangere</em> ("to touch").</>,
             "Range: (-∞, ∞)",
-            "Ideally shown as the segment on the line x=1."
+            "Shown as the segment on the line x=1 OR the ratio sin/cos."
         ],
+        diagram: 'none',
         apply: (set) => set(prev => ({
             ...prev,
             sin: false, cos: false, tan: true, cot: false, sec: false, csc: false,
-            geoTan: true, // Show geometric tangent line
+            geoTan: true,
             hypotenuse: true, quadrants: false, similarSec: false, similarCsc: false
+        }))
+    },
+    {
+        id: 'cotangent',
+        title: 'Cotangent',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">Cotangent is the complementary tangent.</strong>
+        </>,
+        details: [
+            "Range: (-∞, ∞)",
+            "Shown as the segment on the line y=1.",
+            "Ratio cos/sin."
+        ],
+        diagram: 'none',
+        apply: (set) => set(prev => ({
+            ...prev,
+            sin: false, cos: false, tan: false, cot: true, sec: false, csc: false,
+            geoCot: true,
+            hypotenuse: true, quadrants: false, geoTan: false, similarSec: false, similarCsc: false
         }))
     },
     {
@@ -96,33 +122,113 @@ const LESSONS: LessonData[] = [
         </>,
         details: [
             <>From Latin <em>secare</em> ("to cut").</>,
-            "Range: (-∞, -1] U [1, ∞)",
+            "Range: (-∞, -1] U [1, ∞) (U means Union)",
             "The hypotenuse of the triangle formed by the tangent."
         ],
+        diagram: 'none',
         apply: (set) => set(prev => ({
             ...prev,
-            sin: false, cos: false, tan: false, cot: false, sec: true, csc: false,
-            similarSec: true, // Show similar triangle
-            hypotenuse: true, quadrants: false, geoTan: true, geoCot: false, similarCsc: false
+            ...RESET_DEFAULTS,
+            sec: true, similarSec: true, hypotenuse: true
+        }))
+    },
+    {
+        id: 'cosecant',
+        title: 'Cosecant',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">Cosecant is the complementary secant.</strong>
+        </>,
+        details: [
+            "Range: (-∞, -1] U [1, ∞)",
+            "The hypotenuse of the triangle formed by the cotangent."
+        ],
+        diagram: 'none',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            csc: true, similarCsc: true, hypotenuse: true, geoCot: true
+        })),
+    },
+    {
+        id: 'tangent_identity',
+        title: 'Tangent Identity',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">tan θ = sin θ / cos θ</strong>
+        </>,
+        details: [
+            "We can see two Similar Triangles.",
+            "Small Triangle: sides sin, cos, 1.",
+            "Large Triangle: sides tan, 1, sec.",
+            "The ratio of Vertical/Horizontal is the same for both."
+        ],
+        diagram: 'tangent_identity',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            proof_sin_tri: true, // Start with Step 0
+        }))
+    },
+    {
+        id: 'general_form',
+        title: 'General Form',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">SOH CAH TOA</strong>
+        </>,
+        details: [
+            "General relationships for any right triangle.",
+            "sin(θ) = Opposite / Hypotenuse",
+            "cos(θ) = Adjacent / Hypotenuse",
+            "tan(θ) = Opposite / Adjacent"
+        ],
+        diagram: 'general_form',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            proof_general_unit: true // Initial state for General Form
+        }))
+    },
+    {
+        id: 'pythagorean',
+        title: 'Pythagorean Theorem',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">a² + b² = c²</strong>
+        </>,
+        details: [
+            "The square of the hypotenuse is equal to the sum of the squares of the other two sides.",
+            "For the unit circle: sin²(θ) + cos²(θ) = 1"
+        ],
+        diagram: 'pythagorean',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            sin: true, cos: true, hypotenuse: true // Basics
         }))
     }
 ];
 
-export const LessonPanel: React.FC<LessonPanelProps> = ({ toggles, setToggles }) => {
-    // Simple self-contained state for the dropdown. 
-    // Ideally this could be lifted if we wanted 'two-way' binding with the visuals returning to a lesson state, 
-    // but for now, the lesson just APPLIES state.
-    const [selectedId, setSelectedId] = React.useState<LessonId>('unit_circle');
+interface LessonPanelProps {
+    toggles: UnitCircleState['toggles'];
+    setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
+    selectedLessonId: LessonId;
+    onLessonChange: (id: LessonId) => void;
+}
 
-    const handleSelect = (id: LessonId) => {
-        setSelectedId(id);
-        const lesson = LESSONS.find(l => l.id === id);
+export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLessonId, onLessonChange }) => {
+
+    // Apply lesson Logic when selection changes (handled by parent calling this, but we can double check or just let parent handle)
+    // Actually, usually the parent sets the ID, and we trigger the APPLY.
+    // Or we keep the apply logic here.
+
+    // Let's do it in useEffect to sync when prop changes
+    useEffect(() => {
+        const lesson = LESSONS.find(l => l.id === selectedLessonId);
         if (lesson) {
             lesson.apply(setToggles);
         }
-    };
+    }, [selectedLessonId, setToggles]);
 
-    const currentLesson = LESSONS.find(l => l.id === selectedId) || LESSONS[0];
+
+    const currentLesson = LESSONS.find(l => l.id === selectedLessonId) || LESSONS[0];
 
     return (
         <div className="w-full xl:w-[320px] flex-shrink-0 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 flex flex-col gap-6 h-fit sticky top-6">
@@ -131,8 +237,8 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ toggles, setToggles })
                     Lessons
                 </h2>
                 <select
-                    value={selectedId}
-                    onChange={(e) => handleSelect(e.target.value as LessonId)}
+                    value={selectedLessonId}
+                    onChange={(e) => onLessonChange(e.target.value as LessonId)}
                     className="w-full p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     {LESSONS.map(l => (

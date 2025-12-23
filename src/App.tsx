@@ -10,7 +10,7 @@ function App() {
                 <p className="text-slate-500 dark:text-slate-400">Interactive Trigonometric Unit Circle</p>
             </header>
 
-            <main className="w-full max-w-7xl">
+            <main className="w-full max-w-[1600px]">
                 <UnitCircle />
             </main>
 

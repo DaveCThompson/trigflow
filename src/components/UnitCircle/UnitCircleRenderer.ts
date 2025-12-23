@@ -17,6 +17,11 @@ export interface UnitCircleState {
         similarCsc: boolean;
         hypotenuse: boolean;
         quadrants: boolean;
+        proof_sin_tri?: boolean;
+        proof_tan_tri?: boolean;
+        proof_general_unit?: boolean;
+        proof_general_target?: boolean;
+        proof_pythag_squares?: boolean;
     };
     theme: {
         sin: string;
@@ -242,25 +247,8 @@ export const drawUnitCircle = (
         // Point is pXAxis
         {
             const raSize = 10;
-
-            // Wait, coordinate mapper handles Y flip for 'map'.
-            // Here we are in canvas pixels.
-            // pXAxis is on the visual X-axis (CY).
-            // P is at pCircle.
-            // Vector pXAxis -> P.
-            // If sin > 0 (upper half), P is above pXAxis (smaller Y). So we go UP (-1).
-            // If cos > 0 (right half), Origin is to the left (-1).
-
-            // Actually, we want the square "inside" the triangle O-A-P.
-            // A is pXAxis. O is origin. P is pCircle.
-            // Vector A->O is towards center.
-            // Vector A->P is vertical.
-
-            // Direction to Origin:
             const dirToOriginX = origin.x - pXAxis.x;
             const signX = dirToOriginX >= 0 ? 1 : -1;
-
-            // Direction to P (Vertical):
             const dirToPY = pCircle.y - pXAxis.y;
             const signY = dirToPY >= 0 ? 1 : -1;
 
@@ -275,8 +263,6 @@ export const drawUnitCircle = (
 
         // 2. Alpha at P(cos, sin) - Top Right of Standard Triangle
         // Vertices: O, pXAxis, pCircle.
-        // Angle is at pCircle.
-        // Rays are pCircle->pXAxis (Vertical) and pCircle->Origin (Hypotenuse).
         {
             const alphaR = 20;
             const angVertical = Math.atan2(pXAxis.y - pCircle.y, pXAxis.x - pCircle.x);
@@ -285,12 +271,8 @@ export const drawUnitCircle = (
             ctx.beginPath();
             ctx.strokeStyle = theme.text;
             ctx.lineWidth = 1;
-            ctx.arc(pCircle.x, pCircle.y, alphaR, angVertical, angHypot, false); // Direct arc?
-            // Need to check chirality for 'counterclockwise' param.
-            // Visual inspection: Vertical is roughly PI/2 (down) or -PI/2 (up). Hypotenuse is variable.
-            // Just force it:
+            ctx.arc(pCircle.x, pCircle.y, alphaR, angVertical, angHypot, false);
             ctx.stroke();
-
             // Alpha Label
             const midAlpha = (angVertical + angHypot) / 2;
             drawText(ctx, "α", {
@@ -300,14 +282,10 @@ export const drawUnitCircle = (
         }
 
         // 3. Right Angle at P(cos, sin) for Secant/Tangent Triangle
-        // Vertices: Origin, P(circle), P(sec).
-        // Angle at P(circle) is 90 deg.
-        // Between Radius (P->O) and Tangent (P->Psec).
         {
             // Vector P->O
             const dirToOX = origin.x - pCircle.x;
             const dirToOY = origin.y - pCircle.y;
-            // Normalize
             const lenO = Math.sqrt(dirToOX * dirToOX + dirToOY * dirToOY);
             const uOX = dirToOX / lenO;
             const uOY = dirToOY / lenO;
@@ -335,28 +313,72 @@ export const drawUnitCircle = (
             ctx.stroke();
         }
 
-        // --- ANGLE LABELS for Triangle ---
-        // 1. Angle theta at Top (P_circle) -- WAIT, theta is at origin.
-        // Existing code had "Angle theta at Top (P_circle)". 
-        // REVIEW: In previous code, I labeled theta at P_Circle. That's WRONG.
-        // Theta is at Origin.
-        // In the SECANT triangle (O, P, Sec), the angle at O is 'theta'.
-        // The angle at Sec is 'alpha' (90-theta).
-        // The angle at P is 90.
-        // Previous code labeled P_Circle as 'theta' and P_Sec as 'alpha'.
-        // Actually, P_Circle angle is 90.
-        // In the "Similar Triangle" logic, maybe the user meant the *complementary* triangle?
-        // Wait, Triangle O-P-Sec is similar to standard O-A-P.
-        // Angle at O is shared (theta).
-        // Angle at P (in secant tri) is 90. Angle at A (in standard) is 90.
-        // Angle at Sec is alpha. Angle at P (in standard) is alpha.
+        // --- Alpha Angle at S(sec, 0) ---
+        // Between Secant Line (X-axis, towards Origin) and Tangent Line (towards P)
+        {
+            const pf = map(sec, 0); // S
+            const vecToOrigin = { x: origin.x - pf.x, y: origin.y - pf.y };
+            const angToOrigin = Math.atan2(vecToOrigin.y, vecToOrigin.x);
+            const vecToP = { x: pCircle.x - pf.x, y: pCircle.y - pf.y };
+            const angToP = Math.atan2(vecToP.y, vecToP.x);
 
-        // Correcting previous labels if necessary, but preserving user intent if they asked for specific things.
-        // The previous code block (which I am replacing part of) had:
-        // "Angle theta at Top (P_circle)" -> atan2(pSec - pCircle). This is the angle of the tangent line.
-        // This seems to be measuring the external angle? 
-        // Let's stick to the new requests. I will preserve the existing labels but fixing the 'alpha' request.
+            // REMOVED ARC
+            // Label Only - Position relative to vertex
+            const midX = (Math.cos(angToOrigin) + Math.cos(angToP));
+            const midY = (Math.sin(angToOrigin) + Math.sin(angToP));
+            const angMid = Math.atan2(midY, midX);
 
+            drawText(ctx, "α", {
+                x: pf.x + Math.cos(angMid) * 35,
+                y: pf.y + Math.sin(angMid) * 35
+            }, theme.text);
+        }
+
+        // --- NEW: Theta Angle at P (Intersection of Tangent and Sine/Vertical) ---
+        {
+            const thetaR = 25;
+            // Vector P->S (Tangent)
+            const pS = map(sec, 0);
+            const angTan = Math.atan2(pS.y - pCircle.y, pS.x - pCircle.x);
+
+            // Vector P->A (Vertical/Sine) - towards X-axis
+            const angVert = Math.atan2(pXAxis.y - pCircle.y, pXAxis.x - pCircle.x);
+
+            ctx.beginPath();
+            ctx.strokeStyle = theme.text;
+            ctx.lineWidth = 1;
+            ctx.arc(pCircle.x, pCircle.y, thetaR, angTan, angVert, false);
+            ctx.stroke();
+
+            // Label
+            const midTheta = (angTan + angVert) / 2;
+            drawText(ctx, "θ", {
+                x: pCircle.x + Math.cos(midTheta) * 35,
+                y: pCircle.y + Math.sin(midTheta) * 35
+            }, theme.text);
+        }
+
+        // --- NEW: Supplementary Right Angle at A (pXAxis) ---
+        // Existing right angle is inside O-A-P. Add one on the other side (towards S).
+        {
+            const raSize = 10;
+            const pSec = map(sec, 0);
+            // Direction A->S (away from origin)
+            const dirToSX = pSec.x - pXAxis.x;
+            const signSX = dirToSX >= 0 ? 1 : -1;
+
+            // Direction A->P (Vertical)
+            const dirToPY = pCircle.y - pXAxis.y;
+            const signPY = dirToPY >= 0 ? 1 : -1;
+
+            ctx.beginPath();
+            ctx.strokeStyle = theme.text;
+            ctx.lineWidth = 1;
+            ctx.moveTo(pXAxis.x + signSX * raSize, pXAxis.y);
+            ctx.lineTo(pXAxis.x + signSX * raSize, pXAxis.y + signPY * raSize);
+            ctx.lineTo(pXAxis.x, pXAxis.y + signPY * raSize);
+            ctx.stroke();
+        }
 
         // --- NEW: Duplicate Triangle (Complementary) ---
         // 1. Dotted Horizontal Line (Duplicate Cosine)
@@ -369,25 +391,12 @@ export const drawUnitCircle = (
 
         // 3. Right Angle at Py(0, sin)
         const raSize = 10;
-
-        // pYAxis is on the Y-axis. The line comes from P(cos, sin).
-        // The right angle is between the vertical axis and the horizontal line.
-        // It should point towards P and towards Origin? No, just a square at the intersection.
-        ctx.beginPath();
-        ctx.strokeStyle = theme.text;
-        ctx.lineWidth = 1;
-        // Draw square corner at pYAxis
-        // Corners: (0, sin), (dirX*size, sin), (dirX*size, sin-dirY*size), (0, sin-dirY*size)
-        // Wait, pYAxis IS (0, sin).
-        // We want the square in the quadrant towards P and Origin?
-        // The angle is at (0, sin). Legs are (0,0)-(0,sin) and (cos,sin)-(0,sin).
-        // So the square should be "inside" that junction.
-        // Towards X=cos (dirX) and Y=0 (dirY? No, down towards origin). 
-        // O is (0,0). Py is (0,sin). Vector Py->O is (0, -sin). Direction is -sign(sin).
-        // P is (cos, sin). Vector Py->P is (cos, 0). Direction is sign(cos).
         const dY = sin >= 0 ? -1 : 1; // Down towards origin if sin>0
         const dX = cos >= 0 ? 1 : -1; // Towards P
 
+        ctx.beginPath();
+        ctx.strokeStyle = theme.text;
+        ctx.lineWidth = 1;
         ctx.moveTo(pYAxis.x + dX * raSize, pYAxis.y);
         ctx.lineTo(pYAxis.x + dX * raSize, pYAxis.y + dY * raSize);
         ctx.lineTo(pYAxis.x, pYAxis.y + dY * raSize);
@@ -395,28 +404,15 @@ export const drawUnitCircle = (
 
         // 4. Alpha Angle at Origin (0,0)
         // Between Y-axis (PI/2) and Radius (rad)
-        // Note: 'rad' is angle from X-axis. 'PI/2' is Y-axis.
-        // Arc from rad to PI/2
         const alphaR = 20;
         ctx.beginPath();
         ctx.strokeStyle = theme.text;
-        // rad is normal angle.
-        // We want arc between PI/2 and rad?
-        // Wait, radius is at 'rad'. Y-axis is at -PI/2 in canvas? No, canvas Y is down? 
-        // toRad handles degrees. coordinateMapper handles Y-flip.
-        // Let's use points to be safe or raw angles.
-        // Canvas angles: 0 is Right. PI/2 is Down (in raw canvas). -PI/2 is Up.
-        // Our 'rad' is mathematical (CCW from Right).
-        // render 'arc' takes canvas angles.
-        // We should calculate start/end angles in canvas space.
         const angleCanvasRad = -rad; // Canvas Y is flipped. +rad means UP, which is -angle in canvas.
         const angleCanvasY = -Math.PI / 2; // Up
         ctx.arc(origin.x, origin.y, alphaR, angleCanvasY, angleCanvasRad, false);
         ctx.stroke();
         // Label alpha near origin
-        // Mid-angle
         const midAlpha = (angleCanvasY + angleCanvasRad) / 2;
-        // Position slightly offset
         drawText(ctx, "α", {
             x: origin.x + Math.cos(midAlpha) * 35,
             y: origin.y + Math.sin(midAlpha) * 35
@@ -424,18 +420,13 @@ export const drawUnitCircle = (
 
 
         // 5. Theta Angle at P(cos, sin)
-        // Between Vertical (up/down?) No, between Horizontal Line (P->Py) and Radius (P->O).
-        // Radius P->O angle: From P to O. P=(cos, sin). O=(0,0). Vector is (-cos, -sin).
-        // Canvas angle of vector P->O: Math.atan2(origin.y - pCircle.y, origin.x - pCircle.x).
-        // Horizontal Line P->Py angle: Vector (-cos, 0).
-        // Canvas angle: Math.atan2(pYAxis.y - pCircle.y, pYAxis.x - pCircle.x).
         const thetaR = 20;
         const angPO = Math.atan2(origin.y - pCircle.y, origin.x - pCircle.x);
         const angPPy = Math.atan2(pYAxis.y - pCircle.y, pYAxis.x - pCircle.x);
 
         ctx.beginPath();
         ctx.strokeStyle = theme.text;
-        ctx.arc(pCircle.x, pCircle.y, thetaR, angPPy, angPO, rad > 0); // Direction?
+        ctx.arc(pCircle.x, pCircle.y, thetaR, angPPy, angPO, rad > 0);
         ctx.stroke();
 
         // Label Theta
@@ -499,22 +490,54 @@ export const drawUnitCircle = (
             ctx.stroke();
         }
 
-        // Theta at C (0, csc)
+        // --- NEW: Theta at P (Intersection of Cotangent and Cosine/Horizontal) ---
         {
-            const arcR = 25;
-            // Vector C->P
-            const angHypot = Math.atan2(pCircle.y - pCsc.y, pCircle.x - pCsc.x);
-            // Vector C->O
-            const angBase = Math.atan2(origin.y - pCsc.y, origin.x - pCsc.x);
+            const thetaR = 25;
+            // Vector P->C (Cotangent)
+            const angCot = Math.atan2(pCsc.y - pCircle.y, pCsc.x - pCircle.x);
+            // Vector P->Py (Horizontal/Cosine line to Y-axis)
+            const angHoriz = Math.atan2(pYAxis.y - pCircle.y, pYAxis.x - pCircle.x);
 
             ctx.beginPath();
             ctx.strokeStyle = theme.text;
             ctx.lineWidth = 1;
-            ctx.arc(pCsc.x, pCsc.y, arcR, angBase, angHypot, false); // Check chirality?
+            ctx.arc(pCircle.x, pCircle.y, thetaR, angHoriz, angCot, false);
             ctx.stroke();
 
+            // Label
+            const midTheta = (angHoriz + angCot) / 2;
+            drawText(ctx, "θ", { x: pCircle.x + Math.cos(midTheta) * 35, y: pCircle.y + Math.sin(midTheta) * 35 }, theme.text);
+        }
+
+        // --- Theta Label at C (0, csc) - Remove Arc, Keep Label ---
+        {
+            // Just label
             drawText(ctx, "θ", { x: pCsc.x + 10, y: pCsc.y + (csc > 0 ? 35 : -35) }, theme.text);
         }
+
+        // --- NEW: Supplementary Right Angle at Py (pYAxis) ---
+        {
+            const raSize = 10;
+            // Direction Py->C (away from origin along Y)
+            const dirToCY = pCsc.y - pYAxis.y;
+            const signCY = dirToCY >= 0 ? 1 : -1;
+
+            // Direction Py->P (Horizontal)
+            const dirToPX = pCircle.x - pYAxis.x;
+            const signPX = dirToPX >= 0 ? 1 : -1;
+
+            ctx.beginPath();
+            ctx.strokeStyle = theme.text;
+            ctx.lineWidth = 1;
+            ctx.moveTo(pYAxis.x + signPX * raSize, pYAxis.y);
+            ctx.lineTo(pYAxis.x + signPX * raSize, pYAxis.y + signCY * raSize);
+            ctx.lineTo(pYAxis.x, pYAxis.y + signCY * raSize);
+            ctx.stroke();
+        }
+
+
+
+
     }
 
     // --- Feature: Geometric Tangent (P -> Sec) ---
@@ -598,8 +621,184 @@ export const drawUnitCircle = (
         const compMid = (rad + Math.PI / 2) / 2;
         // Updated Label: Just alpha
         drawText(ctx, "α", map(Math.cos(compMid) * 0.45, Math.sin(compMid) * 0.45), theme.comp);
+
+        // --- Alpha at P (Interior Angle) ---
+        // Between Vertical (Sine line) and Radius (Hypotenuse)
+        {
+            const alphaR = 20;
+            // Vector P->O (Radius)
+            const angToO = Math.atan2(origin.y - pCircle.y, origin.x - pCircle.x);
+            // Vector Vertical Down (Parallel to Y-axis / Sine line)
+            const angToVert = Math.atan2(pXAxis.y - pCircle.y, pXAxis.x - pCircle.x);
+
+            ctx.beginPath();
+            ctx.strokeStyle = theme.comp;
+            ctx.lineWidth = 1;
+            ctx.arc(pCircle.x, pCircle.y, alphaR, angToVert, angToO, false);
+            ctx.stroke();
+
+            // Label
+            const midAlpha2 = (angToVert + angToO) / 2;
+            drawText(ctx, "α", {
+                x: pCircle.x + Math.cos(midAlpha2) * 35,
+                y: pCircle.y + Math.sin(midAlpha2) * 35
+            }, theme.comp);
+        }
     }
 
-    // Point P
-    drawPoint(ctx, pCircle, theme.text, theme.bg);
+    // --- Proof Mode: Sine Triangle ---
+    if (toggles.proof_sin_tri) {
+        ctx.beginPath();
+        // Fill mix of Red(sin) and Blue(cos) -> Purple-ish
+        ctx.fillStyle = 'rgba(155, 89, 182, 0.2)';
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pXAxis.x, pXAxis.y); // (cos, 0)
+        ctx.lineTo(pCircle.x, pCircle.y); // (cos, sin)
+        ctx.closePath();
+        ctx.fill();
+
+        // Outline specific sides
+        // Adjacent (Cos) - Blue
+        drawLine(ctx, origin, pXAxis, theme.cos, 4);
+        // Opposite (Sin) - Red
+        drawLine(ctx, pXAxis, pCircle, theme.sin, 4);
+        // Hypotenuse (1) - Axis/White
+        drawLine(ctx, origin, pCircle, theme.text, 2);
+
+        // Labels
+        drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+        drawText(ctx, "cos", { x: (CX + pXAxis.x) / 2, y: CY + 15 }, theme.cos);
+        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 15 : -15), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
+    }
+
+    // --- Proof Mode: Tangent Triangle ---
+    if (toggles.proof_tan_tri) {
+        const dir = cos >= 0 ? 1 : -1;
+        const pStart = map(dir, 0); // (1, 0)
+        const pEnd = map(dir, dir * tan); // (1, tan)
+
+        ctx.beginPath();
+        // Fill Orange
+        ctx.fillStyle = 'rgba(230, 126, 34, 0.2)';
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pStart.x, pStart.y);
+        ctx.lineTo(pEnd.x, pEnd.y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Outline specific sides
+        // Adjacent (1) - Axis/White. Slightly offset or just redraw?
+        // Since it's on axis, we can just draw it solid.
+        drawLine(ctx, origin, pStart, theme.text, 3);
+
+        // Opposite (Tan) - Orange
+        drawLine(ctx, pStart, pEnd, theme.tan, 4);
+
+        // Hypotenuse (Sec) - Dashed or different style
+        drawLine(ctx, origin, pEnd, theme.text, 2, [6, 4]);
+
+        // Labels
+        drawText(ctx, "1", { x: (origin.x + pStart.x) / 2, y: CY + 20 }, theme.text);
+        drawText(ctx, "tan", { x: pStart.x + dir * 20, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right");
+    }
+
+    // --- Proof Mode: General Form ---
+    if (toggles.proof_general_unit) {
+        // Just the standard unit triangle, but labeled specifically for this proof
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.1)'; // Blue fill
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pXAxis.x, pXAxis.y);
+        ctx.lineTo(pCircle.x, pCircle.y);
+        ctx.closePath();
+        ctx.fill();
+
+        drawLine(ctx, origin, pXAxis, theme.text, 2); // Adj
+        drawLine(ctx, pXAxis, pCircle, theme.sin, 3); // Opp (Sin)
+        drawLine(ctx, origin, pCircle, theme.text, 2); // Hyp (1)
+
+        drawText(ctx, "sin θ", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
+        drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    }
+
+    if (toggles.proof_general_target) {
+        // Draw a larger scaled triangle behind/around to show similarity
+        // Let's interpret the unit circle as the "small" triangle inside a larger concept
+        // Or actually, draw a separate triangle offset? No, overlay is usually better for similarity.
+        // Let's scale up by 1.5x
+        const scale = 1.35;
+        const pGenEnd = map(Math.cos(rad) * scale, Math.sin(rad) * scale);
+        const pGenAxis = { x: pGenEnd.x, y: origin.y };
+
+        ctx.beginPath();
+        // Dashed lines for the projection
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = theme.text;
+        ctx.lineWidth = 1;
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pGenEnd.x, pGenEnd.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // The Triangle
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.1)'; // Greenish
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pGenAxis.x, pGenAxis.y);
+        ctx.lineTo(pGenEnd.x, pGenEnd.y);
+        ctx.closePath();
+        ctx.fill();
+
+        drawLine(ctx, origin, pGenAxis, theme.text, 2); // Adj
+        drawLine(ctx, pGenAxis, pGenEnd, theme.tan, 3); // Opp 
+        drawLine(ctx, origin, pGenEnd, theme.text, 2); // Hyp
+
+        drawText(ctx, "H", map(Math.cos(rad) * scale * 0.55, Math.sin(rad) * scale * 0.55), theme.text);
+        drawText(ctx, "O", { x: pGenAxis.x + (cos >= 0 ? 15 : -15), y: (pGenAxis.y + pGenEnd.y) / 2 }, theme.tan, cos >= 0 ? "left" : "right");
+        drawText(ctx, "A", { x: (origin.x + pGenAxis.x) / 2, y: origin.y + 15 }, theme.text);
+    }
+
+    // --- Proof Mode: Pythagorean Squares ---
+    if (toggles.proof_pythag_squares) {
+        // Draw squares on the sides of the sine triangle
+
+        // 1. Square on Adjacent (Cos) - Blue
+        // Vertices: (0,0), (cos,0), (cos, cos), (0, cos) ? No, needs to extrude outwards or inwards?
+        // Standard proof usually extrudes outwards.
+        // Adjacent is on X axis. Square goes down? Or up?
+        // Let's draw it "down" from the x-axis if y>0, or just "out".
+        // Actually, just drawing semi-transparent squares aligned with the axes is easiest.
+
+        // Square on Cosine (Blue)
+        const cosSize = Math.abs(pXAxis.x - origin.x); // width
+        // Draw square below x-axis
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+        ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, cosSize, cosSize); // Below axis
+
+        // Square on Sine (Red)
+        // Draw square to the right of the vertical line
+        const sinSize = Math.abs(pCircle.y - pXAxis.y);
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+        // If cos is positive, draw to right. If negative, left.
+        const dir = cos >= 0 ? 1 : -1;
+        ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), sinSize * dir, sinSize);
+
+        // Labels
+        if (cosSize > 10) drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + cosSize / 2 }, theme.cos);
+        if (sinSize > 10) drawText(ctx, "b²", { x: pXAxis.x + (sinSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.sin);
+
+        // Square on Hypotenuse (c=1) - Big square?
+        // Maybe just outline the circle or label it? 
+        // Or actually draw a rotated square on the hypotenuse?
+        // Rotated square is hard to make look good dynamically without overlap.
+        // Let's just create a visual cue on the hypotenuse line.
+        drawText(ctx, "c² = 1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    }
+
+    // Draw point P if we are not in pure abstraction mode, but maybe skip for clarity
+    if (!toggles.proof_general_target && !toggles.proof_tan_tri) {
+        drawPoint(ctx, pCircle, theme.text, theme.bg);
+    }
 };

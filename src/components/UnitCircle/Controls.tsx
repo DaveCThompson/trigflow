@@ -88,6 +88,41 @@ export const Controls: React.FC<ControlsProps> = ({
                 </div>
             </ControlSection>
 
+            <ControlSection title="Special Angles">
+                <div className="grid grid-cols-5 gap-2">
+                    {[0, 30, 45, 60, 90].map(deg => {
+                        const isActive = Math.abs(angle - deg) < 0.1;
+
+                        let label = `${deg}°`;
+                        if (angleUnit === 'rad') {
+                            switch (deg) {
+                                case 0: label = "0"; break;
+                                case 30: label = "π/6"; break;
+                                case 45: label = "π/4"; break;
+                                case 60: label = "π/3"; break;
+                                case 90: label = "π/2"; break;
+                            }
+                        }
+
+                        return (
+                            <button
+                                key={deg}
+                                onClick={() => setAngle(deg)}
+                                className={`
+                                    text-sm font-medium py-2 rounded transition-colors
+                                    ${isActive
+                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                    }
+                                `}
+                            >
+                                {label}
+                            </button>
+                        );
+                    })}
+                </div>
+            </ControlSection>
+
             <ControlSection title="Functions">
                 <Toggle
                     label="Sine"

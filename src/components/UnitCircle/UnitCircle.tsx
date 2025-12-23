@@ -1,50 +1,13 @@
-
 import React, { useState, useMemo, useCallback } from 'react';
 import { useCanvas } from '../../hooks/useCanvas';
 import { drawUnitCircle, UnitCircleState } from './UnitCircleRenderer';
 import { Controls } from './Controls';
-import { LessonPanel } from './LessonPanel';
+import { LessonPanel, LessonId, LESSONS } from './LessonPanel';
 import { toRad, toDeg, normalizeAngle } from '../../utils/math';
 import { TrigGraph } from '../TrigGraph';
+import { DiagramPanel } from './DiagramPanel';
 
-// --- Readout Component ---
-const ValueDisplay: React.FC<{ label: string; value: number; color?: string }> = ({ label, value, color }) => {
-    // Format helper
-    const fmt = (n: number) => {
-        if (Math.abs(n) > 1000) return n < 0 ? "-∞" : "+∞";
-        // Fixed width for stability? " 0.000"
-        return n.toFixed(3);
-    };
-
-    return (
-        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-0 font-mono text-sm">
-            <span className="font-bold opacity-80" style={{ color }}>{label}</span>
-            <span className="text-gray-600 dark:text-gray-400 tabular-nums">{fmt(value)}</span>
-        </div>
-    );
-};
-
-const ReadoutPanel: React.FC<{
-    trigValues: { cos: number; sin: number; tan: number; cot: number; sec: number; csc: number; };
-    toggles: UnitCircleState['toggles'];
-    theme: UnitCircleState['theme'];
-}> = ({ trigValues, toggles, theme }) => {
-    return (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 h-fit sticky top-6">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
-                Values
-            </h2>
-            <div className="space-y-1">
-                {toggles.sin && <ValueDisplay label="sin(θ)" value={trigValues.sin} color={theme.sin} />}
-                {toggles.cos && <ValueDisplay label="cos(θ)" value={trigValues.cos} color={theme.cos} />}
-                {toggles.tan && <ValueDisplay label="tan(θ)" value={trigValues.tan} color={theme.tan} />}
-                {toggles.cot && <ValueDisplay label="cot(θ)" value={trigValues.cot} color={theme.cot} />}
-                {toggles.sec && <ValueDisplay label="sec(θ)" value={trigValues.sec} color={theme.sec} />}
-                {toggles.csc && <ValueDisplay label="csc(θ)" value={trigValues.csc} color={theme.csc} />}
-            </div>
-        </div>
-    );
-};
+import { ReadoutPanel } from './ReadoutPanel';
 
 export const UnitCircle: React.FC = () => {
     // State
@@ -58,13 +21,16 @@ export const UnitCircle: React.FC = () => {
         sec: false,
         csc: false,
         comp: false,
-        geoTan: true,
-        geoCot: true,
+        geoTan: false,
+        geoCot: false,
         similarSec: false,
         similarCsc: false,
         hypotenuse: true,
         quadrants: false,
     });
+
+    // Lesson State
+    const [selectedLessonId, setSelectedLessonId] = useState<LessonId>('unit_circle');
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -228,17 +194,19 @@ export const UnitCircle: React.FC = () => {
         updateTrace(val);
     };
 
+    // Determine Diagram Mode
+    const currentLesson = LESSONS.find(l => l.id === selectedLessonId);
+    const showDiagram = currentLesson && currentLesson.diagram !== 'none';
+
     return (
         <div className="flex flex-col xl:flex-row gap-6 items-start p-8 min-h-screen text-slate-800 dark:text-slate-200 transition-colors duration-300">
-            {/* 1. Left Column: Controls */}
-            <div className="w-full xl:w-[360px] flex-shrink-0 flex flex-col gap-6 order-2 xl:order-1">
-                <Controls
-                    angle={angle}
-                    setAngle={handleSliderChange}
-                    angleUnit={angleUnit}
-                    setAngleUnit={setAngleUnit}
+            {/* 1. Left Column: Lessons */}
+            <div className="w-full xl:w-[320px] flex-shrink-0 flex flex-col gap-6 order-2 xl:order-1">
+                <LessonPanel
                     toggles={toggles}
                     setToggles={setToggles}
+                    selectedLessonId={selectedLessonId}
+                    onLessonChange={setSelectedLessonId}
                 />
             </div>
 
@@ -264,23 +232,34 @@ export const UnitCircle: React.FC = () => {
                     theme={theme}
                     angleUnit={angleUnit}
                     onReset={() => setTrace([])}
+                    currentAngle={angle}
                 />
             </div>
 
-            {/* 3. Right Column: Lessons & Values */}
-            <div className="w-full xl:w-[320px] flex-shrink-0 flex flex-col gap-6 order-3">
-                <LessonPanel
-                    toggles={toggles}
-                    setToggles={setToggles}
-                    setAngle={handleSliderChange}
-                />
-                {/* Visual Readout can stay here or move left. User asked for "Lesson Panel on right". 
-                    Keeping Readout here balances the 3 columns well. */}
-                <ReadoutPanel
-                    trigValues={trigValues}
-                    toggles={toggles}
-                    theme={theme}
-                />
+            {/* 3. Right Column: Controls OR Diagram */}
+            <div className="w-full xl:w-[360px] flex-shrink-0 flex flex-col gap-6 order-3">
+                {showDiagram ? (
+                    <DiagramPanel
+                        type={currentLesson!.diagram}
+                        setToggles={setToggles}
+                    />
+                ) : (
+                    <>
+                        <Controls
+                            angle={angle}
+                            setAngle={handleSliderChange}
+                            angleUnit={angleUnit}
+                            setAngleUnit={setAngleUnit}
+                            toggles={toggles}
+                            setToggles={setToggles}
+                        />
+                        <ReadoutPanel
+                            trigValues={trigValues}
+                            toggles={toggles}
+                            theme={theme}
+                        />
+                    </>
+                )}
             </div>
         </div>
     );
