@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { UnitCircleState } from './UnitCircleRenderer';
 import { DiagramType } from './DiagramPanel';
 
-export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity';
+export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity' | 'identities';
 
 interface LessonData {
     id: LessonId;
@@ -224,9 +224,196 @@ export const LESSONS: LessonData[] = [
             // Actually, best to let stepper handle specific toggles, but here we set defaults.
             // Stepper will override if needed.
         }))
+    },
+    {
+        id: 'identities',
+        title: '📐 Trig Identities',
+        quote: <span className="text-xl font-light">Complete reference of trigonometric identities.</span>,
+        details: [], // Content handled by custom rendering below
+        diagram: 'none',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            sin: true, cos: true, tan: true, cot: true, sec: true, csc: true,
+            hypotenuse: true
+        }))
     }
 ];
 
+// ============================================================================
+// IDENTITIES LESSON COMPONENTS
+// ============================================================================
+
+// Color constants matching the visualization theme (using dark theme for better contrast)
+const COLORS = {
+    sin: '#ff6b6b',
+    cos: '#4dabf7',
+    tan: '#ff922b',
+    cot: '#51cf66',
+    sec: '#cc5de8',
+    csc: '#fcc419',
+    neutral: '#adb5bd',
+};
+
+// Fraction component with proper horizontal bar (no slashes)
+const Frac: React.FC<{ n: React.ReactNode; d: React.ReactNode; color?: string }> = ({ n, d, color }) => (
+    <span className="inline-flex flex-col items-center mx-0.5 leading-tight" style={{ color }}>
+        <span className="text-xs">{n}</span>
+        <span className="w-full border-t border-current" style={{ marginTop: '1px', marginBottom: '1px' }} />
+        <span className="text-xs">{d}</span>
+    </span>
+);
+
+// Identity card with proper styling
+const Card: React.FC<{ children: React.ReactNode; color?: string }> = ({ children, color }) => (
+    <div
+        className="px-3 py-2 rounded-lg border text-center flex items-center justify-center"
+        style={{
+            borderColor: color || COLORS.neutral,
+            backgroundColor: color ? `${color}15` : 'transparent',
+        }}
+    >
+        {children}
+    </div>
+);
+
+// Category section header
+const Category: React.FC<{ title: string; level?: string }> = ({ title, level }) => (
+    <div className="mt-4 mb-2 first:mt-0">
+        <div className="flex items-center gap-2">
+            <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{title}</h4>
+            {level && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                    {level}
+                </span>
+            )}
+        </div>
+    </div>
+);
+
+// Colored function name
+const Fn: React.FC<{ name: 'sin' | 'cos' | 'tan' | 'cot' | 'sec' | 'csc'; sup?: string }> = ({ name, sup }) => (
+    <span style={{ color: COLORS[name] }}>
+        {name}{sup && <sup>{sup}</sup>}
+    </span>
+);
+
+// The main Identities Content component
+const IdentitiesContent: React.FC = () => (
+    <div className="space-y-1 max-h-[60vh] overflow-y-auto pr-2 -mr-2">
+        {/* BASIC DEFINITIONS (SOH CAH TOA) */}
+        <Category title="Basic Definitions" level="Basic" />
+        <div className="grid grid-cols-3 gap-2 text-sm">
+            <Card color={COLORS.sin}>
+                <Fn name="sin" /> = <Frac n="o" d="h" color={COLORS.sin} />
+            </Card>
+            <Card color={COLORS.cos}>
+                <Fn name="cos" /> = <Frac n="a" d="h" color={COLORS.cos} />
+            </Card>
+            <Card color={COLORS.tan}>
+                <Fn name="tan" /> = <Frac n="o" d="a" color={COLORS.tan} />
+            </Card>
+        </div>
+
+        {/* RECIPROCAL IDENTITIES */}
+        <Category title="Reciprocal Identities" level="Basic" />
+        <div className="grid grid-cols-3 gap-2 text-sm">
+            <Card color={COLORS.csc}>
+                <Fn name="csc" /> = <Frac n="1" d={<Fn name="sin" />} />
+            </Card>
+            <Card color={COLORS.sec}>
+                <Fn name="sec" /> = <Frac n="1" d={<Fn name="cos" />} />
+            </Card>
+            <Card color={COLORS.cot}>
+                <Fn name="cot" /> = <Frac n="1" d={<Fn name="tan" />} />
+            </Card>
+        </div>
+        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+            Flip the fraction upside down
+        </p>
+
+        {/* QUOTIENT IDENTITIES */}
+        <Category title="Quotient Identities" level="Intermediate" />
+        <div className="grid grid-cols-2 gap-2 text-sm">
+            <Card color={COLORS.tan}>
+                <Fn name="tan" /> = <Frac n={<Fn name="sin" />} d={<Fn name="cos" />} />
+            </Card>
+            <Card color={COLORS.cot}>
+                <Fn name="cot" /> = <Frac n={<Fn name="cos" />} d={<Fn name="sin" />} />
+            </Card>
+        </div>
+
+        {/* PYTHAGOREAN IDENTITIES */}
+        <Category title="Pythagorean Identities" level="Intermediate" />
+        <div className="space-y-2 text-sm">
+            <Card>
+                <Fn name="sin" sup="²" />θ + <Fn name="cos" sup="²" />θ = 1
+            </Card>
+            <Card>
+                <Fn name="tan" sup="²" />θ + 1 = <Fn name="sec" sup="²" />θ
+            </Card>
+            <Card>
+                1 + <Fn name="cot" sup="²" />θ = <Fn name="csc" sup="²" />θ
+            </Card>
+        </div>
+        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+            From a² + b² = c² on the unit circle
+        </p>
+
+        {/* COMPLEMENTARY (CO-) IDENTITIES */}
+        <Category title='Complementary "co-" Identities' level="Intermediate" />
+        <div className="space-y-2 text-sm">
+            <Card>
+                <Fn name="sin" />θ = <Fn name="cos" />(90° − θ)
+            </Card>
+            <Card>
+                <Fn name="tan" />θ = <Fn name="cot" />(90° − θ)
+            </Card>
+            <Card>
+                <Fn name="sec" />θ = <Fn name="csc" />(90° − θ)
+            </Card>
+        </div>
+        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+            "co-" = complementary angle (90° − θ)
+        </p>
+
+        {/* RECIPROCALS RESTATED (for completeness) */}
+        <Category title="Reciprocals (Alternate)" level="Reference" />
+        <div className="grid grid-cols-3 gap-2 text-sm">
+            <Card color={COLORS.sin}>
+                <Fn name="sin" /> = <Frac n="1" d={<Fn name="csc" />} />
+            </Card>
+            <Card color={COLORS.cos}>
+                <Fn name="cos" /> = <Frac n="1" d={<Fn name="sec" />} />
+            </Card>
+            <Card color={COLORS.tan}>
+                <Fn name="tan" /> = <Frac n="1" d={<Fn name="cot" />} />
+            </Card>
+        </div>
+
+        {/* DOUBLE ANGLE (Advanced) */}
+        <Category title="Double Angle" level="Advanced" />
+        <div className="space-y-2 text-sm">
+            <Card>
+                <Fn name="sin" />2θ = 2<Fn name="sin" />θ<Fn name="cos" />θ
+            </Card>
+            <Card>
+                <Fn name="cos" />2θ = <Fn name="cos" sup="²" />θ − <Fn name="sin" sup="²" />θ
+            </Card>
+        </div>
+
+        {/* HALF ANGLE (Advanced) */}
+        <Category title="Half Angle" level="Advanced" />
+        <div className="space-y-2 text-sm">
+            <Card>
+                <Fn name="sin" /><Frac n="θ" d="2" /> = ±√<Frac n={<>1 − <Fn name="cos" />θ</>} d="2" />
+            </Card>
+            <Card>
+                <Fn name="cos" /><Frac n="θ" d="2" /> = ±√<Frac n={<>1 + <Fn name="cos" />θ</>} d="2" />
+            </Card>
+        </div>
+    </div>
+);
 interface LessonPanelProps {
     toggles: UnitCircleState['toggles'];
     setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
@@ -273,19 +460,24 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                     {currentLesson.quote}
                 </div>
 
-                <div className="space-y-3">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                        Key Concepts
-                    </h3>
-                    <ul className="space-y-2">
-                        {currentLesson.details.map((detail, i) => (
-                            <li key={i} className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
-                                <span>{detail}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {/* Render custom content for identities lesson, standard list for others */}
+                {selectedLessonId === 'identities' ? (
+                    <IdentitiesContent />
+                ) : (
+                    <div className="space-y-3">
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                            Key Concepts
+                        </h3>
+                        <ul className="space-y-2">
+                            {currentLesson.details.map((detail, i) => (
+                                <li key={i} className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
+                                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+                                    <span>{detail}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );
