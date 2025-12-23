@@ -22,6 +22,7 @@ export interface UnitCircleState {
         proof_general_unit?: boolean;
         proof_general_target?: boolean;
         proof_pythag_squares?: boolean;
+        proof_pythag_general?: boolean;
     };
     theme: {
         sin: string;
@@ -763,20 +764,13 @@ export const drawUnitCircle = (
         // Draw squares on the sides of the sine triangle
 
         // 1. Square on Adjacent (Cos) - Blue
-        // Vertices: (0,0), (cos,0), (cos, cos), (0, cos) ? No, needs to extrude outwards or inwards?
-        // Standard proof usually extrudes outwards.
-        // Adjacent is on X axis. Square goes down? Or up?
-        // Let's draw it "down" from the x-axis if y>0, or just "out".
-        // Actually, just drawing semi-transparent squares aligned with the axes is easiest.
-
-        // Square on Cosine (Blue)
         const cosSize = Math.abs(pXAxis.x - origin.x); // width
         // Draw square below x-axis
         ctx.beginPath();
         ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
         ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, cosSize, cosSize); // Below axis
 
-        // Square on Sine (Red)
+        // 2. Square on Sine (Red)
         // Draw square to the right of the vertical line
         const sinSize = Math.abs(pCircle.y - pXAxis.y);
         ctx.beginPath();
@@ -789,12 +783,94 @@ export const drawUnitCircle = (
         if (cosSize > 10) drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + cosSize / 2 }, theme.cos);
         if (sinSize > 10) drawText(ctx, "b²", { x: pXAxis.x + (sinSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.sin);
 
-        // Square on Hypotenuse (c=1) - Big square?
-        // Maybe just outline the circle or label it? 
-        // Or actually draw a rotated square on the hypotenuse?
-        // Rotated square is hard to make look good dynamically without overlap.
-        // Let's just create a visual cue on the hypotenuse line.
+        // Square on Hypotenuse (c=1)
         drawText(ctx, "c² = 1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    }
+
+    // --- Proof Mode: General Pythagorean Theorem ---
+    if (toggles.proof_pythag_general) {
+        // Draw a generic right triangle with squares on all sides
+        // We'll place this somewhat centrally or use the unit circle triangle but labeled generically a, b, c
+
+        // Let's use the standard "Sine" triangle but label it a, b, c
+        // And draw squares on all sides, including hypotenuse!
+
+        // 1. Triangle
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(100, 100, 100, 0.1)';
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(pXAxis.x, pXAxis.y);
+        ctx.lineTo(pCircle.x, pCircle.y);
+        ctx.closePath();
+        ctx.fill();
+
+        // 2. Squares
+
+        // Square on Adjacent (a)
+        const aSize = Math.abs(pXAxis.x - origin.x);
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)'; // Blueish
+        ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, aSize, aSize);
+        drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + aSize / 2 }, theme.text);
+
+        // Square on Opposite (b)
+        const bSize = Math.abs(pCircle.y - pXAxis.y);
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.2)'; // Reddish
+        const dir = cos >= 0 ? 1 : -1;
+        ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), bSize * dir, bSize);
+        drawText(ctx, "b²", { x: pXAxis.x + (bSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
+
+        // Square on Hypotenuse (c) - This is the tricky one to draw rotationally aligned
+        // We need 4 points. P1(origin), P2(pCircle). 
+        // Vector V = P2 - P1. 
+        // Normal N = (-Vy, Vx).
+        // P3 = P2 + N. P4 = P1 + N.
+
+        const P1 = origin;
+        const P2 = pCircle;
+        const dx = P2.x - P1.x;
+        const dy = P2.y - P1.y;
+
+        // We want the square to go "outwards" away from the center/triangle usually.
+        // For the triangle O-A-P (Origin, Axis, Point), the hypotenuse is O-P.
+        // If we go "up/left" for Q1, it might overlap the circle heavily.
+        // Let's try to project it "outward".
+        // Current angle is 'rad'. Normal is rad + 90deg?
+
+        // Let's just calculate raw vector
+        const len = Math.sqrt(dx * dx + dy * dy);
+        // Unit normal
+        const nx = -dy / len;
+        const ny = dx / len;
+
+        // Direction? If we are in Q1 (dx>0, dy<0 in canvas?), 
+        // Normal (-(-), +) -> (+, +). This points down/right? No, visual space.
+        // Let's just try one direction and flip if needed. usually "up" in diagram means -y.
+        // If we want it "outside" the triangle (which is "below" the hypotenuse in Q1 visual?), 
+        // let's try subtracting the normal.
+
+        const scale = len; // Square side length is length of hypotenuse
+
+        const P3 = { x: P2.x - nx * scale, y: P2.y - ny * scale };
+        const P4 = { x: P1.x - nx * scale, y: P1.y - ny * scale };
+
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; // Greenish
+        ctx.moveTo(P1.x, P1.y);
+        ctx.lineTo(P2.x, P2.y);
+        ctx.lineTo(P3.x, P3.y);
+        ctx.lineTo(P4.x, P4.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = theme.text;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        drawText(ctx, "c²", { x: (P1.x + P3.x) / 2, y: (P1.y + P3.y) / 2 }, theme.text);
+
+        // Labels on sides
+        drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: origin.y - 10 }, theme.text); // Above/Below axis?
+        drawText(ctx, "b", { x: pXAxis.x + (dir * 10), y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
+        drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
     }
 
     // Draw point P if we are not in pure abstraction mode, but maybe skip for clarity

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { UnitCircleState } from './UnitCircleRenderer';
 import { DiagramType } from './DiagramPanel';
 
-export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean';
+export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity';
 
 interface LessonData {
     id: LessonId;
@@ -17,7 +17,8 @@ export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
     hypotenuse: false, quadrants: false, geoTan: false, geoCot: false,
     similarSec: false, similarCsc: false, comp: false,
-    proof_sin_tri: false, proof_tan_tri: false
+    proof_sin_tri: false, proof_tan_tri: false,
+    proof_pythag_squares: false, proof_pythag_general: false
 };
 
 export const LESSONS: LessonData[] = [
@@ -190,18 +191,38 @@ export const LESSONS: LessonData[] = [
     {
         id: 'pythagorean',
         title: 'Pythagorean Theorem',
-        quote: <>
-            <strong className="font-extrabold text-2xl block mb-2">a² + b² = c²</strong>
-        </>,
+        quote: <span className="text-xl font-light">The fundamental relationship in Euclidean geometry.</span>,
         details: [
-            "The square of the hypotenuse is equal to the sum of the squares of the other two sides.",
-            "For the unit circle: sin²(θ) + cos²(θ) = 1"
+            "In a right-angled triangle:",
+            "The square of the hypotenuse (c) is equal to the sum of the squares of the other two sides (a and b).",
+            "a² + b² = c²"
         ],
-        diagram: 'pythagorean',
+        diagram: 'pythagorean', // General form
         apply: (set) => set(prev => ({
             ...prev,
             ...RESET_DEFAULTS,
-            sin: true, cos: true, hypotenuse: true // Basics
+            proof_pythag_general: true // New toggle
+        }))
+    },
+    {
+        id: 'pythagorean_identity',
+        title: 'Pythagorean Identity',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">sin²(θ) + cos²(θ) = 1</strong>
+        </>,
+        details: [
+            "Applying the Pythagorean Theorem to the Unit Circle.",
+            "a = cos(θ), b = sin(θ), c = 1",
+            "Therefore: cos²(θ) + sin²(θ) = 1² = 1"
+        ],
+        diagram: 'pythagorean_identity', // Specific Identity
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            sin: true, cos: true, hypotenuse: true,
+            proof_pythag_squares: true // Start with squares visible? Or let stepper handle it.
+            // Actually, best to let stepper handle specific toggles, but here we set defaults.
+            // Stepper will override if needed.
         }))
     }
 ];
