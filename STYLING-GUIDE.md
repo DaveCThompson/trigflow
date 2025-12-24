@@ -61,3 +61,41 @@ Colors are available via Tailwind classes:
 - **Color definitions**: `src/theme/colors.ts`
 - **Tailwind tokens**: `tailwind.config.js`
 - **Types**: `src/types/index.ts`
+
+## Anti-Patterns (Avoid These)
+
+### ❌ Hardcoded Colors
+```tsx
+// BAD - will break if theme changes
+<Toggle color="#e74c3c" />
+
+// GOOD - uses theme from props
+<Toggle color={theme.sin} />
+```
+
+### ❌ Duplicate Type Definitions
+```typescript
+// BAD - duplicates types/index.ts
+interface UnitCircleState { ... }
+
+// GOOD - imports from single source
+import { UnitCircleState } from '../../types';
+```
+
+### ❌ Magic Numbers in Canvas
+```typescript
+// BAD - unexplained values
+ctx.arc(CX, CY, 4.2, 0, Math.PI * 2);
+
+// GOOD - use named constants
+const RADIUS_SCALE = 4.2; // Provides padding for labels
+ctx.arc(CX, CY, RADIUS_SCALE, 0, Math.PI * 2);
+```
+
+## Best Practices
+
+1. **Import theme colors** via props, never hardcode hex values
+2. **Use canvas/helpers.ts** for drawing primitives
+3. **Test both light and dark modes** after color changes
+4. **Run `npm run build`** to catch TypeScript errors before committing
+

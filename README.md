@@ -12,6 +12,7 @@ An educational web app that makes trigonometric concepts intuitive through inter
 - 📐 **Visual Proofs** - Animated proofs for Pythagorean theorem, tangent identity, and more
 - 📊 **Live Graphs** - Real-time sine, cosine, and tangent waveforms
 - 🎓 **Guided Lessons** - Step-by-step educational content
+- ⌨️ **Keyboard Shortcuts** - Space (play/pause), Arrow keys (angle control)
 - 🌙 **Dark Mode** - Beautiful dark theme with vibrant colors
 
 ## Quick Start
@@ -58,6 +59,7 @@ npm run preview  # Preview production build
 ## Documentation
 
 - [AGENTS.md](AGENTS.md) - AI agent instructions
+- [STYLING-GUIDE.md](STYLING-GUIDE.md) - Design tokens and patterns
 - [docs/STRATEGY-Animation.md](docs/STRATEGY-Animation.md) - Animation philosophy
 - [docs/STRATEGY-Visualization.md](docs/STRATEGY-Visualization.md) - Visual design principles
 - [docs/STRATEGY-Education.md](docs/STRATEGY-Education.md) - Educational approach
