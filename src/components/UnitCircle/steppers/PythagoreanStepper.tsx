@@ -6,13 +6,11 @@ interface PythagoreanStepperProps {
 }
 
 export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggles }) => {
-    const [step, setStep] = React.useState(0);
+    const [step, setStep] = React.useState(1);
 
     React.useEffect(() => {
         if (!setToggles) return;
 
-        // For this proof, we don't need to toggle unit circle elements
-        // Just reset relevant toggles
         const resetToggles = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
@@ -26,7 +24,7 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
     const stepContent = [
         {
             title: "Step 1: The Setup",
-            description: "Start with a large square of side (a + b). We'll place 4 identical right triangles inside.",
+            description: "A large square of side (a + b) with 4 identical right triangles at the corners.",
         },
         {
             title: "Step 2: Configuration 1",
@@ -38,9 +36,14 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
             description: "Same outer square, same 4 triangles — but rearranged to reveal TWO axis-aligned squares.",
             equation: "Area = a² + b²"
         },
+        {
+            title: "Conclusion",
+            description: "Since the remaining area must be equal:",
+            equation: "a² + b² = c²"
+        },
     ];
 
-    const current = stepContent[step];
+    const current = stepContent[step - 1] || stepContent[0];
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -64,34 +67,26 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
                             {current.equation}
                         </div>
                     )}
-                    {step === 2 && (
-                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                            <p className="text-xs text-gray-500 mb-2">Since the remaining area must be equal:</p>
-                            <div className="text-2xl font-serif font-bold text-gray-800 dark:text-gray-200">
-                                a² + b² = c²
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
 
             {/* Navigation */}
             <div className="flex justify-between mt-6 px-2">
                 <button
-                    onClick={() => setStep(Math.max(0, step - 1))}
-                    disabled={step === 0}
+                    onClick={() => setStep(Math.max(1, step - 1))}
+                    disabled={step === 1}
                     className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50 font-medium transition-colors"
                 >
                     Back
                 </button>
                 <div className="flex gap-1 items-center">
-                    {[0, 1, 2].map(i => (
+                    {[1, 2, 3, 4].map(i => (
                         <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
                     ))}
                 </div>
                 <button
-                    onClick={() => setStep(Math.min(2, step + 1))}
-                    disabled={step === 2}
+                    onClick={() => setStep(Math.min(4, step + 1))}
+                    disabled={step === 4}
                     className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50 font-medium transition-colors shadow-sm"
                 >
                     Next
