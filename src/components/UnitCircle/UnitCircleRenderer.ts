@@ -128,12 +128,12 @@ export const drawUnitCircle = (
         drawLine(ctx, pCircle, pYAxis, theme.cos, 4);
         const labelX = pYAxis.x - 20;
         const labelY = (pYAxis.y + pCircle.y) / 2;
-        drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right", "middle");
+        drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right", "middle", theme.halo);
     }
 
     if (toggles.sin) {
         drawLine(ctx, pXAxis, pCircle, theme.sin, 4);
-        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle");
+        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle", theme.halo);
     }
 
     // --- Tan (x=1) ---
@@ -145,7 +145,7 @@ export const drawUnitCircle = (
         drawLine(ctx, origin, pEnd, theme.grid, 2, [5, 5]);
         drawLine(ctx, pStart, pEnd, theme.tan, 4);
         drawPoint(ctx, pEnd, theme.tan, theme.bg);
-        drawText(ctx, "tan", { x: pStart.x + dir * 25, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right", "middle");
+        drawText(ctx, "tan", { x: pStart.x + dir * 25, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right", "middle", theme.halo);
     }
 
     // --- Cot (y=1) ---
@@ -157,14 +157,14 @@ export const drawUnitCircle = (
         drawLine(ctx, origin, pEnd, theme.grid, 2, [5, 5]);
         drawLine(ctx, pStart, pEnd, theme.cot, 4);
         drawPoint(ctx, pEnd, theme.cot, theme.bg);
-        drawText(ctx, "cot", { x: (pStart.x + pEnd.x) / 2, y: pStart.y - dir * 20 }, theme.cot, "center", dir > 0 ? "bottom" : "top");
+        drawText(ctx, "cot", { x: (pStart.x + pEnd.x) / 2, y: pStart.y - dir * 20 }, theme.cot, "center", dir > 0 ? "bottom" : "top", theme.halo);
     }
 
     // --- Secant ---
     if (toggles.sec) {
         const pSec = map(sec, 0);
         drawLine(ctx, origin, pSec, theme.sec, 4);
-        drawText(ctx, "sec", { x: (CX + pSec.x) / 2, y: CY + 30 }, theme.sec, "center", "top");
+        drawText(ctx, "sec", { x: (CX + pSec.x) / 2, y: CY + 30 }, theme.sec, "center", "top", theme.halo);
         drawPoint(ctx, pSec, theme.sec, theme.bg);
     }
 
@@ -172,7 +172,7 @@ export const drawUnitCircle = (
     if (toggles.csc) {
         const pCsc = map(0, csc);
         drawLine(ctx, origin, pCsc, theme.csc, 4);
-        drawText(ctx, "csc", { x: CX + 20, y: (CY + pCsc.y) / 2 }, theme.csc, "left", "middle");
+        drawText(ctx, "csc", { x: CX + 20, y: (CY + pCsc.y) / 2 }, theme.csc, "left", "middle", theme.halo);
         drawPoint(ctx, pCsc, theme.csc, theme.bg);
     }
 
@@ -185,7 +185,7 @@ export const drawUnitCircle = (
         ctx.stroke();
 
         const compMid = (rad + Math.PI / 2) / 2;
-        drawText(ctx, "α", map(Math.cos(compMid) * 0.45, Math.sin(compMid) * 0.45), theme.comp, "center", "middle");
+        drawText(ctx, "α", map(Math.cos(compMid) * 0.45, Math.sin(compMid) * 0.45), theme.comp, "center", "middle", theme.halo);
 
         {
             const alphaR = 20;
@@ -202,7 +202,7 @@ export const drawUnitCircle = (
             drawText(ctx, "α", {
                 x: pCircle.x + Math.cos(midAlpha2) * 35,
                 y: pCircle.y + Math.sin(midAlpha2) * 35
-            }, theme.comp, "center", "middle");
+            }, theme.comp, "center", "middle", theme.halo);
         }
     }
 
@@ -228,7 +228,7 @@ export const drawUnitCircle = (
             const offsetY = p.y > CY ? 20 : (p.y < CY ? -20 : 0);
             const align = p.x > CX ? 'left' : (p.x < CX ? 'right' : 'center');
             const base = p.y > CY ? 'top' : (p.y < CY ? 'bottom' : 'middle');
-            drawText(ctx, label, { x: p.x + offsetX, y: p.y + offsetY }, theme.text, align, base);
+            drawText(ctx, label, { x: p.x + offsetX, y: p.y + offsetY }, theme.text, align, base, theme.halo);
         }
     }
 
@@ -239,7 +239,7 @@ export const drawUnitCircle = (
         const label = `(${xVal}, ${yVal})`;
         const offsetX = cos >= 0 ? 20 : -20;
         const offsetY = sin >= 0 ? -25 : 25;
-        drawText(ctx, label, { x: pCircle.x + offsetX, y: pCircle.y + offsetY }, theme.text, cos >= 0 ? 'left' : 'right', "middle");
+        drawText(ctx, label, { x: pCircle.x + offsetX, y: pCircle.y + offsetY }, theme.text, cos >= 0 ? 'left' : 'right', "middle", theme.halo);
     }
 
     if (!toggles.proof_general_target && !toggles.proof_tan_tri) {

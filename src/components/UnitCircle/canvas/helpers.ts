@@ -40,10 +40,9 @@ export const drawText = (
     base: CanvasTextBaseline = 'middle',
     haloColor?: string
 ): void => {
-    // Determine halo color based on context if not provided
-    // For now, default to a smart alpha-white/black
-    // Ideally we pass theme.bg but that makes signature complex.
-    // Using a safe semi-transparent 'background' approximation.
+    // Use provided halo, or fallback to a smart default.
+    // NOTE: In Dark Mode, you MUST provide theme.halo from the renderer, 
+    // otherwise this default 'white' halo will look bad against dark backgrounds.
     const halo = haloColor || 'rgba(255, 255, 255, 0.8)';
 
     // Nunito Font

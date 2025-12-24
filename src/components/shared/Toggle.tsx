@@ -28,19 +28,19 @@ export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color,
                 {/* Track */}
                 <div
                     className={clsx(
-                        "w-11 h-6 rounded-full transition-all duration-300 ease-spring border",
-                        checked ? "border-transparent" : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                        "w-11 h-6 rounded-full transition-all duration-300 ease-spring border flex items-center px-[3px]",
+                        checked ? "border-transparent justify-end" : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 justify-start"
                     )}
                     style={activeStyle}
-                ></div>
-
-                {/* Thumb */}
-                <div
-                    className={clsx(
-                        "absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ease-spring group-hover:scale-110",
-                        checked ? "translate-x-5" : "translate-x-0"
-                    )}
-                ></div>
+                >
+                    {/* Thumb */}
+                    <div
+                        className={clsx(
+                            "w-4 h-4 rounded-full shadow-md transition-all duration-300 ease-spring group-hover:scale-110",
+                            "bg-white dark:bg-ui-bg-panel" // Invert thumb in dark mode
+                        )}
+                    ></div>
+                </div>
             </div>
 
             <div className="flex flex-col ml-3">

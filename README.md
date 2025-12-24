@@ -11,8 +11,9 @@ An educational web app that makes trigonometric concepts intuitive through inter
 - 🎯 **Unit Circle Visualization** - Interactive unit circle with all six trig functions
 - 📐 **Visual Proofs** - Animated proofs for Pythagorean theorem, tangent identity, and more
 - 📊 **Live Graphs** - Real-time sine, cosine, and tangent waveforms
+- 🎨 **Pastel Aesthetic** - Modern, approachable design with OKLCH colors and Nunito typography
+- 🧩 **Premium UI** - Custom controls with smooth spring animations and responsive layout
 - 🎓 **Guided Lessons** - Step-by-step educational content
-- ⌨️ **Keyboard Shortcuts** - Space (play/pause), Arrow keys (angle control)
 - ⌨️ **Keyboard Shortcuts** - Space (play/pause), Arrow keys (angle control)
 - 🌓 **Theme Support** - Light, Dark, and System Sync modes
 

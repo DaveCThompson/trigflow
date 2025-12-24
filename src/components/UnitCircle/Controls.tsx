@@ -114,7 +114,7 @@ export const Controls: React.FC<ControlsProps> = ({
                                 border: 3px solid var(--color-cos);
                                 box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                                 transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                                margin-top: -8.5px;
+                                margin-top: -3px;
                             }
                             input[type=range]::-webkit-slider-thumb:hover {
                                 transform: scale(1.15);
@@ -129,7 +129,7 @@ export const Controls: React.FC<ControlsProps> = ({
             </div>
 
             <ControlSection title="Special Angles">
-                <div className="grid grid-cols-5 gap-3 px-1">
+                <div className="grid grid-cols-5 gap-3 p-1">
                     {[0, 30, 45, 60, 90].map(deg => {
                         const isActive = Math.abs(angle - deg) < 0.1;
                         let label = `${deg}°`;

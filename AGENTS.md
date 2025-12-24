@@ -50,8 +50,9 @@ src/
 
 5. **Theme Colors**: Use `ThemeContext` for nested components. Pass theme via props for canvas. Never hardcode hex values or Tailwind color classes.
 6. **Semantic Tokens**: Always use semantic tokens (`action_primary`, `surface_selected`, etc.) instead of hardcoded colors. See `STYLING-GUIDE.md` for complete token reference.
-7. **Canvas Text Tokens**: Use `theme.label_primary`, `theme.label_on_fill`, and `theme.halo` for text. Do NOT use `theme.text` for canvas labels unless you're sure of the background.
-8. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
+7. **Shared Components**: Use `Button`, `Toggle`, and `ControlSection` from `components/shared/` instead of primitives. Do not create raw `<button>` elements for UI controls.
+8. **Canvas Text Tokens**: Use `theme.label_primary`, `theme.label_on_fill`, and `theme.halo` for text. Do NOT use `theme.text` for canvas labels unless you're sure of the background.
+9. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
 
 ## Avoiding Common Errors
 

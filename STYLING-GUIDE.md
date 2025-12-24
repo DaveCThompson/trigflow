@@ -58,12 +58,29 @@ Canonical reference for visual design tokens and patterns.
 |-------|-------|------|----------|
 | `fill_angle_wedge` | Blue @ 15% opacity | Blue @ 12% opacity | Theta angle fill |
 
+## Component Library
+
+Always use these shared components instead of matching primitives.
+
+### Button (`src/components/shared/Button.tsx`)
+- **Usage**: Primary actions, secondary navigation, icon-only triggers.
+- **Variants**: `primary`, `secondary`, `danger`, `ghost`.
+- **Features**: Hover lift, active bounce, subtle shadow.
+
+### Toggle (`src/components/shared/Toggle.tsx`)
+- **Usage**: Boolean state switches.
+- **Features**: Spring animation, specific track colors (use semantic tokens).
+
+### ControlSection (`src/components/shared/ControlSection.tsx`)
+- **Usage**: Grouping controls in the right-hand panel.
+- **Features**: Collapsible with smooth height transition, `font-heading` headers.
+
 ## Typography
 
-- **Root Font**: `Inter, system-ui, Avenir, Helvetica, Arial, sans-serif`
-- **Canvas Labels**: Bold 14px (use root font, not Arial)
-- **Graph Axis**: 10px sans-serif
-- **Quadrant Labels**: Bold 120px Times New Roman
+- **Headings**: `Nunito` (700/800) - Friendly, rounded, modern.
+- **Body**: `Inter` (400/500/600) - Clean, highly legible.
+- **Monospace**: `JetBrains Mono` (500) - Tabular numbers, code.
+- **Canvas Labels**: **Bold** 14px Nunito.
 
 ## Canvas Rendering
 
@@ -159,7 +176,6 @@ ctx.arc(CX, CY, 4.2, 0, Math.PI * 2);
 
 // GOOD - use named constants
 const RADIUS_SCALE = 4.2; // Provides padding for labels
-const RADIUS_SCALE = 4.2; // Provides padding for labels
 ctx.arc(CX, CY, RADIUS_SCALE, 0, Math.PI * 2);
 ```
 
@@ -184,5 +200,30 @@ ctx.fillText("θ", x, y);
 4. **Test both light and dark modes** after color changes
 5. **Run `npm run build`** to catch TypeScript errors before committing
 
+## UI Craft Standards
+
+### 1. Vertical Alignment
+- **Interactive Elements**: Must be optically centered.
+    - **Toggles**: Use Flexbox (`items-center`) for thumb alignment. Do not use absolute positioning (`top-1`) if it risks off-by-pixel errors.
+    - **Sliders**: calculating negative margins must account for exact thumb/track dimensions.
+        - Formula: `margin-top = (thumbHeight - trackHeight) / -2`
+
+### 2. Focus & Accessibility
+- **Focus Rings**: Never clip focus rings (`outline`, `ring`).
+    - Containers must have `overflow-visible` or sufficient padding (min `p-1`) if children have focus rings.
+    - **Special Angles**: Ensure grid containers have enough gap/padding.
+
+### 3. Canvas Rendering (Theme Awareness)
+- **Text Labels**:
+    - **Light Mode**: White halo (standard).
+    - **Dark Mode**: **Dark halo** (matching background) required.
+    - **Implementation**: Always pass `theme.halo` to `drawText`.
+    - ❌ `drawText(ctx, "x", p, theme.text)` (Uses default white halo -> Bad in Dark Mode)
+    - ✅ `drawText(ctx, "x", p, theme.text, "center", "middle", theme.halo)`
+
+### 4. Selection States
+- **Contrast**: Selected items must use `surface-selected` (high contrast) background with `surface-selected-text`.
+- **Borders**: selected items should distinguish via border AND background.
+
 ---
-*Last updated: 2025-12-24 (v0.1.0)*
+*Last updated: 2025-12-24 (v0.3.0)*
