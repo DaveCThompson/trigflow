@@ -1,6 +1,15 @@
 import { toRad, createCoordinateMapper } from '../../utils/math';
 import { UnitCircleState } from '../../types';
 import { drawLine, drawText, drawPoint, drawQuadrants } from './canvas/helpers';
+import {
+    ProofContext,
+    drawSineTriangleProof,
+    drawTangentTriangleProof,
+    drawGeneralFormUnitProof,
+    drawGeneralFormTargetProof,
+    drawPythagoreanSquaresProof,
+    drawPythagoreanGeneralProof
+} from './canvas/proofs';
 
 // Re-export for consumers that import from this file
 export type { UnitCircleState } from '../../types';
@@ -520,230 +529,33 @@ export const drawUnitCircle = (
         }
     }
 
-    // --- Proof Mode: Sine Triangle ---
+    // --- Proof Modes (using extracted functions) ---
+    const proofCtx: ProofContext = {
+        ctx, origin, pCircle, pXAxis, CX, CY, map, rad, cos, sin, tan, theme
+    };
+
     if (toggles.proof_sin_tri) {
-        ctx.beginPath();
-        // Fill mix of Red(sin) and Blue(cos) -> Purple-ish
-        ctx.fillStyle = 'rgba(155, 89, 182, 0.2)';
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pXAxis.x, pXAxis.y); // (cos, 0)
-        ctx.lineTo(pCircle.x, pCircle.y); // (cos, sin)
-        ctx.closePath();
-        ctx.fill();
-
-        // Outline specific sides
-        // Adjacent (Cos) - Blue
-        drawLine(ctx, origin, pXAxis, theme.cos, 4);
-        // Opposite (Sin) - Red
-        drawLine(ctx, pXAxis, pCircle, theme.sin, 4);
-        // Hypotenuse (1) - Axis/White
-        drawLine(ctx, origin, pCircle, theme.text, 2);
-
-        // Labels
-        drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
-        drawText(ctx, "cos", { x: (CX + pXAxis.x) / 2, y: CY + 15 }, theme.cos);
-        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 15 : -15), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
+        drawSineTriangleProof(proofCtx);
     }
 
-    // --- Proof Mode: Tangent Triangle ---
     if (toggles.proof_tan_tri) {
-        const dir = cos >= 0 ? 1 : -1;
-        const pStart = map(dir, 0); // (1, 0)
-        const pEnd = map(dir, dir * tan); // (1, tan)
-
-        ctx.beginPath();
-        // Fill Orange
-        ctx.fillStyle = 'rgba(230, 126, 34, 0.2)';
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pStart.x, pStart.y);
-        ctx.lineTo(pEnd.x, pEnd.y);
-        ctx.closePath();
-        ctx.fill();
-
-        // Outline specific sides
-        // Adjacent (1) - Axis/White. Slightly offset or just redraw?
-        // Since it's on axis, we can just draw it solid.
-        drawLine(ctx, origin, pStart, theme.text, 3);
-
-        // Opposite (Tan) - Orange
-        drawLine(ctx, pStart, pEnd, theme.tan, 4);
-
-        // Hypotenuse (Sec) - Dashed or different style
-        drawLine(ctx, origin, pEnd, theme.text, 2, [6, 4]);
-
-        // Labels
-        drawText(ctx, "1", { x: (origin.x + pStart.x) / 2, y: CY + 20 }, theme.text);
-        drawText(ctx, "tan", { x: pStart.x + dir * 20, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right");
+        drawTangentTriangleProof(proofCtx);
     }
 
-    // --- Proof Mode: General Form ---
     if (toggles.proof_general_unit) {
-        // Just the standard unit triangle, but labeled specifically for this proof
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.1)'; // Blue fill
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pXAxis.x, pXAxis.y);
-        ctx.lineTo(pCircle.x, pCircle.y);
-        ctx.closePath();
-        ctx.fill();
-
-        drawLine(ctx, origin, pXAxis, theme.text, 2); // Adj
-        drawLine(ctx, pXAxis, pCircle, theme.sin, 3); // Opp (Sin)
-        drawLine(ctx, origin, pCircle, theme.text, 2); // Hyp (1)
-
-        drawText(ctx, "sin θ", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
-        drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+        drawGeneralFormUnitProof(proofCtx);
     }
 
     if (toggles.proof_general_target) {
-        // Draw a larger scaled triangle behind/around to show similarity
-        // Let's interpret the unit circle as the "small" triangle inside a larger concept
-        // Or actually, draw a separate triangle offset? No, overlay is usually better for similarity.
-        // Let's scale up by 1.5x
-        const scale = 1.35;
-        const pGenEnd = map(Math.cos(rad) * scale, Math.sin(rad) * scale);
-        const pGenAxis = { x: pGenEnd.x, y: origin.y };
-
-        ctx.beginPath();
-        // Dashed lines for the projection
-        ctx.setLineDash([5, 5]);
-        ctx.strokeStyle = theme.text;
-        ctx.lineWidth = 1;
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pGenEnd.x, pGenEnd.y);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // The Triangle
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.1)'; // Greenish
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pGenAxis.x, pGenAxis.y);
-        ctx.lineTo(pGenEnd.x, pGenEnd.y);
-        ctx.closePath();
-        ctx.fill();
-
-        drawLine(ctx, origin, pGenAxis, theme.text, 2); // Adj
-        drawLine(ctx, pGenAxis, pGenEnd, theme.tan, 3); // Opp 
-        drawLine(ctx, origin, pGenEnd, theme.text, 2); // Hyp
-
-        drawText(ctx, "H", map(Math.cos(rad) * scale * 0.55, Math.sin(rad) * scale * 0.55), theme.text);
-        drawText(ctx, "O", { x: pGenAxis.x + (cos >= 0 ? 15 : -15), y: (pGenAxis.y + pGenEnd.y) / 2 }, theme.tan, cos >= 0 ? "left" : "right");
-        drawText(ctx, "A", { x: (origin.x + pGenAxis.x) / 2, y: origin.y + 15 }, theme.text);
+        drawGeneralFormTargetProof(proofCtx);
     }
 
-    // --- Proof Mode: Pythagorean Squares ---
     if (toggles.proof_pythag_squares) {
-        // Draw squares on the sides of the sine triangle
-
-        // 1. Square on Adjacent (Cos) - Blue
-        const cosSize = Math.abs(pXAxis.x - origin.x); // width
-        // Draw square below x-axis
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
-        ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, cosSize, cosSize); // Below axis
-
-        // 2. Square on Sine (Red)
-        // Draw square to the right of the vertical line
-        const sinSize = Math.abs(pCircle.y - pXAxis.y);
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
-        // If cos is positive, draw to right. If negative, left.
-        const dir = cos >= 0 ? 1 : -1;
-        ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), sinSize * dir, sinSize);
-
-        // Labels
-        if (cosSize > 10) drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + cosSize / 2 }, theme.cos);
-        if (sinSize > 10) drawText(ctx, "b²", { x: pXAxis.x + (sinSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.sin);
-
-        // Square on Hypotenuse (c=1)
-        drawText(ctx, "c² = 1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+        drawPythagoreanSquaresProof(proofCtx);
     }
 
-    // --- Proof Mode: General Pythagorean Theorem ---
     if (toggles.proof_pythag_general) {
-        // Draw a generic right triangle with squares on all sides
-        // We'll place this somewhat centrally or use the unit circle triangle but labeled generically a, b, c
-
-        // Let's use the standard "Sine" triangle but label it a, b, c
-        // And draw squares on all sides, including hypotenuse!
-
-        // 1. Triangle
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(100, 100, 100, 0.1)';
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(pXAxis.x, pXAxis.y);
-        ctx.lineTo(pCircle.x, pCircle.y);
-        ctx.closePath();
-        ctx.fill();
-
-        // 2. Squares
-
-        // Square on Adjacent (a)
-        const aSize = Math.abs(pXAxis.x - origin.x);
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)'; // Blueish
-        ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, aSize, aSize);
-        drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + aSize / 2 }, theme.text);
-
-        // Square on Opposite (b)
-        const bSize = Math.abs(pCircle.y - pXAxis.y);
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.2)'; // Reddish
-        const dir = cos >= 0 ? 1 : -1;
-        ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), bSize * dir, bSize);
-        drawText(ctx, "b²", { x: pXAxis.x + (bSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
-
-        // Square on Hypotenuse (c) - This is the tricky one to draw rotationally aligned
-        // We need 4 points. P1(origin), P2(pCircle). 
-        // Vector V = P2 - P1. 
-        // Normal N = (-Vy, Vx).
-        // P3 = P2 + N. P4 = P1 + N.
-
-        const P1 = origin;
-        const P2 = pCircle;
-        const dx = P2.x - P1.x;
-        const dy = P2.y - P1.y;
-
-        // We want the square to go "outwards" away from the center/triangle usually.
-        // For the triangle O-A-P (Origin, Axis, Point), the hypotenuse is O-P.
-        // If we go "up/left" for Q1, it might overlap the circle heavily.
-        // Let's try to project it "outward".
-        // Current angle is 'rad'. Normal is rad + 90deg?
-
-        // Let's just calculate raw vector
-        const len = Math.sqrt(dx * dx + dy * dy);
-        // Unit normal
-        const nx = -dy / len;
-        const ny = dx / len;
-
-        // Direction? If we are in Q1 (dx>0, dy<0 in canvas?), 
-        // Normal (-(-), +) -> (+, +). This points down/right? No, visual space.
-        // Let's just try one direction and flip if needed. usually "up" in diagram means -y.
-        // If we want it "outside" the triangle (which is "below" the hypotenuse in Q1 visual?), 
-        // let's try subtracting the normal.
-
-        const scale = len; // Square side length is length of hypotenuse
-
-        const P3 = { x: P2.x - nx * scale, y: P2.y - ny * scale };
-        const P4 = { x: P1.x - nx * scale, y: P1.y - ny * scale };
-
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; // Greenish
-        ctx.moveTo(P1.x, P1.y);
-        ctx.lineTo(P2.x, P2.y);
-        ctx.lineTo(P3.x, P3.y);
-        ctx.lineTo(P4.x, P4.y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = theme.text;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        drawText(ctx, "c²", { x: (P1.x + P3.x) / 2, y: (P1.y + P3.y) / 2 }, theme.text);
-
-        // Labels on sides
-        drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: origin.y - 10 }, theme.text); // Above/Below axis?
-        drawText(ctx, "b", { x: pXAxis.x + (dir * 10), y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
-        drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+        drawPythagoreanGeneralProof(proofCtx);
     }
 
     // --- Axes Intersection Points ---
