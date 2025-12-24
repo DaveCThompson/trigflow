@@ -25,6 +25,8 @@ export interface UnitCircleState {
         proof_general_target?: boolean;
         proof_pythag_squares?: boolean;
         proof_pythag_general?: boolean;
+        proof_pythag_rearrange?: boolean;
+        pythagStep?: number;
     };
     theme: {
         sin: string;

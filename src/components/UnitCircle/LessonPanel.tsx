@@ -18,7 +18,7 @@ export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     hypotenuse: false, quadrants: false, showXY: false, geoTan: false, geoCot: false,
     similarSec: false, similarCsc: false, comp: false, axesIntersections: false,
     proof_sin_tri: false, proof_tan_tri: false,
-    proof_pythag_squares: false, proof_pythag_general: false
+    proof_pythag_squares: false, proof_pythag_general: false, proof_pythag_rearrange: false
 };
 
 export const LESSONS: LessonData[] = [
@@ -201,7 +201,7 @@ export const LESSONS: LessonData[] = [
         apply: (set) => set(prev => ({
             ...prev,
             ...RESET_DEFAULTS,
-            proof_pythag_general: true // New toggle
+            proof_pythag_rearrange: true // Use new rearrangement proof
         }))
     },
     {

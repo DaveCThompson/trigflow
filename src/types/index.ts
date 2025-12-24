@@ -67,6 +67,10 @@ export interface UnitCircleToggles {
     proof_pythag_squares?: boolean;
     /** Proof mode: Shows general Pythagorean theorem (a² + b² = c²) */
     proof_pythag_general?: boolean;
+    /** Proof mode: Shows the rearrangement proof (outer square with 4 triangles) */
+    proof_pythag_rearrange?: boolean;
+    /** Step number for the Pythagorean rearrangement animation (0-2) */
+    pythagStep?: number;
 }
 
 export interface UnitCircleState {
