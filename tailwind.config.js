@@ -38,6 +38,20 @@ export default {
                 canvas: {
                     bg: 'var(--canvas-bg)',
                     grid: 'var(--canvas-grid)'
+                },
+                action: {
+                    primary: 'var(--action-primary)',
+                    'primary-hover': 'var(--action-primary-hover)',
+                    danger: 'var(--action-danger)',
+                    'danger-subtle': 'var(--action-danger-subtle)',
+                },
+                surface: {
+                    selected: 'var(--surface-selected)',
+                    'selected-text': 'var(--surface-selected-text)',
+                },
+                border: {
+                    focus: 'var(--border-focus)',
+                    selected: 'var(--border-selected)',
                 }
             },
             backgroundImage: {

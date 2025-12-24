@@ -76,9 +76,9 @@ export const drawUnitCircle = (
     ctx.stroke();
 
     // --- 3. Angle Wedge ---
-    // Use theme color for wedge but very transparent? hardcoded blue is okay for "angle" concept
+    // Use theme.fill_angle_wedge for consistent theming
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(77, 171, 247, 0.1)'; // Soft Blue
+    ctx.fillStyle = theme.fill_angle_wedge;
     ctx.moveTo(CX, CY);
     ctx.arc(CX, CY, 50, 0, -rad, true);
     ctx.lineTo(CX, CY);
@@ -123,17 +123,12 @@ export const drawUnitCircle = (
         drawLine(ctx, pCircle, pCsc, theme.cot, 2.5, [6, 6]);
     }
 
-    // --- Separate Sin/Cos ---
+    // --- Cosine (Always Complementary Position) ---
     if (toggles.cos) {
-        if (toggles.cosOnCompSide) {
-            drawLine(ctx, pCircle, pYAxis, theme.cos, 4);
-            const labelX = pYAxis.x - 20;
-            const labelY = (pYAxis.y + pCircle.y) / 2;
-            drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right", "middle");
-        } else {
-            drawLine(ctx, origin, pXAxis, theme.cos, 4);
-            drawText(ctx, "cos", { x: (CX + pXAxis.x) / 2, y: CY + 20 }, theme.cos, "center", "top");
-        }
+        drawLine(ctx, pCircle, pYAxis, theme.cos, 4);
+        const labelX = pYAxis.x - 20;
+        const labelY = (pYAxis.y + pCircle.y) / 2;
+        drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right", "middle");
     }
 
     if (toggles.sin) {

@@ -211,7 +211,7 @@ export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, ang
     return (
         <div className="mt-8 w-full">
             <div className="flex justify-between items-center mb-4 border-b border-ui-border pb-2">
-                <h3 className="text-sm font-bold text-ui-text-muted uppercase tracking-wider">Historical Graphs</h3>
+                <h3 className="text-sm font-bold text-ui-text-muted uppercase tracking-wider">Graphs</h3>
                 <button
                     onClick={onReset}
                     className="text-xs flex items-center gap-1 px-2.5 py-1.5 bg-ui-bg-hover rounded-lg text-ui-text-muted hover:text-ui-text transition-colors"

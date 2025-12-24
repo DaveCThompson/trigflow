@@ -25,8 +25,10 @@ function App() {
                     <UnitCircle />
                 </main>
 
-                <footer className="mt-12 text-slate-400 text-sm pb-8">
-                    Modular Canvas Architecture
+                <footer className="mt-12 text-ui-text-muted text-sm pb-8 flex items-center gap-2">
+                    <span className="font-bold">TrigFlow</span>
+                    <span className="opacity-50">•</span>
+                    <span>v0.1.0</span>
                 </footer>
             </div>
         </ThemeProvider>

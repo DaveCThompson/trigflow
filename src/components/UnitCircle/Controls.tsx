@@ -38,25 +38,44 @@ export const Controls: React.FC<ControlsProps> = ({
                     <button
                         onClick={onResetToggles}
                         title="Reset all toggles"
-                        className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors active:scale-95"
+                        className="p-2 rounded-xl bg-action-danger-subtle text-action-danger hover:bg-action-danger hover:text-white transition-colors active:scale-95"
                     >
                         <ArrowCounterClockwise weight="bold" />
                     </button>
-                    <button
-                        onClick={() => setAngleUnit(angleUnit === 'deg' ? 'rad' : 'deg')}
-                        className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-ui-bg-hover text-ui-text-muted hover:text-ui-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-95"
-                    >
-                        {angleUnit === 'deg' ? 'DEG' : 'RAD'}
-                    </button>
+                    {/* Segmented Deg/Rad Toggle */}
+                    <div className="flex rounded-xl bg-ui-bg-hover p-1 gap-1">
+                        <button
+                            onClick={() => setAngleUnit('deg')}
+                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95 ${angleUnit === 'deg'
+                                ? 'bg-surface-selected text-surface-selected-text shadow-sm'
+                                : 'text-ui-text-muted hover:text-ui-text'
+                                }`}
+                        >
+                            DEG
+                        </button>
+                        <button
+                            onClick={() => setAngleUnit('rad')}
+                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95 ${angleUnit === 'rad'
+                                ? 'bg-surface-selected text-surface-selected-text shadow-sm'
+                                : 'text-ui-text-muted hover:text-ui-text'
+                                }`}
+                        >
+                            RAD
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <ControlSection title={`Angle: ${angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}`}>
-                <div className="flex items-center gap-3 mt-2">
+            {/* Angle Control - No longer in accordion */}
+            <div className="pb-4 mb-4 border-b border-ui-border">
+                <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider mb-2">
+                    Angle: {angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}
+                </h3>
+                <div className="flex items-center gap-3 mt-2 py-3 overflow-visible">
                     <button
                         onClick={() => setIsPlaying(!isPlaying)}
                         className={`
-                            flex items-center justify-center p-0 rounded-full transition-all duration-300 hover:-translate-y-0.5
+                            flex items-center justify-center p-0 rounded-full transition-all duration-300 hover:scale-105 active:scale-95
                             ${isPlaying ? 'text-ui-text opacity-50' : 'text-trig-cos shadow-glow'}
                         `}
                         title={isPlaying ? 'Pause animation' : 'Play animation'}
@@ -70,7 +89,7 @@ export const Controls: React.FC<ControlsProps> = ({
                     </button>
 
                     {/* Custom Range Slider */}
-                    <div className="relative flex-1 h-8 flex items-center group">
+                    <div className="relative flex-1 h-8 flex items-center group overflow-visible">
                         <input
                             type="range"
                             min="0"
@@ -78,7 +97,7 @@ export const Controls: React.FC<ControlsProps> = ({
                             step="0.1"
                             value={angle}
                             onChange={(e) => setAngle(parseFloat(e.target.value))}
-                            className="absolute w-full h-2 bg-ui-bg-hover rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-trig-cos/20"
+                            className="absolute w-full h-2 bg-ui-bg-hover rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-trig-cos/20 overflow-visible"
                             disabled={isPlaying}
                             style={{
                                 background: `linear-gradient(to right, var(--color-cos) 0%, var(--color-cos) ${(angle / 360) * 100}%, var(--surface-3) ${(angle / 360) * 100}%, var(--surface-3) 100%)`
@@ -94,7 +113,7 @@ export const Controls: React.FC<ControlsProps> = ({
                                 border: 2px solid var(--color-cos);
                                 box-shadow: 0 2px 6px rgba(0,0,0,0.1);
                                 transition: transform 0.1s;
-                                margin-top: -6px; /* center it? no, check h-2 is 8px */
+                                margin-top: -4.5px; /* aligned to center (8px track - 20px thumb + offset) */
                             }
                             input[type=range]::-webkit-slider-thumb:hover {
                                 transform: scale(1.1);
@@ -111,10 +130,10 @@ export const Controls: React.FC<ControlsProps> = ({
                         `}</style>
                     </div>
                 </div>
-            </ControlSection>
+            </div>
 
             <ControlSection title="Special Angles">
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-5 gap-3 px-1">
                     {[0, 30, 45, 60, 90].map(deg => {
                         const isActive = Math.abs(angle - deg) < 0.1;
                         let label = `${deg}°`;
@@ -135,8 +154,8 @@ export const Controls: React.FC<ControlsProps> = ({
                                 className={`
                                     text-xs font-bold py-2 rounded-xl transition-all duration-200 active:scale-95
                                     ${isActive
-                                        ? 'bg-white dark:bg-gray-800 ring-2 ring-trig-cos text-trig-cos shadow-lg shadow-trig-cos/20'
-                                        : 'bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text'
+                                        ? 'bg-surface-selected text-surface-selected-text ring-2 ring-border-selected shadow-lg'
+                                        : 'bg-ui-bg-hover text-ui-text-muted hover:bg-ui-bg-hover hover:text-ui-text'
                                     }
                                 `}
                             >
@@ -147,7 +166,38 @@ export const Controls: React.FC<ControlsProps> = ({
                 </div>
             </ControlSection>
 
-            <ControlSection title="Functions">
+            <ControlSection title="Foundational" defaultExpanded={true}>
+                <Toggle
+                    label="Radius (Hypotenuse)"
+                    checked={toggles.hypotenuse}
+                    onChange={() => toggle('hypotenuse')}
+                    color={theme.axis}
+                    description="Unit length = 1"
+                />
+                <Toggle
+                    label="Quadrant Labels"
+                    checked={toggles.quadrants}
+                    onChange={() => toggle('quadrants')}
+                    color={theme.text}
+                    description="Shows I, II, III, IV"
+                />
+                <Toggle
+                    label="Point Coordinates"
+                    checked={toggles.showXY}
+                    onChange={() => toggle('showXY')}
+                    color={theme.text}
+                    description="Shows (x, y) at point"
+                />
+                <Toggle
+                    label="Axis Intersections"
+                    checked={toggles.axesIntersections}
+                    onChange={() => toggle('axesIntersections')}
+                    color={theme.text}
+                    description="(1,0), (0,1), (-1,0), (0,-1)"
+                />
+            </ControlSection>
+
+            <ControlSection title="Basic Trig Functions" defaultExpanded={true}>
                 <Toggle
                     label="Sine"
                     checked={toggles.sin}
@@ -155,33 +205,20 @@ export const Controls: React.FC<ControlsProps> = ({
                     color={theme.sin}
                 />
                 <Toggle
-                    label="Tangent"
-                    checked={toggles.tan}
-                    onChange={() => toggle('tan')}
-                    color={theme.tan}
-                />
-                <Toggle
-                    label="Secant"
-                    checked={toggles.sec}
-                    onChange={() => toggle('sec')}
-                    color={theme.sec}
-                />
-            </ControlSection>
-
-            <ControlSection title="Complementary Functions">
-                <Toggle
                     label="Cosine"
                     checked={toggles.cos}
                     onChange={() => toggle('cos')}
                     color={theme.cos}
                 />
                 <Toggle
-                    label="Cosine (Comp. Position)"
-                    checked={toggles.cosOnCompSide ?? false}
-                    onChange={() => toggle('cosOnCompSide')}
-                    color={theme.cos}
-                    description="Shows cos from point to Y-axis"
+                    label="Tangent"
+                    checked={toggles.tan}
+                    onChange={() => toggle('tan')}
+                    color={theme.tan}
                 />
+            </ControlSection>
+
+            <ControlSection title="Other Functions" defaultExpanded={false}>
                 <Toggle
                     label="Cotangent"
                     checked={toggles.cot}
@@ -193,6 +230,12 @@ export const Controls: React.FC<ControlsProps> = ({
                     checked={toggles.csc}
                     onChange={() => toggle('csc')}
                     color={theme.csc}
+                />
+                <Toggle
+                    label="Secant"
+                    checked={toggles.sec}
+                    onChange={() => toggle('sec')}
+                    color={theme.sec}
                 />
             </ControlSection>
 
@@ -231,34 +274,6 @@ export const Controls: React.FC<ControlsProps> = ({
                     onChange={() => toggle('similarCsc')}
                     color={theme.csc}
                     description="Similar triangle visualization"
-                />
-                <Toggle
-                    label="Radius (Hypotenuse)"
-                    checked={toggles.hypotenuse}
-                    onChange={() => toggle('hypotenuse')}
-                    color={theme.axis}
-                    description="Unit length = 1"
-                />
-                <Toggle
-                    label="Quadrant Labels"
-                    checked={toggles.quadrants}
-                    onChange={() => toggle('quadrants')}
-                    color={theme.text}
-                    description="Shows I, II, III, IV"
-                />
-                <Toggle
-                    label="Point Coordinates"
-                    checked={toggles.showXY}
-                    onChange={() => toggle('showXY')}
-                    color={theme.text}
-                    description="Shows (x, y) at point"
-                />
-                <Toggle
-                    label="Axis Intersections"
-                    checked={toggles.axesIntersections}
-                    onChange={() => toggle('axesIntersections')}
-                    color={theme.text}
-                    description="(1,0), (0,1), (-1,0), (0,-1)"
                 />
             </ControlSection>
         </div>

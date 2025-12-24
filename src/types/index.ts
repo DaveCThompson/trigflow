@@ -27,6 +27,30 @@ export interface TrigTheme {
     /** Halo/Stroke color for text readability */
     halo: string;
 
+    // Interactive States
+    /** Main CTA color (e.g., cos blue) */
+    action_primary: string;
+    /** Hover state for primary actions */
+    action_primary_hover: string;
+    /** Destructive actions (e.g., reset button) */
+    action_danger: string;
+    /** Danger bg with low opacity */
+    action_danger_subtle: string;
+
+    // Selection & Focus
+    /** Selected item background */
+    surface_selected: string;
+    /** Text on selected background */
+    surface_selected_text: string;
+    /** Focus ring color */
+    border_focus: string;
+    /** Selected item border */
+    border_selected: string;
+
+    // Wedge/Fill specific
+    /** Theta angle fill (darker in light mode) */
+    fill_angle_wedge: string;
+
     /** Whether this is a dark theme - used for overlay/contrast decisions */
     isDark: boolean;
 }
@@ -74,9 +98,6 @@ export interface UnitCircleToggles {
     showXY: boolean;
     /** Shows unit circle axis intersection points: (1,0), (-1,0), (0,1), (0,-1) */
     axesIntersections: boolean;
-    /** When true, draws cosine on the complementary side (P to Y-axis) instead of standard position (O to X-axis).
-     *  Used in co-function lessons to demonstrate cos(θ) = sin(90°-θ) visually. */
-    cosOnCompSide?: boolean;
 
     // === Proof Visualization Toggles ===
     /** Proof mode: Shows sin/cos right triangle with labeled sides */

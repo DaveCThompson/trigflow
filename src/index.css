@@ -41,6 +41,18 @@
     /* Solid Canvas Background (Slightly darker than surface-2 in light mode) */
     --canvas-bg: oklch(96% 0.01 240);
 
+    /* Semantic Action Tokens */
+    --action-primary: oklch(65% 0.18 250);
+    --action-primary-hover: oklch(60% 0.20 250);
+    --action-danger: oklch(60% 0.20 25);
+    --action-danger-subtle: oklch(98% 0.01 25);
+
+    /* Selection & Focus */
+    --surface-selected: oklch(100% 0 0);
+    --surface-selected-text: oklch(15% 0.02 260);
+    --border-focus: oklch(65% 0.18 250);
+    --border-selected: oklch(65% 0.18 250);
+
     /* Gradients - Only for page background if requested, keeping subtle */
     --bg-gradient-page: linear-gradient(180deg, var(--surface-1) 0%, oklch(95% 0.02 240) 100%);
   }
@@ -66,6 +78,18 @@
 
     /* Solid Canvas Background Dark */
     --canvas-bg: oklch(20% 0.02 260);
+
+    /* Semantic Action Tokens - Dark Mode */
+    --action-primary: oklch(75% 0.15 260);
+    --action-primary-hover: oklch(80% 0.18 260);
+    --action-danger: oklch(70% 0.18 25);
+    --action-danger-subtle: oklch(25% 0.02 25);
+
+    /* Selection & Focus - Dark Mode */
+    --surface-selected: oklch(30% 0.02 260);
+    --surface-selected-text: oklch(100% 0 0);
+    --border-focus: oklch(75% 0.15 260);
+    --border-selected: oklch(75% 0.15 260);
 
     /* Gradients Dark */
     --bg-gradient-page: linear-gradient(180deg, var(--surface-1) 0%, oklch(15% 0.05 260) 100%);

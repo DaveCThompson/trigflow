@@ -22,7 +22,6 @@ export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
     hypotenuse: false, quadrants: false, showXY: false, geoTan: false, geoCot: false,
     similarSec: false, similarCsc: false, comp: false, axesIntersections: false,
-    cosOnCompSide: false,
     proof_sin_tri: false, proof_tan_tri: false,
     proof_pythag_squares: false, proof_pythag_general: false, proof_pythag_rearrange: false
 };

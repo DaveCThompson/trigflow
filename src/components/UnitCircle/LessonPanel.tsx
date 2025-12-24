@@ -47,7 +47,7 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                     <select
                         value={selectedLessonId}
                         onChange={(e) => onLessonChange(e.target.value as LessonId)}
-                        className="w-full p-3 rounded-xl border border-ui-border bg-ui-bg-hover text-ui-text font-medium focus:outline-none focus:ring-2 focus:ring-trig-cos/20 appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-ui-border bg-ui-bg-hover text-ui-text font-medium focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2 appearance-none cursor-pointer transition-all duration-200"
                     >
                         {LESSONS.map(l => (
                             <option key={l.id} value={l.id}>{l.title}</option>
