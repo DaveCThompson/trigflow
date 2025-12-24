@@ -18,6 +18,7 @@ export interface UnitCircleState {
         hypotenuse: boolean;
         quadrants: boolean;
         showXY: boolean;
+        axesIntersections: boolean;
         proof_sin_tri?: boolean;
         proof_tan_tri?: boolean;
         proof_general_unit?: boolean;
@@ -872,6 +873,31 @@ export const drawUnitCircle = (
         drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: origin.y - 10 }, theme.text); // Above/Below axis?
         drawText(ctx, "b", { x: pXAxis.x + (dir * 10), y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
         drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    }
+
+    // --- Axes Intersection Points ---
+    if (toggles.axesIntersections) {
+        const intersections = [
+            { p: map(1, 0), label: '(1, 0)' },
+            { p: map(-1, 0), label: '(-1, 0)' },
+            { p: map(0, 1), label: '(0, 1)' },
+            { p: map(0, -1), label: '(0, -1)' },
+        ];
+        for (const { p, label } of intersections) {
+            // Draw a small point
+            ctx.beginPath();
+            ctx.fillStyle = theme.text;
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = theme.bg;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            // Label offset based on position
+            const offsetX = p.x > CX ? 12 : (p.x < CX ? -12 : 0);
+            const offsetY = p.y > CY ? 15 : (p.y < CY ? -15 : 0);
+            const align: CanvasTextAlign = p.x > CX ? 'left' : (p.x < CX ? 'right' : 'center');
+            drawText(ctx, label, { x: p.x + offsetX, y: p.y + offsetY }, theme.text, align);
+        }
     }
 
     // --- Show X,Y Coordinates ---

@@ -20,26 +20,52 @@ export interface TrigTheme {
 }
 
 export interface UnitCircleToggles {
+    // === Primary Function Lines ===
+    /** Shows the vertical sine line from point P to the x-axis (red) */
     sin: boolean;
+    /** Shows the horizontal cosine line from point P to the y-axis (blue) */
     cos: boolean;
+    /** Shows the tangent value as a line segment on x=1 (orange) */
     tan: boolean;
+    /** Shows the cotangent value as a line segment on y=1 (green) */
     cot: boolean;
+    /** Shows the secant line from origin through P to x=1 (purple) */
     sec: boolean;
+    /** Shows the cosecant line from origin through P to y=1 (yellow) */
     csc: boolean;
+
+    // === Geometry & Visual Aids ===
+    /** Shows the complementary angle (90° - θ) arc and its trigonometric relationships */
     comp: boolean;
+    /** Shows the geometric tangent construction: vertical line at x=1 */
     geoTan: boolean;
+    /** Shows the geometric cotangent construction: horizontal line at y=1 */
     geoCot: boolean;
+    /** Shows the similar triangle for secant: O-P-S triangle with annotations */
     similarSec: boolean;
+    /** Shows the similar triangle for cosecant: O-P-C triangle with annotations */
     similarCsc: boolean;
+    /** Shows the radius/hypotenuse line from origin to point P (labeled "1") */
     hypotenuse: boolean;
+    /** Shows quadrant labels (I, II, III, IV) in each corner */
     quadrants: boolean;
+    /** Shows (x, y) coordinate labels at point P */
     showXY: boolean;
-    // Proof toggles
+    /** Shows unit circle axis intersection points: (1,0), (-1,0), (0,1), (0,-1) */
+    axesIntersections: boolean;
+
+    // === Proof Visualization Toggles ===
+    /** Proof mode: Shows sin/cos right triangle with labeled sides */
     proof_sin_tri?: boolean;
+    /** Proof mode: Shows tangent proof triangle */
     proof_tan_tri?: boolean;
+    /** Proof mode: Shows general form with unit circle context */
     proof_general_unit?: boolean;
+    /** Proof mode: Shows general form target triangle */
     proof_general_target?: boolean;
+    /** Proof mode: Shows Pythagorean squares on unit circle */
     proof_pythag_squares?: boolean;
+    /** Proof mode: Shows general Pythagorean theorem (a² + b² = c²) */
     proof_pythag_general?: boolean;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useCanvas } from '../../hooks/useCanvas';
 import { drawUnitCircle, UnitCircleState } from './UnitCircleRenderer';
 import { Controls } from './Controls';
@@ -28,12 +28,34 @@ export const UnitCircle: React.FC = () => {
         hypotenuse: true,
         quadrants: false,
         showXY: false,
+        axesIntersections: false,
     });
 
     // Lesson State
     const [selectedLessonId, setSelectedLessonId] = useState<LessonId>('unit_circle');
 
     const [isDragging, setIsDragging] = useState(false);
+
+    // Play/Animation State
+    const [isPlaying, setIsPlaying] = useState(false);
+    const ANIMATION_SPEED = 0.5; // degrees per frame (~30 deg/sec at 60fps)
+
+    // Animation Loop
+    useEffect(() => {
+        if (!isPlaying) return;
+        let animationId: number;
+        const animate = () => {
+            setAngle(prev => {
+                const next = prev + ANIMATION_SPEED;
+                const normalized = next >= 360 ? 0 : next;
+                updateTrace(normalized);
+                return normalized;
+            });
+            animationId = requestAnimationFrame(animate);
+        };
+        animationId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationId);
+    }, [isPlaying]);
 
     // Trace History for Graph
     const [trace, setTrace] = useState<Array<{ angle: number, values: any }>>([]);
@@ -229,6 +251,8 @@ export const UnitCircle: React.FC = () => {
                             setAngleUnit={setAngleUnit}
                             toggles={toggles}
                             setToggles={setToggles}
+                            isPlaying={isPlaying}
+                            setIsPlaying={setIsPlaying}
                         />
                         <ReadoutPanel
                             trigValues={trigValues}

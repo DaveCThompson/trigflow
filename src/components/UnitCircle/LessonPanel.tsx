@@ -16,7 +16,7 @@ interface LessonData {
 export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
     hypotenuse: false, quadrants: false, showXY: false, geoTan: false, geoCot: false,
-    similarSec: false, similarCsc: false, comp: false,
+    similarSec: false, similarCsc: false, comp: false, axesIntersections: false,
     proof_sin_tri: false, proof_tan_tri: false,
     proof_pythag_squares: false, proof_pythag_general: false
 };
@@ -53,7 +53,7 @@ export const LESSONS: LessonData[] = [
         apply: (set) => set(prev => ({
             ...prev,
             sin: true, cos: false, tan: false, cot: false, sec: false, csc: false,
-            quadrants: true, comp: true,
+            quadrants: true, comp: false,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
         }))
     },
@@ -73,7 +73,7 @@ export const LESSONS: LessonData[] = [
         apply: (set) => set(prev => ({
             ...prev,
             sin: false, cos: true, tan: false, cot: false, sec: false, csc: false,
-            quadrants: true, comp: true,
+            quadrants: true, comp: false,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
         }))
     },
@@ -147,7 +147,7 @@ export const LESSONS: LessonData[] = [
         apply: (set) => set(prev => ({
             ...prev,
             ...RESET_DEFAULTS,
-            csc: true, similarCsc: true, hypotenuse: true, geoCot: true
+            csc: true, similarCsc: true, hypotenuse: true
         })),
     },
     {
@@ -306,8 +306,8 @@ const LevelBtn: React.FC<{ level: IdentityLevel; current: IdentityLevel; onClick
     <button
         onClick={onClick}
         className={`px-2 py-1 text-xs rounded-md transition-colors ${current === level
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            ? 'bg-blue-500 text-white'
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
     >
         {level.charAt(0).toUpperCase() + level.slice(1)}

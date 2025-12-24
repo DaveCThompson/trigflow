@@ -11,12 +11,14 @@ interface ControlsProps {
     setAngleUnit: (unit: 'deg' | 'rad') => void;
     toggles: UnitCircleState['toggles'];
     setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
+    isPlaying: boolean;
+    setIsPlaying: (playing: boolean) => void;
 }
 
 // ControlSection and Toggle are now imported from shared components
 
 export const Controls: React.FC<ControlsProps> = ({
-    angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles
+    angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles, isPlaying, setIsPlaying
 }) => {
 
     const toggle = (key: keyof UnitCircleState['toggles']) => {
@@ -38,17 +40,31 @@ export const Controls: React.FC<ControlsProps> = ({
             </div>
 
             <ControlSection title={`Angle: ${angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}`}>
-                <input
-                    type="range"
-                    min="0"
-                    max="360"
-                    step="0.1"
-                    value={angle}
-                    onChange={(e) => setAngle(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-2"
-                />
-                <div className="text-xs text-gray-400 text-center mt-2">
-                    Drag slider or use circle
+                <div className="flex items-center gap-2 mt-2">
+                    <button
+                        onClick={() => setIsPlaying(!isPlaying)}
+                        className={`
+                            flex items-center justify-center w-10 h-10 rounded-lg font-bold text-lg
+                            transition-colors
+                            ${isPlaying
+                                ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                                : 'bg-green-500 hover:bg-green-600 text-white'
+                            }
+                        `}
+                        title={isPlaying ? 'Pause animation' : 'Play animation'}
+                    >
+                        {isPlaying ? '⏸' : '▶'}
+                    </button>
+                    <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        step="0.1"
+                        value={angle}
+                        onChange={(e) => setAngle(parseFloat(e.target.value))}
+                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        disabled={isPlaying}
+                    />
                 </div>
             </ControlSection>
 
@@ -181,6 +197,13 @@ export const Controls: React.FC<ControlsProps> = ({
                     onChange={() => toggle('showXY')}
                     color="#64748b"
                     description="Coordinates on point"
+                />
+                <Toggle
+                    label="Axes Points"
+                    checked={toggles.axesIntersections}
+                    onChange={() => toggle('axesIntersections')}
+                    color="#94a3b8"
+                    description="(1,0), (0,1), (-1,0), (0,-1)"
                 />
             </ControlSection>
         </div>

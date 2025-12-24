@@ -97,6 +97,17 @@ const SingleGraph: React.FC<{
 
         ctx.stroke();
 
+        // Vertical line at current angle (faint indicator)
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(150, 150, 150, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        const currentX = mapX(currentAngle);
+        ctx.moveTo(currentX, PADDING_TOP);
+        ctx.lineTo(currentX, H - PADDING_BOTTOM);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
         // X-Axis Labels (0, 90, 180, 270, 360)
         ctx.fillStyle = theme.text;
         ctx.font = "10px sans-serif";
