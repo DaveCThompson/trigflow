@@ -3,8 +3,7 @@
  * Extracted from UnitCircleRenderer.ts for maintainability.
  */
 
-import { Point } from '../../../utils/math';
-import { UnitCircleState } from '../../../types';
+import { Point, UnitCircleState } from '../../../types';
 
 /**
  * Draw a line between two points.
@@ -83,7 +82,7 @@ export const drawQuadrants = (
     ctx.font = "bold 120px Times New Roman";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = theme.bg === '#212529' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
+    ctx.fillStyle = theme.isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
 
     // Q1: Top-Right
     ctx.fillText("I", CX + W / 4, CY - H / 4);

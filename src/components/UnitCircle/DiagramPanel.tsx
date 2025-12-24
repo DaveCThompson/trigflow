@@ -1,4 +1,5 @@
 import React from 'react';
+import { UnitCircleState } from '../../types';
 import {
     TangentProofStepper,
     GeneralProofStepper,
@@ -20,7 +21,7 @@ export type DiagramType =
 
 interface DiagramPanelProps {
     type: DiagramType;
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 export const DiagramPanel: React.FC<DiagramPanelProps> = ({ type, setToggles }) => {

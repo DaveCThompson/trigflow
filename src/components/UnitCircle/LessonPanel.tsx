@@ -17,9 +17,10 @@ interface LessonPanelProps {
     setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
     selectedLessonId: LessonId;
     onLessonChange: (id: LessonId) => void;
+    theme: UnitCircleState['theme'];
 }
 
-export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLessonId, onLessonChange }) => {
+export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLessonId, onLessonChange, theme }) => {
 
     // Apply lesson logic when selection changes
     useEffect(() => {
@@ -55,7 +56,7 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
 
                 {/* Render custom content for identities lesson, standard list for others */}
                 {selectedLessonId === 'identities' ? (
-                    <IdentitiesContent />
+                    <IdentitiesContent theme={theme} />
                 ) : (
                     <div className="space-y-3">
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">

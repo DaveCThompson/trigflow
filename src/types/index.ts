@@ -17,6 +17,8 @@ export interface TrigTheme {
     text: string;
     bg: string;
     comp: string;
+    /** Whether this is a dark theme - used for overlay/contrast decisions */
+    isDark: boolean;
 }
 
 export interface UnitCircleToggles {

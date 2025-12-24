@@ -248,6 +248,7 @@ export const UnitCircle: React.FC = () => {
                     setToggles={setToggles}
                     selectedLessonId={selectedLessonId}
                     onLessonChange={setSelectedLessonId}
+                    theme={theme}
                 />
             </div>
 

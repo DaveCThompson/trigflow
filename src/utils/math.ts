@@ -1,3 +1,5 @@
+import type { Point } from '../types';
+
 export const PI = Math.PI;
 export const TAU = Math.PI * 2;
 
@@ -10,13 +12,11 @@ export const normalizeAngle = (angle: number): number => {
     return a;
 };
 
-export const clamp = (val: number, min: number, max: number): number => 
+export const clamp = (val: number, min: number, max: number): number =>
     Math.min(Math.max(val, min), max);
 
-export interface Point {
-    x: number;
-    y: number;
-}
+// Re-export Point from central types for backward compatibility
+export type { Point };
 
 export const mapRange = (
     value: number,
@@ -31,15 +31,15 @@ export const mapRange = (
 // Canvas coordinate mapper
 // Maps unit circle coordinates (center 0,0, Y up) to Canvas coordinates (center CX,CY, Y down)
 export const createCoordinateMapper = (
-    cx: number, 
-    cy: number, 
+    cx: number,
+    cy: number,
     scale: number
 ) => {
     return (x: number, y: number): Point => {
         // Clamp to avoid Infinity issues in drawing
         const safeX = clamp(x, -1000, 1000);
         const safeY = clamp(y, -1000, 1000);
-        
+
         return {
             x: cx + safeX * scale,
             y: cy - safeY * scale // Invert Y for canvas

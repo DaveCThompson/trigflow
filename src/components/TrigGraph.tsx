@@ -183,7 +183,7 @@ const SingleGraph: React.FC<{
 
             ctx.beginPath();
             ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = theme.bg;
             ctx.fill();
             ctx.lineWidth = 2;
             ctx.strokeStyle = color;

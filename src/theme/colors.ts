@@ -12,7 +12,8 @@ export const LIGHT_THEME: TrigTheme = {
     axis: '#333333',
     text: '#333333',
     bg: '#ffffff',
-    comp: '#888888'
+    comp: '#888888',
+    isDark: false
 };
 
 export const DARK_THEME: TrigTheme = {
@@ -26,5 +27,6 @@ export const DARK_THEME: TrigTheme = {
     axis: '#ced4da',
     text: '#f8f9fa',
     bg: '#212529',
-    comp: '#adb5bd'
+    comp: '#adb5bd',
+    isDark: true
 };

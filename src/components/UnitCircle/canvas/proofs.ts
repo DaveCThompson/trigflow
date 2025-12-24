@@ -3,8 +3,7 @@
  * Extracted from UnitCircleRenderer.ts for maintainability.
  */
 
-import { Point } from '../../../utils/math';
-import { UnitCircleState } from '../../../types';
+import { Point, UnitCircleState } from '../../../types';
 import { drawLine, drawText } from './helpers';
 
 /**
