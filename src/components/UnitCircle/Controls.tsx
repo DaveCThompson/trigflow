@@ -114,7 +114,7 @@ export const Controls: React.FC<ControlsProps> = ({
                                 border: 3px solid var(--color-cos);
                                 box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                                 transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                                margin-top: -3px;
+                                margin-top: 0px;
                             }
                             input[type=range]::-webkit-slider-thumb:hover {
                                 transform: scale(1.15);
