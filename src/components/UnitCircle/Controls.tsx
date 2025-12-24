@@ -142,6 +142,13 @@ export const Controls: React.FC<ControlsProps> = ({
                     color={theme.cos}
                 />
                 <Toggle
+                    label="Cos on Comp Side"
+                    checked={toggles.cosOnCompSide ?? false}
+                    onChange={() => toggle('cosOnCompSide')}
+                    color={theme.cos}
+                    description="Draw cos from P to Y-axis"
+                />
+                <Toggle
                     label="Cotangent"
                     checked={toggles.cot}
                     onChange={() => toggle('cot')}
@@ -160,59 +167,59 @@ export const Controls: React.FC<ControlsProps> = ({
                     label="Complementary Angle"
                     checked={toggles.comp}
                     onChange={() => toggle('comp')}
-                    color="#aaaaaa"
+                    color={theme.comp}
                 />
                 <Toggle
                     label="Geometric Tangent (P-S)"
                     checked={toggles.geoTan}
                     onChange={() => toggle('geoTan')}
-                    color="#e67e22"
+                    color={theme.tan}
                 />
                 <Toggle
                     label="Geometric Cotangent (P-C)"
                     checked={toggles.geoCot}
                     onChange={() => toggle('geoCot')}
-                    color="#27ae60"
+                    color={theme.cot}
                 />
                 <Toggle
                     label="Similar Triangle (Sec)"
                     checked={toggles.similarSec}
                     onChange={() => toggle('similarSec')}
-                    color="#8e44ad"
+                    color={theme.sec}
                     description="O-P-S"
                 />
                 <Toggle
                     label="Similar Triangle (Csc)"
                     checked={toggles.similarCsc}
                     onChange={() => toggle('similarCsc')}
-                    color="#f1c40f"
+                    color={theme.csc}
                     description="O-P-C"
                 />
                 <Toggle
                     label="Hypotenuse (1)"
                     checked={toggles.hypotenuse}
                     onChange={() => toggle('hypotenuse')}
-                    color="#000000"
+                    color={theme.axis}
                 />
                 <Toggle
                     label="Show Quadrants"
                     checked={toggles.quadrants}
                     onChange={() => toggle('quadrants')}
-                    color="#6b7280"
+                    color={theme.text}
                     description="I, II, III, IV"
                 />
                 <Toggle
                     label="Show (x, y)"
                     checked={toggles.showXY}
                     onChange={() => toggle('showXY')}
-                    color="#64748b"
+                    color={theme.text}
                     description="Coordinates on point"
                 />
                 <Toggle
                     label="Axes Points"
                     checked={toggles.axesIntersections}
                     onChange={() => toggle('axesIntersections')}
-                    color="#94a3b8"
+                    color={theme.text}
                     description="(1,0), (0,1), (-1,0), (0,-1)"
                 />
             </ControlSection>

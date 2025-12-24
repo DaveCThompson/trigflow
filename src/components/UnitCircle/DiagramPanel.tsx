@@ -1,7 +1,22 @@
 import React from 'react';
-import { TangentProofStepper, GeneralProofStepper, PythagoreanStepper } from './steppers';
+import {
+    TangentProofStepper,
+    GeneralProofStepper,
+    PythagoreanStepper,
+    PythagIdentity1Stepper,
+    PythagIdentity2Stepper,
+    PythagIdentity3Stepper
+} from './steppers';
 
-export type DiagramType = 'none' | 'general_form' | 'pythagorean' | 'pythagorean_identity' | 'tangent_identity';
+export type DiagramType =
+    | 'none'
+    | 'general_form'
+    | 'pythagorean'
+    | 'pythagorean_identity'
+    | 'tangent_identity'
+    | 'pythag_identity_1'
+    | 'pythag_identity_2'
+    | 'pythag_identity_3';
 
 interface DiagramPanelProps {
     type: DiagramType;
@@ -17,12 +32,25 @@ export const DiagramPanel: React.FC<DiagramPanelProps> = ({ type, setToggles }) 
                 <GeneralProofStepper setToggles={setToggles} />
             )}
 
-            {(type === 'pythagorean' || type === 'pythagorean_identity') && (
+            {type === 'pythagorean' && (
                 <PythagoreanStepper setToggles={setToggles} />
             )}
 
             {type === 'tangent_identity' && (
                 <TangentProofStepper setToggles={setToggles} />
+            )}
+
+            {/* New split Pythagorean identity lessons */}
+            {(type === 'pythagorean_identity' || type === 'pythag_identity_1') && (
+                <PythagIdentity1Stepper setToggles={setToggles} />
+            )}
+
+            {type === 'pythag_identity_2' && (
+                <PythagIdentity2Stepper setToggles={setToggles} />
+            )}
+
+            {type === 'pythag_identity_3' && (
+                <PythagIdentity3Stepper setToggles={setToggles} />
             )}
         </div>
     );

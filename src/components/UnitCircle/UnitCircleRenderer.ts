@@ -441,8 +441,18 @@ export const drawUnitCircle = (
 
     // --- Separate Sin/Cos ---
     if (toggles.cos) {
-        drawLine(ctx, origin, pXAxis, theme.cos, 4);
-        drawText(ctx, "cos", { x: (CX + pXAxis.x) / 2, y: CY + 15 }, theme.cos);
+        if (toggles.cosOnCompSide) {
+            // Complementary position: cos is the horizontal segment from P to Y-axis
+            // This visualizes cos(θ) = sin(90°-θ) relationship
+            drawLine(ctx, pCircle, pYAxis, theme.cos, 4);
+            const labelX = pYAxis.x - 15;
+            const labelY = (pYAxis.y + pCircle.y) / 2;
+            drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right");
+        } else {
+            // Standard position: cos is the horizontal segment from O to (cos, 0)
+            drawLine(ctx, origin, pXAxis, theme.cos, 4);
+            drawText(ctx, "cos", { x: (CX + pXAxis.x) / 2, y: CY + 15 }, theme.cos);
+        }
     }
 
     if (toggles.sin) {

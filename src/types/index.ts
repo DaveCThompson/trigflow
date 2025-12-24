@@ -53,6 +53,9 @@ export interface UnitCircleToggles {
     showXY: boolean;
     /** Shows unit circle axis intersection points: (1,0), (-1,0), (0,1), (0,-1) */
     axesIntersections: boolean;
+    /** When true, draws cosine on the complementary side (P to Y-axis) instead of standard position (O to X-axis).
+     *  Used in co-function lessons to demonstrate cos(θ) = sin(90°-θ) visually. */
+    cosOnCompSide?: boolean;
 
     // === Proof Visualization Toggles ===
     /** Proof mode: Shows sin/cos right triangle with labeled sides */

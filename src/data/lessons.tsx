@@ -7,7 +7,7 @@ import React from 'react';
 import { UnitCircleState } from '../types';
 import { DiagramType } from '../components/UnitCircle/DiagramPanel';
 
-export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity' | 'identities';
+export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity' | 'pythag_identity_2' | 'pythag_identity_3' | 'identities';
 
 export interface LessonData {
     id: LessonId;
@@ -22,6 +22,7 @@ export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
     sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
     hypotenuse: false, quadrants: false, showXY: false, geoTan: false, geoCot: false,
     similarSec: false, similarCsc: false, comp: false, axesIntersections: false,
+    cosOnCompSide: false,
     proof_sin_tri: false, proof_tan_tri: false,
     proof_pythag_squares: false, proof_pythag_general: false, proof_pythag_rearrange: false
 };
@@ -211,21 +212,53 @@ export const LESSONS: LessonData[] = [
     },
     {
         id: 'pythagorean_identity',
-        title: 'Pythagorean Identity',
+        title: 'Identity: sin² + cos² = 1',
         quote: <>
-            <strong className="font-extrabold text-2xl block mb-2">sin²(θ) + cos²(θ) = 1</strong>
+            <strong className="font-extrabold text-2xl block mb-2">sin²θ + cos²θ = 1</strong>
         </>,
         details: [
-            "Applying the Pythagorean Theorem to the Unit Circle.",
-            "a = cos(θ), b = sin(θ), c = 1",
-            "Therefore: cos²(θ) + sin²(θ) = 1² = 1"
+            "The fundamental Pythagorean identity.",
+            "Derived from applying a² + b² = c² to the unit circle."
         ],
         diagram: 'pythagorean_identity',
         apply: (set) => set(prev => ({
             ...prev,
             ...RESET_DEFAULTS,
-            sin: true, cos: true, hypotenuse: true,
-            proof_pythag_squares: true
+            sin: true, cos: true, hypotenuse: true
+        }))
+    },
+    {
+        id: 'pythag_identity_2',
+        title: 'Identity: tan² + 1 = sec²',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">tan²θ + 1 = sec²θ</strong>
+        </>,
+        details: [
+            "Derived by dividing sin² + cos² = 1 by cos².",
+            "Shows the relationship between tangent and secant."
+        ],
+        diagram: 'pythag_identity_2',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            tan: true, sec: true, hypotenuse: true, geoTan: true
+        }))
+    },
+    {
+        id: 'pythag_identity_3',
+        title: 'Identity: 1 + cot² = csc²',
+        quote: <>
+            <strong className="font-extrabold text-2xl block mb-2">1 + cot²θ = csc²θ</strong>
+        </>,
+        details: [
+            "Derived by dividing sin² + cos² = 1 by sin².",
+            "Shows the relationship between cotangent and cosecant."
+        ],
+        diagram: 'pythag_identity_3',
+        apply: (set) => set(prev => ({
+            ...prev,
+            ...RESET_DEFAULTS,
+            cot: true, csc: true, hypotenuse: true, geoCot: true
         }))
     },
     {
