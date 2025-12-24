@@ -6,8 +6,10 @@
 import React from 'react';
 import { AlgebraicStepper, AlgebraicStep } from './AlgebraicStepper';
 
+import { UnitCircleState } from '../../../types';
+
 interface PythagIdentity3StepperProps {
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 // Styled function names matching the color theme
@@ -78,7 +80,7 @@ export const PythagIdentity3Stepper: React.FC<PythagIdentity3StepperProps> = ({ 
     React.useEffect(() => {
         if (!setToggles) return;
 
-        const resetToggles = {
+        const resetToggles: Partial<UnitCircleState['toggles']> = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
             proof_sin_tri: false, proof_tan_tri: false, proof_general_unit: false, proof_general_target: false,
@@ -87,7 +89,7 @@ export const PythagIdentity3Stepper: React.FC<PythagIdentity3StepperProps> = ({ 
 
         // Show cot/csc visualization for later steps
         if (step <= 1) {
-            setToggles((prev: any) => ({
+            setToggles(prev => ({
                 ...prev,
                 ...resetToggles,
                 sin: true,
@@ -95,7 +97,7 @@ export const PythagIdentity3Stepper: React.FC<PythagIdentity3StepperProps> = ({ 
                 hypotenuse: true
             }));
         } else {
-            setToggles((prev: any) => ({
+            setToggles(prev => ({
                 ...prev,
                 ...resetToggles,
                 cot: true,

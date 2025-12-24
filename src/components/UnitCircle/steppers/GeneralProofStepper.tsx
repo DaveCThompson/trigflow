@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { UnitCircleState } from '../../../types';
+
 interface GeneralProofStepperProps {
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 export const GeneralProofStepper: React.FC<GeneralProofStepperProps> = ({ setToggles }) => {
@@ -10,18 +12,18 @@ export const GeneralProofStepper: React.FC<GeneralProofStepperProps> = ({ setTog
     React.useEffect(() => {
         if (!setToggles) return;
 
-        const resetToggles = {
+        const resetToggles: Partial<UnitCircleState['toggles']> = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
             proof_sin_tri: false, proof_tan_tri: false, proof_general_unit: false, proof_general_target: false, proof_pythag_squares: false
         };
 
         if (step === 0) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_general_unit: true }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_general_unit: true }));
         } else if (step === 1) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_general_unit: true, proof_general_target: true }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_general_unit: true, proof_general_target: true }));
         } else if (step === 2) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_general_unit: true, proof_general_target: true }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_general_unit: true, proof_general_target: true }));
         }
     }, [step, setToggles]);
 

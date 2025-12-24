@@ -15,6 +15,7 @@ export interface ProofContext {
     origin: Point;
     pCircle: Point;
     pXAxis: Point;
+    pYAxis: Point;
     CX: number;
     CY: number;
     map: (x: number, y: number) => Point;
@@ -22,6 +23,9 @@ export interface ProofContext {
     cos: number;
     sin: number;
     tan: number;
+    sec: number;
+    csc: number;
+    cot: number;
     theme: UnitCircleState['theme'];
 }
 

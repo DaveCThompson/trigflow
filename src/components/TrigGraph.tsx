@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import { UnitCircleState } from '../types';
+import { UnitCircleState, TrigValues } from '../types';
 import { mapRange, toRad } from '../utils/math';
 
 interface TrigGraphProps {
-    trace: Array<{ angle: number, values: { sin: number, cos: number, tan: number, cot: number, sec: number, csc: number } }>;
+    trace: Array<{ angle: number, values: TrigValues }>;
     toggles: UnitCircleState['toggles'];
     theme: UnitCircleState['theme'];
     angleUnit: 'deg' | 'rad';
@@ -12,7 +12,7 @@ interface TrigGraphProps {
 }
 
 const SingleGraph: React.FC<{
-    dataKey: keyof TrigGraphProps['trace'][0]['values'];
+    dataKey: keyof TrigValues;
     label: string;
     color: string;
     trace: TrigGraphProps['trace'];
@@ -236,7 +236,7 @@ export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, ang
                 {activeGraphs.map(g => (
                     <SingleGraph
                         key={g.key}
-                        dataKey={g.key as any}
+                        dataKey={g.key as keyof TrigValues}
                         label={g.label}
                         color={g.color}
                         trace={trace}

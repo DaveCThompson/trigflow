@@ -1,8 +1,9 @@
 import React from 'react';
 import { PythagoreanProofCanvas } from '../PythagoreanProofCanvas';
+import { UnitCircleState } from '../../../types';
 
 interface PythagoreanStepperProps {
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggles }) => {
@@ -11,14 +12,14 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
     React.useEffect(() => {
         if (!setToggles) return;
 
-        const resetToggles = {
+        const resetToggles: Partial<UnitCircleState['toggles']> = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
             proof_sin_tri: false, proof_tan_tri: false, proof_general_unit: false, proof_general_target: false,
             proof_pythag_squares: false, proof_pythag_rearrange: true, pythagStep: step
         };
 
-        setToggles((prev: any) => ({ ...prev, ...resetToggles }));
+        setToggles(prev => ({ ...prev, ...resetToggles }));
     }, [step, setToggles]);
 
     const stepContent = [

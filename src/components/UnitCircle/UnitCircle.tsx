@@ -9,6 +9,7 @@ import { DiagramPanel } from './DiagramPanel';
 import { ReadoutPanel } from './ReadoutPanel';
 import { LIGHT_THEME, DARK_THEME } from '../../theme/colors';
 import { ThemeContext } from '../../context/ThemeContext';
+import { TrigValues } from '../../types';
 
 export const UnitCircle: React.FC = () => {
     // State
@@ -59,7 +60,7 @@ export const UnitCircle: React.FC = () => {
     }, [isPlaying]);
 
     // Trace History for Graph
-    const [trace, setTrace] = useState<Array<{ angle: number, values: any }>>([]);
+    const [trace, setTrace] = useState<Array<{ angle: number, values: TrigValues }>>([]);
 
     // Dark Mode Detection (Basic system preference)
     const [isDarkMode, setIsDarkMode] = useState(false);

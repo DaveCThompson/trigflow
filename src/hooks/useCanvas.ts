@@ -8,6 +8,7 @@ export const useCanvas = (
         animate?: boolean
     }
 ) => {
+    const { width, height, animate = false } = options;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const requestRef = useRef<number>();
     const frameCountRef = useRef(0);
@@ -24,7 +25,6 @@ export const useCanvas = (
 
             // Handle DPI scaling
             const dpr = window.devicePixelRatio || 1;
-            const { width, height } = options;
 
             // Set display size (css pixels)
             canvas.style.width = `${width}px`;
@@ -48,7 +48,7 @@ export const useCanvas = (
 
             draw(ctx, frameCountRef.current);
 
-            if (options.animate) {
+            if (animate) {
                 requestRef.current = requestAnimationFrame(render);
             }
         };
@@ -58,7 +58,7 @@ export const useCanvas = (
         return () => {
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
-    }, [draw, options.animate, options.width, options.height]);
+    }, [draw, width, height, animate]);
 
     return canvasRef;
 };

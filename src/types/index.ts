@@ -21,6 +21,15 @@ export interface TrigTheme {
     isDark: boolean;
 }
 
+export interface TrigValues {
+    sin: number;
+    cos: number;
+    tan: number;
+    cot: number;
+    sec: number;
+    csc: number;
+}
+
 export interface UnitCircleToggles {
     // === Primary Function Lines ===
     /** Shows the vertical sine line from point P to the x-axis (red) */

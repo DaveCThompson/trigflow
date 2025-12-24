@@ -6,8 +6,10 @@
 import React from 'react';
 import { AlgebraicStepper, AlgebraicStep } from './AlgebraicStepper';
 
+import { UnitCircleState } from '../../../types';
+
 interface PythagIdentity1StepperProps {
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 // Styled function names matching the color theme
@@ -55,7 +57,7 @@ export const PythagIdentity1Stepper: React.FC<PythagIdentity1StepperProps> = ({ 
         if (!setToggles) return;
 
         // Show the sine triangle visualization for this identity
-        const resetToggles = {
+        const resetToggles: Partial<UnitCircleState['toggles']> = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
             proof_sin_tri: false, proof_tan_tri: false, proof_general_unit: false, proof_general_target: false,
@@ -64,7 +66,7 @@ export const PythagIdentity1Stepper: React.FC<PythagIdentity1StepperProps> = ({ 
 
         // Show sin/cos/hypotenuse for steps 1+
         if (step >= 0) {
-            setToggles((prev: any) => ({
+            setToggles(prev => ({
                 ...prev,
                 ...resetToggles,
                 sin: true,

@@ -1,7 +1,8 @@
 import React from 'react';
+import { UnitCircleState } from '../../../types';
 
 interface TangentProofStepperProps {
-    setToggles?: React.Dispatch<React.SetStateAction<any>>;
+    setToggles?: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
 }
 
 export const TangentProofStepper: React.FC<TangentProofStepperProps> = ({ setToggles }) => {
@@ -10,18 +11,18 @@ export const TangentProofStepper: React.FC<TangentProofStepperProps> = ({ setTog
     React.useEffect(() => {
         if (!setToggles) return;
 
-        const resetToggles = {
+        const resetToggles: Partial<UnitCircleState['toggles']> = {
             sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
             similarSec: false, hypotenuse: false, quadrants: false, geoTan: false, geoCot: false, similarCsc: false,
             proof_sin_tri: false, proof_tan_tri: false, proof_general_unit: false, proof_general_target: false, proof_pythag_squares: false
         };
 
         if (step === 0) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_sin_tri: true, proof_tan_tri: false }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_sin_tri: true, proof_tan_tri: false }));
         } else if (step === 1) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_sin_tri: false, proof_tan_tri: true }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_sin_tri: false, proof_tan_tri: true }));
         } else if (step === 2) {
-            setToggles((prev: any) => ({ ...prev, ...resetToggles, proof_sin_tri: true, proof_tan_tri: true }));
+            setToggles(prev => ({ ...prev, ...resetToggles, proof_sin_tri: true, proof_tan_tri: true }));
         }
     }, [step, setToggles]);
 
