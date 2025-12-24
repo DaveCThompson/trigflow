@@ -1,6 +1,6 @@
 # Animation Strategy
 
-Philosophy and principles for animations in TrigFlow.
+Philosophy and principles for animations in Visual Trig.
 
 ## Core Philosophy
 

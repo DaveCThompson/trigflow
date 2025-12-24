@@ -1,6 +1,6 @@
 # Education Strategy
 
-Pedagogical approach for teaching trigonometry through TrigFlow.
+Pedagogical approach for teaching trigonometry through Visual Trig.
 
 ## Core Philosophy
 

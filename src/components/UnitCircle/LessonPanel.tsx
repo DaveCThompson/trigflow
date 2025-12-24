@@ -1,5 +1,5 @@
 /**
- * Lesson panel component for TrigFlow educational content navigation.
+ * Lesson panel component for Visual Trig educational content navigation.
  * Refactored to import lesson data and identity components from separate modules.
  */
 

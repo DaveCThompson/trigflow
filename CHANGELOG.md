@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to TrigFlow will be documented in this file.
+All notable changes to Visual Trig will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Cosine Visualization** - Now always uses complementary position (vertical line from point to Y-axis)
 - **Graph Header** - Renamed from "Historical Graphs" to "Graphs"
-- **Footer** - Updated to show "TrigFlow • v0.1.0"
+- **Footer** - Updated to show "Visual Trig • v0.1.0"
 - **Dropdown Styling** - Enhanced with better padding, focus rings, and borders
 - **Theta Wedge** - Now uses theme-aware color instead of hardcoded blue
 
@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.0] - 2025-12-23
 
 ### Added
-- Initial release of TrigFlow
+- Initial release of Visual Trig
 - Interactive unit circle visualization
 - Lesson system for educational content
 - Proof visualizations for trigonometric identities

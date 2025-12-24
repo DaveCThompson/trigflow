@@ -1,5 +1,5 @@
 /**
- * Trig Identities content component for TrigFlow.
+ * Trig Identities content component for Visual Trig.
  * Extracted from LessonPanel.tsx for maintainability.
  */
 

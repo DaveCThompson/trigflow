@@ -1,5 +1,5 @@
 /**
- * Shared Theme Context for TrigFlow.
+ * Shared Theme Context for Visual Trig.
  * Provides theme colors to all nested components.
  */
 

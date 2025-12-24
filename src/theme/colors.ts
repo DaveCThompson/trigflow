@@ -1,4 +1,4 @@
-// Theme color configurations for TrigFlow
+// Theme color configurations for Visual Trig
 import { TrigTheme } from '../types';
 import { withAlpha } from './overlays';
 

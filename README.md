@@ -1,10 +1,10 @@
-# TrigFlow
+# Visual Trig
 
 **Interactive Trigonometry Visualization**
 
 An educational web app that makes trigonometric concepts intuitive through interactive visualizations and animated proofs.
 
-![TrigFlow Screenshot](docs/assets/screenshot.png)
+![Visual Trig Screenshot](docs/assets/screenshot.png)
 
 ## Features
 

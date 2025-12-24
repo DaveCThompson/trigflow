@@ -1,7 +1,7 @@
 # design_facelift_plan.md
 
 ## Overview
-This document outlines the master plan for the "Pastel Aesthetic Facelift" of TrigFlow. The goal is to transition from the current "functional" design to a high-craft "Pastel & Friendly" aesthetic, supporting both Light and Dark modes using OKLCH color spaces.
+This document outlines the master plan for the "Pastel Aesthetic Facelift" of Visual Trig. The goal is to transition from the current "functional" design to a high-craft "Pastel & Friendly" aesthetic, supporting both Light and Dark modes using OKLCH color spaces.
 
 ## 1. Typography & Global Layout
 **Objective:** Friendly, readable, and modern.

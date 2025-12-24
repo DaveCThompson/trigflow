@@ -4,7 +4,7 @@ Instructions for AI agents working on this codebase.
 
 ## Project Overview
 
-**TrigFlow** is an interactive educational web app for visualizing trigonometric concepts. It uses React, TypeScript, Canvas 2D, and GSAP animations.
+**Visual Trig** is an interactive educational web app for visualizing trigonometric concepts. It uses React, TypeScript, Canvas 2D, and GSAP animations.
 
 ## Architecture
 

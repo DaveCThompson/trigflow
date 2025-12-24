@@ -52,7 +52,7 @@ The interface moves from "Functional" to "Premium Educational".
 
 ```ascii
 +-----------------------------------------------------------------------+
-|  [Logo] TrigFlow (Gradient Text)                    [Theme] [Github]  |
+|  [Logo] Visual Trig (Gradient Text)                    [Theme] [Github]  |
 +-----------------------------------------------------------------------+
 |                                                                       |
 |  +----------------+  +--------------------------------+  +----------+ |
@@ -76,7 +76,7 @@ The interface moves from "Functional" to "Premium Educational".
 |                                                          +----------+ |
 |                                                                       |
 +-----------------------------------------------------------------------+
-|  TrigFlow v0.1.0 • Built with <3                                      |
+|  Visual Trig v0.1.0 • Built with <3                                      |
 +-----------------------------------------------------------------------+
 ```
 

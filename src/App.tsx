@@ -15,8 +15,8 @@ function App() {
                         <ThemeToggle />
                     </div>
 
-                    <h1 className="text-5xl font-heading font-extrabold bg-gradient-to-r from-trig-cos via-trig-sec to-trig-sin bg-clip-text text-transparent mb-3 drop-shadow-sm tracking-tight">
-                        TrigFlow
+                    <h1 className="text-5xl font-heading font-extrabold text-trig-cos mb-3 drop-shadow-sm tracking-tight">
+                        Visual Trig
                     </h1>
                     <p className="text-ui-text-muted font-heading font-bold text-lg tracking-wide opacity-80">
                         Interactive Trigonometric Unit Circle
@@ -28,7 +28,7 @@ function App() {
                 </main>
 
                 <footer className="mt-12 text-ui-text-muted text-sm pb-8 flex items-center gap-2">
-                    <span className="font-bold">TrigFlow</span>
+                    <span className="font-bold">Visual Trig</span>
                     <span className="opacity-50">•</span>
                     <span>v0.1.0</span>
                 </footer>

@@ -1,5 +1,5 @@
 /**
- * Lesson data definitions for TrigFlow educational content.
+ * Lesson data definitions for Visual Trig educational content.
  * Extracted from LessonPanel.tsx for maintainability.
  */
 

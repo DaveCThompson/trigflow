@@ -1,6 +1,6 @@
 # Visualization Strategy
 
-Design principles for mathematical visualizations in TrigFlow.
+Design principles for mathematical visualizations in Visual Trig.
 
 ## Core Philosophy
 

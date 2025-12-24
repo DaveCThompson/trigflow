@@ -1,5 +1,5 @@
 /**
- * Canvas drawing helper functions for TrigFlow visualizations.
+ * Canvas drawing helper functions for Visual Trig visualizations.
  * Updated for Pastel Design Facelift (Nunito font, semantic colors).
  */
 

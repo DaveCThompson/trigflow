@@ -1,4 +1,4 @@
-# TrigFlow Styling Guide
+# Visual Trig Styling Guide
 
 Canonical reference for visual design tokens and patterns.
 

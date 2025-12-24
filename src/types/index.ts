@@ -1,4 +1,4 @@
-// Shared TypeScript interfaces for TrigFlow
+// Shared TypeScript interfaces for Visual Trig
 
 export interface Point {
     x: number;

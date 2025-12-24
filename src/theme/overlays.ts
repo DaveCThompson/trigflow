@@ -1,5 +1,5 @@
 /**
- * Theme overlay utilities for TrigFlow.
+ * Theme overlay utilities for Visual Trig.
  * Provides helpers for creating alpha-blended color variations.
  */
 
