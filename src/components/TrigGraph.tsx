@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { UnitCircleState } from './UnitCircle/UnitCircleRenderer';
+import { UnitCircleState } from '../types';
 import { mapRange, toRad } from '../utils/math';
 
 interface TrigGraphProps {
@@ -99,7 +99,7 @@ const SingleGraph: React.FC<{
 
         // Vertical line at current angle (faint indicator)
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(150, 150, 150, 0.4)';
+        ctx.strokeStyle = theme.isDark ? 'rgba(200, 200, 200, 0.3)' : 'rgba(100, 100, 100, 0.3)';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
         const currentX = mapX(currentAngle);

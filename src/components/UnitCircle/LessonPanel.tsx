@@ -47,6 +47,39 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                         <option key={l.id} value={l.id}>{l.title}</option>
                     ))}
                 </select>
+
+                {/* Navigation Controls */}
+                <div className="flex items-center justify-between mt-3">
+                    <button
+                        onClick={() => {
+                            const currentIndex = LESSONS.findIndex(l => l.id === selectedLessonId);
+                            if (currentIndex > 0) {
+                                onLessonChange(LESSONS[currentIndex - 1].id);
+                            }
+                        }}
+                        disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === 0}
+                        className="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                        ← Previous
+                    </button>
+
+                    <span className="text-xs text-gray-400">
+                        {LESSONS.findIndex(l => l.id === selectedLessonId) + 1} of {LESSONS.length}
+                    </span>
+
+                    <button
+                        onClick={() => {
+                            const currentIndex = LESSONS.findIndex(l => l.id === selectedLessonId);
+                            if (currentIndex < LESSONS.length - 1) {
+                                onLessonChange(LESSONS[currentIndex + 1].id);
+                            }
+                        }}
+                        disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === LESSONS.length - 1}
+                        className="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Next →
+                    </button>
+                </div>
             </div>
 
             <div className="space-y-6">

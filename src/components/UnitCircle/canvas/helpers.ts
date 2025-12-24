@@ -28,6 +28,7 @@ export const drawLine = (
 
 /**
  * Draw text with a soft halo for legibility.
+ * @param haloColor - Optional custom halo color (defaults to semi-transparent gray)
  */
 export const drawText = (
     ctx: CanvasRenderingContext2D,
@@ -35,11 +36,12 @@ export const drawText = (
     p: Point,
     color: string,
     align: CanvasTextAlign = 'center',
-    base: CanvasTextBaseline = 'middle'
+    base: CanvasTextBaseline = 'middle',
+    haloColor = 'rgba(128, 128, 128, 0.2)'
 ): void => {
     ctx.font = "bold 14px Inter, Arial, sans-serif";
     ctx.lineWidth = 3;
-    ctx.strokeStyle = "rgba(128,128,128,0.2)";
+    ctx.strokeStyle = haloColor;
     ctx.textAlign = align;
     ctx.textBaseline = base;
     ctx.strokeText(str, p.x, p.y);

@@ -50,15 +50,41 @@ canvas.height = height * dpr;
 ctx.scale(dpr, dpr);
 ```
 
+## Overlay Utilities
+
+Use `theme/overlays.ts` for transparent color variations:
+
+```typescript
+import { withAlpha, OVERLAY_ALPHA } from '../theme/overlays';
+
+// Fill with 10% opacity
+ctx.fillStyle = withAlpha(theme.sin, OVERLAY_ALPHA.fill);
+
+// Custom alpha
+ctx.fillStyle = withAlpha(theme.cos, 0.25);
+```
+
+### Preset Alpha Values
+
+| Token | Value | Use Case |
+|-------|-------|----------|
+| `subtle` | 0.05 | Large background areas |
+| `fill` | 0.10 | Standard shape fills |
+| `medium` | 0.15 | Emphasized fills |
+| `hover` | 0.20 | Hover state backgrounds |
+| `strong` | 0.30 | Strong emphasis |
+
 ## Tailwind Tokens
 
 Colors are available via Tailwind classes:
-- `text-trig-sin`, `bg-trig-sin`, `border-trig-sin`
-- `text-trig-cos`, `bg-trig-cos`, etc.
+- Trig functions: `text-trig-sin`, `bg-trig-sin`, `border-trig-sin`, etc.
+- UI colors: `text-ui-grid-light`, `bg-ui-bg-dark`, etc.
 
 ## Sources of Truth
 
 - **Color definitions**: `src/theme/colors.ts`
+- **Overlay utilities**: `src/theme/overlays.ts`
+- **Theme context**: `src/context/ThemeContext.tsx`
 - **Tailwind tokens**: `tailwind.config.js`
 - **Types**: `src/types/index.ts`
 
@@ -68,9 +94,11 @@ Colors are available via Tailwind classes:
 ```tsx
 // BAD - will break if theme changes
 <Toggle color="#e74c3c" />
+ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
 
-// GOOD - uses theme from props
+// GOOD - uses theme from props/context
 <Toggle color={theme.sin} />
+ctx.fillStyle = withAlpha(theme.cos, OVERLAY_ALPHA.medium);
 ```
 
 ### ❌ Duplicate Type Definitions
@@ -79,6 +107,15 @@ Colors are available via Tailwind classes:
 interface UnitCircleState { ... }
 
 // GOOD - imports from single source
+import { UnitCircleState } from '../../types';
+```
+
+### ❌ Wrong Import Source
+```typescript
+// BAD - imports from re-export
+import { UnitCircleState } from './UnitCircleRenderer';
+
+// GOOD - imports from canonical source
 import { UnitCircleState } from '../../types';
 ```
 
@@ -94,8 +131,11 @@ ctx.arc(CX, CY, RADIUS_SCALE, 0, Math.PI * 2);
 
 ## Best Practices
 
-1. **Import theme colors** via props, never hardcode hex values
+1. **Import theme colors** via props or `useTheme()` context, never hardcode hex values
 2. **Use canvas/helpers.ts** for drawing primitives
-3. **Test both light and dark modes** after color changes
-4. **Run `npm run build`** to catch TypeScript errors before committing
+3. **Use theme/overlays.ts** for transparent fills
+4. **Test both light and dark modes** after color changes
+5. **Run `npm run build`** to catch TypeScript errors before committing
 
+---
+*Last updated: 2025-12-24*

@@ -15,19 +15,25 @@ src/
 │   │   ├── UnitCircle.tsx    # Main container with state management
 │   │   ├── UnitCircleRenderer.ts # Canvas drawing (imports from canvas/)
 │   │   ├── canvas/           # Extracted canvas helpers
-│   │   │   └── helpers.ts    # drawLine, drawText, drawPoint, drawQuadrants
+│   │   │   ├── helpers.ts    # drawLine, drawText, drawPoint, drawQuadrants
+│   │   │   └── proofs.ts     # Proof visualization functions
 │   │   ├── LessonPanel.tsx   # Lesson content & selection
 │   │   ├── Controls.tsx      # Toggle controls (uses theme colors)
 │   │   ├── DiagramPanel.tsx  # Proof stepper container
 │   │   └── steppers/         # Interactive proof steppers
 │   ├── TrigGraph.tsx         # Waveform graphs
 │   └── shared/               # Reusable UI components
+├── context/
+│   └── ThemeContext.tsx      # App-level theme provider
+├── data/
+│   └── lessons.tsx           # Lesson definitions
 ├── hooks/
 │   └── useCanvas.ts          # Canvas rendering hook
 ├── types/
 │   └── index.ts              # TypeScript interfaces (SINGLE SOURCE)
 ├── theme/
-│   └── colors.ts             # Color definitions (LIGHT_THEME, DARK_THEME)
+│   ├── colors.ts             # Color definitions (LIGHT_THEME, DARK_THEME)
+│   └── overlays.ts           # Alpha-blending utilities (withAlpha, OVERLAY_ALPHA)
 └── utils/
     └── math.ts               # Math utilities (toRad, toDeg, etc.)
 ```
@@ -38,11 +44,13 @@ src/
 
 2. **GSAP Animations**: Use GSAP timelines for sequenced animations. Always update React state in `onUpdate` callbacks.
 
-3. **Lesson System**: Add new lessons to `LESSONS` array in `LessonPanel.tsx`. Each lesson has an `apply()` function that sets toggles.
+3. **Lesson System**: Add new lessons to `LESSONS` array in `data/lessons.tsx`. Each lesson has an `apply()` function that sets toggles.
 
 4. **Type Definitions**: Types are defined ONCE in `types/index.ts`. Import from there, never duplicate.
 
-5. **Theme Colors**: Pass theme via props, never hardcode hex values in components. See `STYLING-GUIDE.md`.
+5. **Theme Colors**: Use `ThemeContext` for nested components. Pass theme via props for canvas. Never hardcode hex values.
+
+6. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
 
 ## Avoiding Common Errors
 
@@ -50,8 +58,9 @@ src/
 
 1. **Unused imports**: Remove imports when extracting code to new files
 2. **Duplicate types**: Always import from `types/index.ts`, never redefine
-3. **Hardcoded colors**: Use `theme.sin`, `theme.cos`, etc. from props
-4. **Missing props**: When adding props to a component, update all call sites
+3. **Hardcoded colors**: Use `theme.sin`, `theme.cos`, etc. from props or context
+4. **Wrong import source**: Import `UnitCircleState` from `types`, not from `UnitCircleRenderer`
+5. **Missing props**: When adding props to a component, update all call sites
 
 ### Build Verification
 
@@ -61,10 +70,16 @@ npm run build    # Catches TypeScript errors
 npm run lint     # Catches style issues
 ```
 
+## Agent Workflows
+
+Use `/add-toggle`, `/add-lesson`, or `/add-proof-visualization` slash commands for step-by-step guidance.
+
 ## Adding Features
 
-1. **New Toggle**: Add to `UnitCircleToggles` interface in `types/index.ts`
-2. **New Drawing**: Add to `UnitCircleRenderer.ts`, use helpers from `canvas/helpers.ts`
-3. **New Lesson**: Add to `LESSONS` array in `LessonPanel.tsx`
+1. **New Toggle**: See `.agent/workflows/add-toggle.md`
+2. **New Lesson**: See `.agent/workflows/add-lesson.md`
+3. **New Proof**: See `.agent/workflows/add-proof-visualization.md`
 4. **New Helper**: Add to `canvas/helpers.ts` with JSDoc comment
 
+---
+*Last updated: 2025-12-24*

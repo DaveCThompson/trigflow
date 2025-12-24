@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { UnitCircleState } from './UnitCircleRenderer';
+import { UnitCircleState } from '../../types';
 import { Toggle } from '../shared/Toggle';
 import { ControlSection } from '../shared/ControlSection';
 
@@ -142,11 +142,11 @@ export const Controls: React.FC<ControlsProps> = ({
                     color={theme.cos}
                 />
                 <Toggle
-                    label="Cos on Comp Side"
+                    label="Cosine (Comp. Position)"
                     checked={toggles.cosOnCompSide ?? false}
                     onChange={() => toggle('cosOnCompSide')}
                     color={theme.cos}
-                    description="Draw cos from P to Y-axis"
+                    description="Shows cos from point to Y-axis"
                 />
                 <Toggle
                     label="Cotangent"
@@ -162,61 +162,65 @@ export const Controls: React.FC<ControlsProps> = ({
                 />
             </ControlSection>
 
-            <ControlSection title="Geometry">
+            <ControlSection title="Advanced Geometry" defaultExpanded={false}>
                 <Toggle
-                    label="Complementary Angle"
+                    label="Complementary Angle (α)"
                     checked={toggles.comp}
                     onChange={() => toggle('comp')}
                     color={theme.comp}
+                    description="Shows 90° - θ relationship"
                 />
                 <Toggle
-                    label="Geometric Tangent (P-S)"
+                    label="Tangent Construction"
                     checked={toggles.geoTan}
                     onChange={() => toggle('geoTan')}
                     color={theme.tan}
+                    description="Line from point to x=1"
                 />
                 <Toggle
-                    label="Geometric Cotangent (P-C)"
+                    label="Cotangent Construction"
                     checked={toggles.geoCot}
                     onChange={() => toggle('geoCot')}
                     color={theme.cot}
+                    description="Line from point to y=1"
                 />
                 <Toggle
-                    label="Similar Triangle (Sec)"
+                    label="Secant Triangle"
                     checked={toggles.similarSec}
                     onChange={() => toggle('similarSec')}
                     color={theme.sec}
-                    description="O-P-S"
+                    description="Similar triangle visualization"
                 />
                 <Toggle
-                    label="Similar Triangle (Csc)"
+                    label="Cosecant Triangle"
                     checked={toggles.similarCsc}
                     onChange={() => toggle('similarCsc')}
                     color={theme.csc}
-                    description="O-P-C"
+                    description="Similar triangle visualization"
                 />
                 <Toggle
-                    label="Hypotenuse (1)"
+                    label="Radius (Hypotenuse)"
                     checked={toggles.hypotenuse}
                     onChange={() => toggle('hypotenuse')}
                     color={theme.axis}
+                    description="Unit length = 1"
                 />
                 <Toggle
-                    label="Show Quadrants"
+                    label="Quadrant Labels"
                     checked={toggles.quadrants}
                     onChange={() => toggle('quadrants')}
                     color={theme.text}
-                    description="I, II, III, IV"
+                    description="Shows I, II, III, IV"
                 />
                 <Toggle
-                    label="Show (x, y)"
+                    label="Point Coordinates"
                     checked={toggles.showXY}
                     onChange={() => toggle('showXY')}
                     color={theme.text}
-                    description="Coordinates on point"
+                    description="Shows (x, y) at point"
                 />
                 <Toggle
-                    label="Axes Points"
+                    label="Axis Intersections"
                     checked={toggles.axesIntersections}
                     onChange={() => toggle('axesIntersections')}
                     color={theme.text}

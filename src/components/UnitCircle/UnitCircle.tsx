@@ -8,6 +8,7 @@ import { TrigGraph } from '../TrigGraph';
 import { DiagramPanel } from './DiagramPanel';
 import { ReadoutPanel } from './ReadoutPanel';
 import { LIGHT_THEME, DARK_THEME } from '../../theme/colors';
+import { ThemeContext } from '../../context/ThemeContext';
 
 export const UnitCircle: React.FC = () => {
     // State
@@ -240,73 +241,75 @@ export const UnitCircle: React.FC = () => {
     const showDiagram = currentLesson && currentLesson.diagram !== 'none';
 
     return (
-        <div className="flex flex-col xl:flex-row gap-6 items-start p-8 min-h-screen text-slate-800 dark:text-slate-200 transition-colors duration-300">
-            {/* 1. Left Column: Lessons */}
-            <div className="w-full xl:w-[320px] flex-shrink-0 flex flex-col gap-6 order-2 xl:order-1">
-                <LessonPanel
-                    toggles={toggles}
-                    setToggles={setToggles}
-                    selectedLessonId={selectedLessonId}
-                    onLessonChange={setSelectedLessonId}
-                    theme={theme}
-                />
-            </div>
-
-            {/* 2. Center Column: Canvas & Graphs */}
-            <div className="flex-grow w-full flex flex-col gap-6 order-1 xl:order-2">
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-300 relative flex justify-center">
-                    <canvas
-                        ref={canvasRef}
-                        onMouseDown={onMouseDown}
-                        onMouseMove={onMouseMove}
-                        onMouseUp={onMouseUp}
-                        onMouseLeave={onMouseUp}
-                        onTouchStart={onTouchStart}
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
-                        className="cursor-crosshair touch-none rounded-lg border border-slate-100 dark:border-slate-700 w-full h-auto max-w-[750px]"
-                        style={{ touchAction: 'none' }}
+        <ThemeContext.Provider value={theme}>
+            <div className="flex flex-col xl:flex-row gap-6 items-start p-8 min-h-screen text-slate-800 dark:text-slate-200 transition-colors duration-300">
+                {/* 1. Left Column: Lessons */}
+                <div className="w-full xl:w-[320px] flex-shrink-0 flex flex-col gap-6 order-2 xl:order-1">
+                    <LessonPanel
+                        toggles={toggles}
+                        setToggles={setToggles}
+                        selectedLessonId={selectedLessonId}
+                        onLessonChange={setSelectedLessonId}
+                        theme={theme}
                     />
                 </div>
-                <TrigGraph
-                    trace={trace}
-                    toggles={toggles}
-                    theme={theme}
-                    angleUnit={angleUnit}
-                    onReset={() => setTrace([])}
-                    currentAngle={angle}
-                />
-            </div>
 
-            {/* 3. Right Column: Controls OR Diagram */}
-            <div className="w-full xl:w-[360px] flex-shrink-0 flex flex-col gap-6 order-3">
-                {showDiagram ? (
-                    <DiagramPanel
-                        type={currentLesson!.diagram}
-                        setToggles={setToggles}
+                {/* 2. Center Column: Canvas & Graphs */}
+                <div className="flex-grow w-full flex flex-col gap-6 order-1 xl:order-2">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-300 relative flex justify-center">
+                        <canvas
+                            ref={canvasRef}
+                            onMouseDown={onMouseDown}
+                            onMouseMove={onMouseMove}
+                            onMouseUp={onMouseUp}
+                            onMouseLeave={onMouseUp}
+                            onTouchStart={onTouchStart}
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
+                            className="cursor-crosshair touch-none rounded-lg border border-slate-100 dark:border-slate-700 w-full h-auto max-w-[750px]"
+                            style={{ touchAction: 'none' }}
+                        />
+                    </div>
+                    <TrigGraph
+                        trace={trace}
+                        toggles={toggles}
+                        theme={theme}
+                        angleUnit={angleUnit}
+                        onReset={() => setTrace([])}
+                        currentAngle={angle}
                     />
-                ) : (
-                    <>
-                        <Controls
-                            angle={angle}
-                            setAngle={handleSliderChange}
-                            angleUnit={angleUnit}
-                            setAngleUnit={setAngleUnit}
-                            toggles={toggles}
+                </div>
+
+                {/* 3. Right Column: Controls OR Diagram */}
+                <div className="w-full xl:w-[360px] flex-shrink-0 flex flex-col gap-6 order-3">
+                    {showDiagram ? (
+                        <DiagramPanel
+                            type={currentLesson!.diagram}
                             setToggles={setToggles}
-                            isPlaying={isPlaying}
-                            setIsPlaying={setIsPlaying}
-                            theme={theme}
-                            onResetToggles={resetToggles}
                         />
-                        <ReadoutPanel
-                            trigValues={trigValues}
-                            toggles={toggles}
-                            theme={theme}
-                        />
-                    </>
-                )}
+                    ) : (
+                        <>
+                            <Controls
+                                angle={angle}
+                                setAngle={handleSliderChange}
+                                angleUnit={angleUnit}
+                                setAngleUnit={setAngleUnit}
+                                toggles={toggles}
+                                setToggles={setToggles}
+                                isPlaying={isPlaying}
+                                setIsPlaying={setIsPlaying}
+                                theme={theme}
+                                onResetToggles={resetToggles}
+                            />
+                            <ReadoutPanel
+                                trigValues={trigValues}
+                                toggles={toggles}
+                                theme={theme}
+                            />
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </ThemeContext.Provider>
     );
 };
