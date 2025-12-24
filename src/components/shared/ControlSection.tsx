@@ -23,7 +23,7 @@ export const ControlSection: React.FC<ControlSectionProps> = ({
                 onClick={() => setExpanded(!expanded)}
                 className="w-full flex items-center justify-between text-left group py-1"
             >
-                <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider group-hover:text-ui-text transition-colors duration-200">
+                <h3 className="text-xs font-heading font-extrabold text-ui-text-muted uppercase tracking-wider group-hover:text-ui-text transition-colors duration-200">
                     {title}
                 </h3>
                 <CaretRight

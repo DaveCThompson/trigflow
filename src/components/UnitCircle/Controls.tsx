@@ -3,6 +3,7 @@ import { UnitCircleState } from '../../types';
 import { Toggle } from '../shared/Toggle';
 import { ControlSection } from '../shared/ControlSection';
 import { ArrowCounterClockwise, PlayCircle, PauseCircle, Gear } from '@phosphor-icons/react';
+import { Button } from '../shared/Button';
 
 interface ControlsProps {
     angle: number;
@@ -35,18 +36,18 @@ export const Controls: React.FC<ControlsProps> = ({
                     </h2>
                 </div>
                 <div className="flex gap-2">
-                    <button
+                    <Button
+                        variant="danger"
+                        size="sm"
                         onClick={onResetToggles}
                         title="Reset all toggles"
-                        className="p-2 rounded-xl bg-action-danger-subtle text-action-danger hover:bg-action-danger hover:text-white transition-colors active:scale-95"
-                    >
-                        <ArrowCounterClockwise weight="bold" />
-                    </button>
+                        icon={<ArrowCounterClockwise weight="bold" />}
+                    />
                     {/* Segmented Deg/Rad Toggle */}
-                    <div className="flex rounded-xl bg-ui-bg-hover p-1 gap-1">
+                    <div className="flex rounded-full bg-ui-bg-hover p-1 gap-1">
                         <button
                             onClick={() => setAngleUnit('deg')}
-                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95 ${angleUnit === 'deg'
+                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'deg'
                                 ? 'bg-surface-selected text-surface-selected-text shadow-sm'
                                 : 'text-ui-text-muted hover:text-ui-text'
                                 }`}
@@ -55,7 +56,7 @@ export const Controls: React.FC<ControlsProps> = ({
                         </button>
                         <button
                             onClick={() => setAngleUnit('rad')}
-                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95 ${angleUnit === 'rad'
+                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'rad'
                                 ? 'bg-surface-selected text-surface-selected-text shadow-sm'
                                 : 'text-ui-text-muted hover:text-ui-text'
                                 }`}
@@ -106,26 +107,21 @@ export const Controls: React.FC<ControlsProps> = ({
                         <style>{`
                             input[type=range]::-webkit-slider-thumb {
                                 -webkit-appearance: none;
-                                height: 20px;
-                                width: 20px;
+                                height: 24px;
+                                width: 24px;
                                 border-radius: 50%;
                                 background: #ffffff;
-                                border: 2px solid var(--color-cos);
-                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-                                transition: transform 0.1s;
-                                margin-top: -4.5px; /* aligned to center (8px track - 20px thumb + offset) */
+                                border: 3px solid var(--color-cos);
+                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                                transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                                margin-top: -8.5px;
                             }
                             input[type=range]::-webkit-slider-thumb:hover {
-                                transform: scale(1.1);
+                                transform: scale(1.15);
+                                cursor: grab;
                             }
-                             input[type=range]::-moz-range-thumb {
-                                height: 20px;
-                                width: 20px;
-                                border-radius: 50%;
-                                background: #ffffff;
-                                border: 2px solid var(--color-cos);
-                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-                                transition: transform 0.1s;
+                            input[type=range]:active::-webkit-slider-thumb {
+                                cursor: grabbing;
                             }
                         `}</style>
                     </div>

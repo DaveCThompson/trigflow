@@ -4,9 +4,9 @@ import { formatNumber } from '../../utils/math';
 
 const ValueDisplay: React.FC<{ label: string; value: number; color?: string }> = ({ label, value, color }) => {
     return (
-        <div className="flex justify-between items-center py-3 border-b border-ui-border last:border-0 font-mono text-sm group hover:bg-ui-bg-hover px-2 rounded-lg transition-colors">
-            <span className="font-bold opacity-80 group-hover:opacity-100 transition-opacity" style={{ color }}>{label}</span>
-            <span className="text-ui-text-muted tabular-nums group-hover:text-ui-text transition-colors">{formatNumber(value)}</span>
+        <div className="flex justify-between items-center py-3.5 border-b border-ui-border last:border-0 text-sm group hover:bg-ui-bg-hover px-3 -mx-3 rounded-2xl transition-all duration-200">
+            <span className="font-heading font-extrabold opacity-70 group-hover:opacity-100 transition-opacity" style={{ color }}>{label}</span>
+            <span className="text-ui-text font-mono font-medium tabular-nums group-hover:scale-105 transition-transform origin-right">{formatNumber(value)}</span>
         </div>
     );
 };

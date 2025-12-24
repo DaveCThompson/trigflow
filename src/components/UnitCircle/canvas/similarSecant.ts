@@ -1,5 +1,6 @@
 import { drawLine, drawText } from './helpers';
 import { ProofContext } from './proofs';
+import { withAlpha, OVERLAY_ALPHA } from '../../../theme/overlays';
 
 /**
  * Draws the Similar Triangle (Secant) visualization.
@@ -15,7 +16,7 @@ export function drawSimilarSecant(c: ProofContext): void {
     const pSec = map(sec, 0);
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(155, 89, 182, 0.15)'; // Secant Lavender Tint
+    ctx.fillStyle = withAlpha(theme.sec, OVERLAY_ALPHA.medium);
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pCircle.x, pCircle.y);
     ctx.lineTo(pSec.x, pSec.y);
@@ -118,7 +119,7 @@ export function drawSimilarSecant(c: ProofContext): void {
         drawText(ctx, "α", {
             x: pf.x + Math.cos(angMid) * 35,
             y: pf.y + Math.sin(angMid) * 35
-        }, theme.isDark ? '#ffffff' : theme.axis);
+        }, theme.label_primary, "center", "middle", theme.halo);
     }
 
     // --- NEW: Theta Angle at P (Intersection of Tangent and Sine/Vertical) ---

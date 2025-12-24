@@ -1,10 +1,6 @@
-/**
- * Proof visualization drawing functions for TrigFlow.
- * Extracted from UnitCircleRenderer.ts for maintainability.
- */
-
 import { Point, UnitCircleState } from '../../../types';
 import { drawLine, drawText } from './helpers';
+import { withAlpha, OVERLAY_ALPHA } from '../../../theme/overlays';
 
 /**
  * Shared context for proof drawing functions.
@@ -37,7 +33,7 @@ export function drawSineTriangleProof(c: ProofContext): void {
     const { ctx, origin, pCircle, pXAxis, cos, rad, theme, map } = c;
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255, 107, 107, 0.15)'; // Sin Color Tint
+    ctx.fillStyle = withAlpha(theme.sin, OVERLAY_ALPHA.medium);
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pXAxis.x, pXAxis.y);
     ctx.lineTo(pCircle.x, pCircle.y);
@@ -50,9 +46,9 @@ export function drawSineTriangleProof(c: ProofContext): void {
     drawLine(ctx, origin, pCircle, theme.text, 2);
 
     // Labels
-    drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
-    drawText(ctx, "cos", { x: (c.CX + pXAxis.x) / 2, y: c.CY + 15 }, theme.cos);
-    drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 15 : -15), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
+    drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.label_primary, "center", "middle", theme.halo);
+    drawText(ctx, "cos", { x: (c.CX + pXAxis.x) / 2, y: c.CY + 15 }, theme.cos, "center", "middle", theme.halo);
+    drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 15 : -15), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle", theme.halo);
 }
 
 /**
@@ -67,7 +63,7 @@ export function drawTangentTriangleProof(c: ProofContext): void {
     const pEnd = map(dir, dir * tan);
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(230, 126, 34, 0.2)';
+    ctx.fillStyle = withAlpha(theme.tan, OVERLAY_ALPHA.medium);
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pStart.x, pStart.y);
     ctx.lineTo(pEnd.x, pEnd.y);
@@ -80,8 +76,8 @@ export function drawTangentTriangleProof(c: ProofContext): void {
     drawLine(ctx, origin, pEnd, theme.text, 2, [6, 4]);
 
     // Labels
-    drawText(ctx, "1", { x: (origin.x + pStart.x) / 2, y: CY + 20 }, theme.text);
-    drawText(ctx, "tan", { x: pStart.x + dir * 20, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right");
+    drawText(ctx, "1", { x: (origin.x + pStart.x) / 2, y: CY + 20 }, theme.label_primary, "center", "middle", theme.halo);
+    drawText(ctx, "tan", { x: pStart.x + dir * 20, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right", "middle", theme.halo);
 }
 
 /**
@@ -135,12 +131,12 @@ export function drawGeneralFormTargetProof(c: ProofContext): void {
     ctx.fill();
 
     drawLine(ctx, origin, pGenAxis, theme.text, 2);
-    drawLine(ctx, pGenAxis, pGenEnd, theme.tan, 3);
-    drawLine(ctx, origin, pGenEnd, theme.text, 2);
+    drawLine(ctx, pGenAxis, pGenEnd, theme.tan, 4);
+    drawLine(ctx, origin, pGenEnd, theme.text, 2, [6, 4]);
 
-    drawText(ctx, "H", map(Math.cos(rad) * scale * 0.55, Math.sin(rad) * scale * 0.55), theme.text);
-    drawText(ctx, "O", { x: pGenAxis.x + (cos >= 0 ? 15 : -15), y: (pGenAxis.y + pGenEnd.y) / 2 }, theme.tan, cos >= 0 ? "left" : "right");
-    drawText(ctx, "A", { x: (origin.x + pGenAxis.x) / 2, y: CY + 15 }, theme.text);
+    drawText(ctx, "H", map(Math.cos(rad) * scale * 0.55, Math.sin(rad) * scale * 0.55), theme.label_primary, "center", "middle", theme.halo);
+    drawText(ctx, "O", { x: pGenAxis.x + (cos >= 0 ? 15 : -15), y: (pGenAxis.y + pGenEnd.y) / 2 }, theme.tan, cos >= 0 ? "left" : "right", "middle", theme.halo);
+    drawText(ctx, "A", { x: (origin.x + pGenAxis.x) / 2, y: CY + 20 }, theme.label_primary, "center", "middle", theme.halo);
 }
 
 /**
@@ -153,22 +149,22 @@ export function drawPythagoreanSquaresProof(c: ProofContext): void {
     // Square on Adjacent (Cos) - Blue
     const cosSize = Math.abs(pXAxis.x - origin.x);
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+    ctx.fillStyle = withAlpha(theme.cos, OVERLAY_ALPHA.fill);
     ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, cosSize, cosSize);
 
     // Square on Sine (Red)
     const sinSize = Math.abs(pCircle.y - pXAxis.y);
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255, 107, 107, 0.2)';
+    ctx.fillStyle = withAlpha(theme.sin, OVERLAY_ALPHA.fill);
     const dir = cos >= 0 ? 1 : -1;
     ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), sinSize * dir, sinSize);
 
     // Labels
-    if (cosSize > 10) drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + cosSize / 2 }, theme.cos);
-    if (sinSize > 10) drawText(ctx, "b²", { x: pXAxis.x + (sinSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.sin);
+    if (cosSize > 10) drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + cosSize / 2 }, theme.label_on_fill, "center", "middle", theme.halo);
+    if (sinSize > 10) drawText(ctx, "b²", { x: pXAxis.x + (sinSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.label_on_fill, "center", "middle", theme.halo);
 
     // Square on Hypotenuse (c=1)
-    drawText(ctx, "c² = 1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    drawText(ctx, "c² = 1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.label_primary, "center", "middle", theme.halo);
 }
 
 /**
@@ -180,7 +176,7 @@ export function drawPythagoreanGeneralProof(c: ProofContext): void {
 
     // 1. Triangle
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(100, 100, 100, 0.1)';
+    ctx.fillStyle = withAlpha(theme.text, OVERLAY_ALPHA.subtle);
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pXAxis.x, pXAxis.y);
     ctx.lineTo(pCircle.x, pCircle.y);
@@ -192,15 +188,15 @@ export function drawPythagoreanGeneralProof(c: ProofContext): void {
 
     // Square on Adjacent (a)
     const aSize = Math.abs(pXAxis.x - origin.x);
-    ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+    ctx.fillStyle = withAlpha(theme.cos, OVERLAY_ALPHA.fill);
     ctx.fillRect(Math.min(origin.x, pXAxis.x), origin.y, aSize, aSize);
-    drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + aSize / 2 }, theme.text);
+    drawText(ctx, "a²", { x: (origin.x + pXAxis.x) / 2, y: origin.y + aSize / 2 }, theme.label_on_fill, "center", "middle", theme.halo);
 
     // Square on Opposite (b)
     const bSize = Math.abs(pCircle.y - pXAxis.y);
-    ctx.fillStyle = 'rgba(255, 107, 107, 0.2)'; // Red/Pink
+    ctx.fillStyle = withAlpha(theme.sin, OVERLAY_ALPHA.fill);
     ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), bSize * dir, bSize);
-    drawText(ctx, "b²", { x: pXAxis.x + (bSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
+    drawText(ctx, "b²", { x: pXAxis.x + (bSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.label_on_fill, "center", "middle", theme.halo);
 
     // Square on Hypotenuse (c) - Rotated
     const P1 = origin;
@@ -216,7 +212,7 @@ export function drawPythagoreanGeneralProof(c: ProofContext): void {
     const P4 = { x: P1.x - nx * scale, y: P1.y - ny * scale };
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+    ctx.fillStyle = withAlpha(theme.axis, OVERLAY_ALPHA.fill);
     ctx.moveTo(P1.x, P1.y);
     ctx.lineTo(P2.x, P2.y);
     ctx.lineTo(P3.x, P3.y);
@@ -227,10 +223,10 @@ export function drawPythagoreanGeneralProof(c: ProofContext): void {
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    drawText(ctx, "c²", { x: (P1.x + P3.x) / 2, y: (P1.y + P3.y) / 2 }, theme.text);
+    drawText(ctx, "c²", { x: (P1.x + P3.x) / 2, y: (P1.y + P3.y) / 2 }, theme.label_on_fill, "center", "middle", theme.halo);
 
     // Labels on sides
-    drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: CY - 10 }, theme.text);
-    drawText(ctx, "b", { x: pXAxis.x + (dir * 10), y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
-    drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    drawText(ctx, "a", { x: (origin.x + pXAxis.x) / 2, y: CY - 15 }, theme.label_primary, "center", "middle", theme.halo);
+    drawText(ctx, "b", { x: pXAxis.x + (dir * 15), y: (pXAxis.y + pCircle.y) / 2 }, theme.label_primary, "center", "middle", theme.halo);
+    drawText(ctx, "c", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.label_primary, "center", "middle", theme.halo);
 }

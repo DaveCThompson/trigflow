@@ -28,7 +28,7 @@ export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color,
                 {/* Track */}
                 <div
                     className={clsx(
-                        "w-11 h-6 rounded-full transition-colors duration-300 ease-spring border",
+                        "w-11 h-6 rounded-full transition-all duration-300 ease-spring border",
                         checked ? "border-transparent" : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600"
                     )}
                     style={activeStyle}
@@ -37,7 +37,7 @@ export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color,
                 {/* Thumb */}
                 <div
                     className={clsx(
-                        "absolute left-1 top-1.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ease-spring",
+                        "absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ease-spring group-hover:scale-110",
                         checked ? "translate-x-5" : "translate-x-0"
                     )}
                 ></div>

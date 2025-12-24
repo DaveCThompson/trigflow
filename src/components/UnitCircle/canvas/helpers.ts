@@ -47,7 +47,7 @@ export const drawText = (
     const halo = haloColor || 'rgba(255, 255, 255, 0.8)';
 
     // Nunito Font
-    ctx.font = "500 14px Nunito, sans-serif";
+    ctx.font = "bold 14px Nunito, sans-serif";
     ctx.lineWidth = 4;
     ctx.strokeStyle = halo;
     ctx.textAlign = align;

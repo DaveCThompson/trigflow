@@ -8,6 +8,7 @@ import { UnitCircleState } from '../../types';
 import { LessonId, LESSONS } from '../../data/lessons';
 import { IdentitiesContent } from './IdentitiesContent';
 import { CaretLeft, CaretRight, BookOpen } from '@phosphor-icons/react';
+import { Button } from '../shared/Button';
 
 // Re-export types for backward compatibility
 export type { LessonId } from '../../data/lessons';
@@ -58,7 +59,10 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
 
                 {/* Navigation Controls */}
                 <div className="flex items-center justify-between mt-4">
-                    <button
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<CaretLeft weight="bold" />}
                         onClick={() => {
                             const currentIndex = LESSONS.findIndex(l => l.id === selectedLessonId);
                             if (currentIndex > 0) {
@@ -66,17 +70,17 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                             }
                         }}
                         disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === 0}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold rounded-xl bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
                     >
-                        <CaretLeft weight="bold" />
                         Prev
-                    </button>
+                    </Button>
 
-                    <span className="text-xs font-mono font-bold text-ui-text-muted bg-ui-bg-hover px-2 py-1 rounded-md">
+                    <span className="text-xs font-mono font-bold text-ui-text-muted bg-ui-bg-hover px-2.5 py-1 rounded-md shadow-inner">
                         {LESSONS.findIndex(l => l.id === selectedLessonId) + 1} / {LESSONS.length}
                     </span>
 
-                    <button
+                    <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() => {
                             const currentIndex = LESSONS.findIndex(l => l.id === selectedLessonId);
                             if (currentIndex < LESSONS.length - 1) {
@@ -84,11 +88,10 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                             }
                         }}
                         disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === LESSONS.length - 1}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold rounded-xl bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
                     >
                         Next
                         <CaretRight weight="bold" />
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -105,11 +108,11 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                         <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider">
                             Key Concepts
                         </h3>
-                        <ul className="space-y-2">
+                        <ul className="space-y-4">
                             {currentLesson.details.map((detail, i) => (
-                                <li key={i} className="text-sm text-ui-text-muted flex items-start gap-3 group hover:bg-ui-bg-hover/50 p-2 rounded-lg transition-colors">
-                                    <span className="mt-1.5 w-2 h-2 rounded-full bg-trig-cos flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                    <span className="leading-relaxed">{detail}</span>
+                                <li key={i} className="text-sm text-ui-text-muted flex items-start gap-3 group hover:bg-ui-bg-hover p-2.5 -mx-2.5 rounded-2xl transition-all duration-200">
+                                    <span className="mt-1.5 w-2 h-2 rounded-full bg-trig-cos flex-shrink-0 group-hover:scale-[1.2] shadow-glow shadow-trig-cos/40 transition-transform" />
+                                    <span className="leading-relaxed group-hover:text-ui-text transition-colors">{detail}</span>
                                 </li>
                             ))}
                         </ul>

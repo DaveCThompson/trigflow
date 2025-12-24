@@ -1,5 +1,6 @@
 import { drawLine, drawText } from './helpers';
 import { ProofContext } from './proofs';
+import { withAlpha, OVERLAY_ALPHA } from '../../../theme/overlays';
 
 /**
  * Draws the Similar Triangle (Cosecant) visualization.
@@ -14,7 +15,7 @@ export function drawSimilarCosecant(c: ProofContext): void {
     const pCsc = map(0, csc);
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255, 193, 7, 0.15)'; // Cosecant Yellow Tint
+    ctx.fillStyle = withAlpha(theme.csc, OVERLAY_ALPHA.medium);
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pCircle.x, pCircle.y);
     ctx.lineTo(pCsc.x, pCsc.y);
@@ -76,13 +77,13 @@ export function drawSimilarCosecant(c: ProofContext): void {
 
         // Label
         const midTheta = (angHoriz + angCot) / 2;
-        drawText(ctx, "θ", { x: pCircle.x + Math.cos(midTheta) * 35, y: pCircle.y + Math.sin(midTheta) * 35 }, theme.isDark ? '#ffffff' : theme.axis);
+        drawText(ctx, "θ", { x: pCircle.x + Math.cos(midTheta) * 35, y: pCircle.y + Math.sin(midTheta) * 35 }, theme.label_primary, "center", "middle", theme.halo);
     }
 
     // --- Theta Label at C (0, csc) - Remove Arc, Keep Label ---
     {
         // Just label
-        drawText(ctx, "θ", { x: pCsc.x + 10, y: pCsc.y + (csc > 0 ? 35 : -35) }, theme.text);
+        drawText(ctx, "θ", { x: pCsc.x + 10, y: pCsc.y + (csc > 0 ? 35 : -35) }, theme.label_primary, "center", "middle", theme.halo);
     }
 
     // --- NEW: Supplementary Right Angle at Py (pYAxis) ---
