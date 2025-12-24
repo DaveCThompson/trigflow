@@ -30,7 +30,7 @@ export const TangentProofStepper: React.FC<TangentProofStepperProps> = ({ setTog
         <div className="w-full h-full flex flex-col">
             <h3 className="text-lg font-bold mb-4 text-center">Tangent Identity Proof</h3>
 
-            <div className="flex-grow flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 transition-all">
+            <div className="flex-grow flex flex-col items-center justify-center p-4 bg-ui-bg-hover/50 rounded-2xl border border-ui-border transition-all">
                 {step === 0 && (
                     <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <p className="font-semibold text-gray-600 dark:text-gray-300">Step 1: The Sine Triangle</p>

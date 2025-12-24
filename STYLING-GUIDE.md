@@ -4,26 +4,35 @@ Canonical reference for visual design tokens and patterns.
 
 ## Color Palette
 
-### Trig Function Colors
+### Trig Function Colors (OKLCH)
 
-| Function | Color | Hex |
-|----------|-------|-----|
-| sin | Red | `#ff6b6b` |
-| cos | Blue | `#4dabf7` |
-| tan | Orange | `#ff922b` |
-| cot | Green | `#51cf66` |
-| sec | Purple | `#cc5de8` |
-| csc | Yellow | `#fcc419` |
+| Function | Color (OKLCH) | Approx |
+|----------|---------------|--------|
+| sin | `oklch(65% 0.22 25)` | Red/Pink |
+| cos | `oklch(65% 0.18 250)` | Blue |
+| tan | `oklch(75% 0.18 60)` | Orange |
+| cot | `oklch(80% 0.18 150)` | Mint |
+| sec | `oklch(70% 0.20 300)` | Purple |
+| csc | `oklch(75% 0.18 100)` | Yellow |
 
 ### UI Colors
 
 | Token | Light | Dark |
 |-------|-------|------|
-| grid | `#e1e4e8` | `#343a40` |
-| axis | `#333333` | `#ced4da` |
-| text | `#333333` | `#f8f9fa` |
-| bg | `#ffffff` | `#212529` |
-| comp | `#888888` | `#adb5bd` |
+| grid | `oklch(88% 0.02 240)` | `oklch(35% 0.03 260)` |
+| axis | `oklch(45% 0.05 260)` | `oklch(70% 0.03 260)` |
+| text | `oklch(25% 0.02 260)` | `oklch(96% 0.01 240)` |
+| canvas-bg | `oklch(96% 0.01 240)` | `oklch(20% 0.02 260)` |
+| comp | `oklch(60% 0.02 260)` | `oklch(75% 0.02 260)` |
+
+### Canvas Contrast Tokens
+
+| Token | Light | Dark | Use Case |
+|-------|-------|------|----------|
+| `label_primary` | Slate 800 (`#1e293b`) | Slate 50 (`#f8fafc`) | Main Axis/Grid labels |
+| `label_secondary` | Slate 600 (`#475569`) | Slate 300 (`#cbd5e1`) | Ticks and subtitles |
+| `label_on_fill` | Slate 800 (`#1e293b`) | White (`#ffffff`) | Text on filled shapes (wedges) |
+| `halo` | White 85% | Dark Slate 85% (`#212529`) | Text outline/glow for contrast |
 
 ## Typography
 
@@ -126,12 +135,26 @@ ctx.arc(CX, CY, 4.2, 0, Math.PI * 2);
 
 // GOOD - use named constants
 const RADIUS_SCALE = 4.2; // Provides padding for labels
+const RADIUS_SCALE = 4.2; // Provides padding for labels
 ctx.arc(CX, CY, RADIUS_SCALE, 0, Math.PI * 2);
+```
+
+### ❌ Inconsistent Canvas Text
+```typescript
+// BAD - using generic text color on colored background (low contrast risk)
+ctx.fillStyle = theme.text;
+ctx.fillText("θ", x, y);
+
+// GOOD - using semantic token + halo
+ctx.strokeStyle = theme.halo;
+ctx.strokeText("θ", x, y);
+ctx.fillStyle = theme.label_on_fill;
+ctx.fillText("θ", x, y);
 ```
 
 ## Best Practices
 
-1. **Import theme colors** via props or `useTheme()` context, never hardcode hex values
+1. **Import theme colors** via `useTheme()` hook context or props, never hardcode hex values
 2. **Use canvas/helpers.ts** for drawing primitives
 3. **Use theme/overlays.ts** for transparent fills
 4. **Test both light and dark modes** after color changes

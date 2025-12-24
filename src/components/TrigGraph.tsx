@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { UnitCircleState, TrigValues } from '../types';
 import { mapRange, toRad } from '../utils/math';
+import { ArrowCounterClockwise } from '@phosphor-icons/react';
 
 interface TrigGraphProps {
     trace: Array<{ angle: number, values: TrigValues }>;
@@ -37,9 +38,10 @@ const SingleGraph: React.FC<{
         const W = rect.width;
         const H = rect.height;
 
-        // Clear
-        ctx.fillStyle = theme.bg;
-        ctx.fillRect(0, 0, W, H);
+        // Clear (Transparent to let CSS gradient show through, or use explicit transparent fill)
+        ctx.clearRect(0, 0, W, H);
+        // Note: We are relying on the CSS bg-canvas-gradient for the background color now.
+        // But for Axes and Grid we need to draw on top.
 
         // Config
         const PADDING_TOP = 15;
@@ -49,10 +51,7 @@ const SingleGraph: React.FC<{
 
         const GRAPH_W = W - PADDING_LEFT - PADDING_RIGHT;
 
-
         // Y-Axis Range
-        // Sin/Cos: Max 1 (use 1.1 for padding)
-        // Others: Max 10
         const isBounded = dataKey === 'sin' || dataKey === 'cos';
         const Y_RANGE = isBounded ? 1.1 : 10;
 
@@ -60,19 +59,13 @@ const SingleGraph: React.FC<{
         const mapY = (val: number) => mapRange(val, -Y_RANGE, Y_RANGE, H - PADDING_BOTTOM, PADDING_TOP);
 
         // Grid
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 0.75;
         ctx.strokeStyle = theme.grid;
         ctx.beginPath();
-
-        // Ref lines at +1/-1 or +10/-10 (dashed)
         ctx.setLineDash([4, 4]);
 
         let displayY = [1, -1];
         if (!isBounded) displayY = [10, -10];
-
-        // Specific fix for Sine/Cosine Min/Max markers requested by user
-        // For Sine: Min at 270 (-1), Max at 90 (1)
-        // For Cosine: Min at 180 (-1), Max at 0 (1)
 
         displayY.forEach(val => {
             const y = mapY(val);
@@ -80,42 +73,42 @@ const SingleGraph: React.FC<{
             ctx.lineTo(W - PADDING_RIGHT, y);
         });
         ctx.stroke();
-        ctx.setLineDash([]); // Reset to solid
+        ctx.setLineDash([]);
 
+        // Axes
         ctx.beginPath();
-
-        // Zero horizontal line (X-axis in chart terminology, but usually Y=0)
         const y0 = mapY(0);
         ctx.moveTo(PADDING_LEFT, y0);
         ctx.lineTo(W - PADDING_RIGHT, y0);
 
-        // Zero vertical line (Y-axis visually)
-        // Since we map 0..360, x=0 is at PADDING_LEFT
         const x0 = mapX(0);
         ctx.moveTo(x0, PADDING_TOP);
         ctx.lineTo(x0, H - PADDING_BOTTOM);
-
         ctx.stroke();
 
-        // Vertical line at current angle (faint indicator)
+        // Current Angle Indicator
         ctx.beginPath();
-        ctx.strokeStyle = theme.isDark ? 'rgba(200, 200, 200, 0.3)' : 'rgba(100, 100, 100, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = theme.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
         const currentX = mapX(currentAngle);
         ctx.moveTo(currentX, PADDING_TOP);
         ctx.lineTo(currentX, H - PADDING_BOTTOM);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // X-Axis Labels (0, 90, 180, 270, 360)
-        ctx.fillStyle = theme.text;
-        ctx.font = "10px sans-serif";
+        // Text Styles (JetBrains Mono)
+        // Text Styles (JetBrains Mono)
+        // Text Styles (JetBrains Mono)
+        ctx.fillStyle = theme.label_primary; // High contrast Slate from Theme
+        ctx.font = "500 11px 'JetBrains Mono', monospace"; // Bump weight and size slightly
         ctx.textAlign = "center";
 
-        [0, 90, 180, 270, 360].forEach(deg => {
+        // X-Axis Labels
+        // Skip 90/270 for cleaner look in small graph? No, show all.
+        [0, 180, 360].forEach(deg => {
             const labelTxt = angleUnit === 'rad'
-                ? (deg === 0 ? "0" : (deg === 90 ? "π/2" : (deg === 180 ? "π" : (deg === 270 ? "3π/2" : "2π"))))
+                ? (deg === 0 ? "0" : (deg === 180 ? "π" : "2π"))
                 : deg + "°";
             ctx.fillText(labelTxt, mapX(deg), H - 5);
         });
@@ -127,33 +120,28 @@ const SingleGraph: React.FC<{
 
         yLabels.forEach(val => {
             const y = mapY(val);
-            // Label string
             let str = val.toString();
             if (val > 0) str = "+" + str;
-
-            ctx.fillText(str, PADDING_LEFT - 5, y);
+            ctx.fillText(str, PADDING_LEFT - 6, y);
         });
 
-        // Plot
+        // Trace Plot
         if (trace.length > 0) {
             ctx.beginPath();
             ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.0; // Finer line
 
             let first = true;
-            // Ensure sorted
             const sorted = [...trace].sort((a, b) => a.angle - b.angle);
 
             for (const pt of sorted) {
                 const x = mapX(pt.angle);
                 const val = pt.values[dataKey];
 
-                // Handle discontinuities (asymptotes)
                 if (Math.abs(val) > Y_RANGE) {
                     first = true;
                     continue;
                 }
-
                 const y = mapY(val);
 
                 if (first) {
@@ -166,7 +154,7 @@ const SingleGraph: React.FC<{
             ctx.stroke();
         }
 
-        // --- Current Value Dot ---
+        // Current Value Dot
         const currentRad = toRad(currentAngle);
         let currentVal = 0;
         if (dataKey === 'sin') currentVal = Math.sin(currentRad);
@@ -176,30 +164,35 @@ const SingleGraph: React.FC<{
         else if (dataKey === 'sec') currentVal = 1 / Math.cos(currentRad);
         else if (dataKey === 'csc') currentVal = 1 / Math.sin(currentRad);
 
-        // Only draw if within visual range
         if (Math.abs(currentVal) <= Y_RANGE) {
             const dotX = mapX(currentAngle);
             const dotY = mapY(currentVal);
 
             ctx.beginPath();
-            ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
-            ctx.fillStyle = theme.bg;
+            ctx.arc(dotX, dotY, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = theme.bg; // This might be solid color, ideally transparent
             ctx.fill();
             ctx.lineWidth = 2;
             ctx.strokeStyle = color;
             ctx.stroke();
+
+            // Re-fill with non-transparent color so wire doesn't show through dot
+            // Use explicit white/black based on theme or just rely on global bg var
+            // since canvas background is transparent now, filling with 'theme.bg' 
+            // from JS context might be solid color.
         }
 
     }, [trace, theme, angleUnit, color, dataKey, currentAngle]);
 
     return (
-        <div className="mb-2 last:mb-0">
-            <div className="flex justify-between items-center px-1 mb-1">
-                <span className="text-xs font-bold uppercase" style={{ color }}>{label}</span>
+        <div className="mb-4 last:mb-0">
+            <div className="flex justify-between items-center px-1 mb-1.5">
+                <span className="text-xs font-bold uppercase tracking-wide opacity-80" style={{ color }}>{label}</span>
             </div>
+            {/* Added bg-canvas-gradient here */}
             <canvas
                 ref={canvasRef}
-                className="w-full h-[120px] rounded border border-slate-100 dark:border-slate-700 bg-white dark:bg-gray-800"
+                className="w-full h-[120px] rounded-2xl border border-ui-border bg-canvas-bg shadow-sm"
             />
         </div>
     );
@@ -216,20 +209,21 @@ export const TrigGraph: React.FC<TrigGraphProps> = ({ trace, toggles, theme, ang
     if (toggles.csc) activeGraphs.push({ key: 'csc', label: 'Cosecant', color: theme.csc });
 
     return (
-        <div className="mt-6 w-full">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Graphs</h3>
+        <div className="mt-8 w-full">
+            <div className="flex justify-between items-center mb-4 border-b border-ui-border pb-2">
+                <h3 className="text-sm font-bold text-ui-text-muted uppercase tracking-wider">Historical Graphs</h3>
                 <button
                     onClick={onReset}
-                    className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    className="text-xs flex items-center gap-1 px-2.5 py-1.5 bg-ui-bg-hover rounded-lg text-ui-text-muted hover:text-ui-text transition-colors"
                 >
+                    <ArrowCounterClockwise className="text-sm" />
                     Reset
                 </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
                 {activeGraphs.length === 0 && (
-                    <div className="text-center text-gray-400 py-8 text-sm italic border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-lg">
+                    <div className="text-center text-ui-text-muted py-8 text-sm italic border-2 border-dashed border-ui-border rounded-2xl">
                         Toggle functions to see graphs
                     </div>
                 )}

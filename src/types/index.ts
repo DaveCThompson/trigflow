@@ -17,6 +17,16 @@ export interface TrigTheme {
     text: string;
     bg: string;
     comp: string;
+
+    /** Primary label color (High Contrast) - e.g. Axis Labels */
+    label_primary: string;
+    /** Secondary label color - e.g. Ticks */
+    label_secondary: string;
+    /** Text color for labels sitting on top of colored fills (Wedges/Triangles) */
+    label_on_fill: string;
+    /** Halo/Stroke color for text readability */
+    halo: string;
+
     /** Whether this is a dark theme - used for overlay/contrast decisions */
     isDark: boolean;
 }

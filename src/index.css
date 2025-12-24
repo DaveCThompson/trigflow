@@ -2,6 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+@layer base {
+  :root {
+    /* Color Palette (OKLCH) */
+    /* Trig Functions - Pastel & Friendly */
+    --color-sin: oklch(65% 0.22 25);
+    /* Red/Pink */
+    --color-cos: oklch(65% 0.18 250);
+    /* Soft Blue */
+    --color-tan: oklch(75% 0.18 60);
+    /* Orange */
+    --color-cot: oklch(80% 0.18 150);
+    /* Mint Green */
+    --color-sec: oklch(70% 0.20 300);
+    /* Lavender */
+    --color-csc: oklch(75% 0.18 100);
+    /* Yellow */
+
+    /* Surface & UI Colors - Light Mode */
+    --surface-1: oklch(98% 0.01 240);
+    /* Main App Bg (Cool White) */
+    --surface-2: oklch(100% 0 0);
+    /* Panel Bg (Pure White) */
+    --surface-3: oklch(96% 0.01 240);
+    /* Hover/Input */
+
+    --text-1: oklch(25% 0.02 260);
+    /* Headings (Darker for contrast) */
+    --text-2: oklch(45% 0.02 260);
+    /* Body (Mid Gray) */
+
+    --border-subtle: oklch(92% 0.005 260);
+
+    /* Default Canvas Colors */
+    --canvas-grid: oklch(88% 0.02 240);
+    /* Slate 300 equiv */
+
+    /* Solid Canvas Background (Slightly darker than surface-2 in light mode) */
+    --canvas-bg: oklch(96% 0.01 240);
+
+    /* Gradients - Only for page background if requested, keeping subtle */
+    --bg-gradient-page: linear-gradient(180deg, var(--surface-1) 0%, oklch(95% 0.02 240) 100%);
+  }
+
+  /* Dark Mode Overrides */
+  .dark {
+    --surface-1: oklch(20% 0.02 260);
+    /* Main App Bg (Deep Navy) */
+    --surface-2: oklch(25% 0.02 260);
+    /* Panel Bg */
+    --surface-3: oklch(30% 0.02 260);
+    /* Hover */
+
+    --text-1: oklch(96% 0.01 240);
+    /* Headings (Off White) */
+    --text-2: oklch(70% 0.01 240);
+    /* Body (Muted) */
+
+    --border-subtle: oklch(35% 0.01 260);
+
+    --canvas-grid: oklch(35% 0.03 260);
+    /* Slate 700 equiv */
+
+    /* Solid Canvas Background Dark */
+    --canvas-bg: oklch(20% 0.02 260);
+
+    /* Gradients Dark */
+    --bg-gradient-page: linear-gradient(180deg, var(--surface-1) 0%, oklch(15% 0.05 260) 100%);
+  }
+
+  body {
+    @apply bg-[image:var(--bg-gradient-page)] text-[color:var(--text-1)] font-body transition-all duration-300 min-h-screen bg-fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+}
+
+/* Custom Scrollbar for Webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[color:var(--border-subtle)] rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[color:var(--text-2)];
 }

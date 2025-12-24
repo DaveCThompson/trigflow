@@ -1,6 +1,6 @@
 /**
  * Canvas drawing helper functions for TrigFlow visualizations.
- * Extracted from UnitCircleRenderer.ts for maintainability.
+ * Updated for Pastel Design Facelift (Nunito font, semantic colors).
  */
 
 import { Point, UnitCircleState } from '../../../types';
@@ -23,12 +23,13 @@ export const drawLine = (
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
+    // Default reset, but caller should handle context save/restore if heavy usage
     ctx.setLineDash([]);
 };
 
 /**
  * Draw text with a soft halo for legibility.
- * @param haloColor - Optional custom halo color (defaults to semi-transparent gray)
+ * Updated to use Nunito font.
  */
 export const drawText = (
     ctx: CanvasRenderingContext2D,
@@ -37,13 +38,22 @@ export const drawText = (
     color: string,
     align: CanvasTextAlign = 'center',
     base: CanvasTextBaseline = 'middle',
-    haloColor = 'rgba(128, 128, 128, 0.2)'
+    haloColor?: string
 ): void => {
-    ctx.font = "bold 14px Inter, Arial, sans-serif";
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = haloColor;
+    // Determine halo color based on context if not provided
+    // For now, default to a smart alpha-white/black
+    // Ideally we pass theme.bg but that makes signature complex.
+    // Using a safe semi-transparent 'background' approximation.
+    const halo = haloColor || 'rgba(255, 255, 255, 0.8)';
+
+    // Nunito Font
+    ctx.font = "500 14px Nunito, sans-serif";
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = halo;
     ctx.textAlign = align;
     ctx.textBaseline = base;
+    ctx.lineJoin = "round";
+
     ctx.strokeText(str, p.x, p.y);
     ctx.fillStyle = color;
     ctx.fillText(str, p.x, p.y);
@@ -69,6 +79,7 @@ export const drawPoint = (
 
 /**
  * Draw quadrant labels (I, II, III, IV) in background.
+ * Updated font.
  */
 export const drawQuadrants = (
     ctx: CanvasRenderingContext2D,
@@ -81,7 +92,7 @@ export const drawQuadrants = (
     const CX = W / 2;
     const CY = H / 2;
 
-    ctx.font = "bold 120px Times New Roman";
+    ctx.font = "bold 120px Nunito, sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = theme.isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
@@ -109,7 +120,8 @@ export const drawRightAngle = (
 ): void => {
     ctx.beginPath();
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
     ctx.moveTo(vertex.x + dirX * size, vertex.y);
     ctx.lineTo(vertex.x + dirX * size, vertex.y + dirY * size);
     ctx.lineTo(vertex.x, vertex.y + dirY * size);

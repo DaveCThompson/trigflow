@@ -166,23 +166,22 @@ export const PythagoreanProofCanvas: React.FC<PythagoreanProofCanvasProps> = ({
         canvas.style.height = `${height}px`;
         ctx.scale(dpr, dpr);
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#1e293b';
-        ctx.fillRect(0, 0, width, height);
+        // Background handled by parent CSS (transparent)
 
         ctx.strokeStyle = '#64748b';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.strokeRect(ox, oy, S, S);
 
         // Edge labels
         if (step >= 1 && labelsRef.current) {
             const labels = labelsRef.current;
-            ctx.font = 'bold 11px Inter, system-ui, sans-serif';
+            ctx.font = '500 12px Nunito, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            ctx.fillStyle = '#3b82f6';
+            ctx.fillStyle = '#60a5fa'; // Pastel Blue
             ctx.fillText('a', labels.topA, oy - 14);
-            ctx.fillStyle = '#ef4444';
+            ctx.fillStyle = '#f87171'; // Pastel Red
             ctx.fillText('b', labels.topB, oy - 14);
 
             ctx.save();
@@ -223,7 +222,7 @@ export const PythagoreanProofCanvas: React.FC<PythagoreanProofCanvasProps> = ({
         }
 
         // Triangles
-        const colors = ['#219654', '#3267BF', '#AF3E7D', '#B85D21'];
+        const colors = ['#4ade80', '#60a5fa', '#f472b6', '#fb923c']; // Pastel Green, Blue, Pink, Orange
         const triLabels = ['I', 'II', 'III', 'IV'];
 
         trianglesRef.current.forEach((tri, i) => {
@@ -236,14 +235,14 @@ export const PythagoreanProofCanvas: React.FC<PythagoreanProofCanvasProps> = ({
             ctx.globalAlpha = 0.85;
             ctx.fill();
             ctx.globalAlpha = 1;
-            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
             ctx.lineWidth = 1;
             ctx.stroke();
 
             const cx = (tri.p1.x + tri.p2.x + tri.p3.x) / 3;
             const cy = (tri.p1.y + tri.p2.y + tri.p3.y) / 3;
-            ctx.font = 'bold 12px Inter, system-ui, sans-serif';
-            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 12px Nunito, sans-serif';
+            ctx.fillStyle = '#1e293b'; // Dark Slate Text (Contrast against pastel fill)
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(triLabels[i], cx, cy);
@@ -285,9 +284,9 @@ export const PythagoreanProofCanvas: React.FC<PythagoreanProofCanvasProps> = ({
             ctx.fillStyle = 'rgba(45, 212, 191, 0.2)';
             ctx.fill();
             ctx.strokeStyle = '#2dd4bf';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.5;
             ctx.stroke();
-            ctx.font = 'bold 18px Inter, system-ui, sans-serif';
+            ctx.font = '500 18px Nunito, sans-serif';
             ctx.fillStyle = '#2dd4bf';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -299,21 +298,21 @@ export const PythagoreanProofCanvas: React.FC<PythagoreanProofCanvasProps> = ({
         if (opacitiesRef.current.a2b2 > 0) {
             ctx.globalAlpha = opacitiesRef.current.a2b2;
 
-            ctx.fillStyle = 'rgba(59, 130, 246, 0.15)';
+            ctx.fillStyle = 'rgba(96, 165, 250, 0.2)'; // Blue tint
             ctx.fillRect(ox, oy + b, a, a);
-            ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2;
+            ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5;
             ctx.strokeRect(ox, oy + b, a, a);
-            ctx.font = 'bold 14px Inter, system-ui, sans-serif';
-            ctx.fillStyle = '#3b82f6';
+            ctx.font = '500 14px Nunito, sans-serif';
+            ctx.fillStyle = '#60a5fa';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('a²', ox + a / 2, oy + b + a / 2);
 
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+            ctx.fillStyle = 'rgba(248, 113, 113, 0.2)'; // Red tint
             ctx.fillRect(ox + a, oy, b, b);
-            ctx.strokeStyle = '#ef4444';
+            ctx.strokeStyle = '#f87171';
             ctx.strokeRect(ox + a, oy, b, b);
-            ctx.fillStyle = '#ef4444';
+            ctx.fillStyle = '#f87171';
             ctx.fillText('b²', ox + a + b / 2, oy + b / 2);
 
             ctx.globalAlpha = 1;

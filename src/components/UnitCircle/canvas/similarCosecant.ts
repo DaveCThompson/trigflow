@@ -14,7 +14,7 @@ export function drawSimilarCosecant(c: ProofContext): void {
     const pCsc = map(0, csc);
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(230, 126, 34, 0.1)'; // Cosecant Triangle fill
+    ctx.fillStyle = 'rgba(255, 193, 7, 0.15)'; // Cosecant Yellow Tint
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pCircle.x, pCircle.y);
     ctx.lineTo(pCsc.x, pCsc.y);
@@ -76,7 +76,7 @@ export function drawSimilarCosecant(c: ProofContext): void {
 
         // Label
         const midTheta = (angHoriz + angCot) / 2;
-        drawText(ctx, "θ", { x: pCircle.x + Math.cos(midTheta) * 35, y: pCircle.y + Math.sin(midTheta) * 35 }, theme.text);
+        drawText(ctx, "θ", { x: pCircle.x + Math.cos(midTheta) * 35, y: pCircle.y + Math.sin(midTheta) * 35 }, theme.isDark ? '#ffffff' : theme.axis);
     }
 
     // --- Theta Label at C (0, csc) - Remove Arc, Keep Label ---

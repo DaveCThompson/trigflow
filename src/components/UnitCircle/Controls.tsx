@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { UnitCircleState } from '../../types';
 import { Toggle } from '../shared/Toggle';
 import { ControlSection } from '../shared/ControlSection';
+import { ArrowCounterClockwise, PlayCircle, PauseCircle, Gear } from '@phosphor-icons/react';
 
 interface ControlsProps {
     angle: number;
@@ -17,8 +17,6 @@ interface ControlsProps {
     onResetToggles: () => void;
 }
 
-// ControlSection and Toggle are now imported from shared components
-
 export const Controls: React.FC<ControlsProps> = ({
     angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles, isPlaying, setIsPlaying, theme, onResetToggles
 }) => {
@@ -28,21 +26,25 @@ export const Controls: React.FC<ControlsProps> = ({
     };
 
     return (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6">
-            <div className="flex justify-between items-center pb-4 mb-4 border-b border-gray-100 dark:border-gray-800">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                    Controls
-                </h2>
+        <div className="w-full bg-ui-bg-panel rounded-3xl shadow-soft border border-ui-border p-6 transition-colors duration-300">
+            <div className="flex justify-between items-center pb-4 mb-4 border-b border-ui-border">
+                <div className="flex items-center gap-2 text-ui-text">
+                    <Gear weight="duotone" className="text-xl text-ui-text-muted" />
+                    <h2 className="text-xl font-heading font-extrabold">
+                        Controls
+                    </h2>
+                </div>
                 <div className="flex gap-2">
                     <button
                         onClick={onResetToggles}
-                        className="text-xs font-mono font-bold px-2 py-1 rounded bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                        title="Reset all toggles"
+                        className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors active:scale-95"
                     >
-                        Reset All
+                        <ArrowCounterClockwise weight="bold" />
                     </button>
                     <button
                         onClick={() => setAngleUnit(angleUnit === 'deg' ? 'rad' : 'deg')}
-                        className="text-xs font-mono font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-ui-bg-hover text-ui-text-muted hover:text-ui-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-95"
                     >
                         {angleUnit === 'deg' ? 'DEG' : 'RAD'}
                     </button>
@@ -50,31 +52,64 @@ export const Controls: React.FC<ControlsProps> = ({
             </div>
 
             <ControlSection title={`Angle: ${angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}`}>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-3 mt-2">
                     <button
                         onClick={() => setIsPlaying(!isPlaying)}
                         className={`
-                            flex items-center justify-center w-10 h-10 rounded-lg font-bold text-lg
-                            transition-colors
-                            ${isPlaying
-                                ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                                : 'bg-green-500 hover:bg-green-600 text-white'
-                            }
+                            flex items-center justify-center p-0 rounded-full transition-all duration-300 hover:-translate-y-0.5
+                            ${isPlaying ? 'text-ui-text opacity-50' : 'text-trig-cos shadow-glow'}
                         `}
                         title={isPlaying ? 'Pause animation' : 'Play animation'}
+                        style={!isPlaying ? { boxShadow: '0 0 20px -5px oklch(75% 0.15 260 / 0.6)' } : undefined}
                     >
-                        {isPlaying ? '⏸' : '▶'}
+                        {isPlaying ? (
+                            <PauseCircle size={42} weight="fill" />
+                        ) : (
+                            <PlayCircle size={42} weight="fill" />
+                        )}
                     </button>
-                    <input
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="0.1"
-                        value={angle}
-                        onChange={(e) => setAngle(parseFloat(e.target.value))}
-                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                        disabled={isPlaying}
-                    />
+
+                    {/* Custom Range Slider */}
+                    <div className="relative flex-1 h-8 flex items-center group">
+                        <input
+                            type="range"
+                            min="0"
+                            max="360"
+                            step="0.1"
+                            value={angle}
+                            onChange={(e) => setAngle(parseFloat(e.target.value))}
+                            className="absolute w-full h-2 bg-ui-bg-hover rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-trig-cos/20"
+                            disabled={isPlaying}
+                            style={{
+                                background: `linear-gradient(to right, var(--color-cos) 0%, var(--color-cos) ${(angle / 360) * 100}%, var(--surface-3) ${(angle / 360) * 100}%, var(--surface-3) 100%)`
+                            }}
+                        />
+                        <style>{`
+                            input[type=range]::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                height: 20px;
+                                width: 20px;
+                                border-radius: 50%;
+                                background: #ffffff;
+                                border: 2px solid var(--color-cos);
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                                transition: transform 0.1s;
+                                margin-top: -6px; /* center it? no, check h-2 is 8px */
+                            }
+                            input[type=range]::-webkit-slider-thumb:hover {
+                                transform: scale(1.1);
+                            }
+                             input[type=range]::-moz-range-thumb {
+                                height: 20px;
+                                width: 20px;
+                                border-radius: 50%;
+                                background: #ffffff;
+                                border: 2px solid var(--color-cos);
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                                transition: transform 0.1s;
+                            }
+                        `}</style>
+                    </div>
                 </div>
             </ControlSection>
 
@@ -82,7 +117,6 @@ export const Controls: React.FC<ControlsProps> = ({
                 <div className="grid grid-cols-5 gap-2">
                     {[0, 30, 45, 60, 90].map(deg => {
                         const isActive = Math.abs(angle - deg) < 0.1;
-
                         let label = `${deg}°`;
                         if (angleUnit === 'rad') {
                             switch (deg) {
@@ -99,10 +133,10 @@ export const Controls: React.FC<ControlsProps> = ({
                                 key={deg}
                                 onClick={() => setAngle(deg)}
                                 className={`
-                                    text-sm font-medium py-2 rounded transition-colors
+                                    text-xs font-bold py-2 rounded-xl transition-all duration-200 active:scale-95
                                     ${isActive
-                                        ? 'bg-blue-600 text-white shadow-sm'
-                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                        ? 'bg-white dark:bg-gray-800 ring-2 ring-trig-cos text-trig-cos shadow-lg shadow-trig-cos/20'
+                                        : 'bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text'
                                     }
                                 `}
                             >

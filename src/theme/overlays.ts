@@ -4,22 +4,37 @@
  */
 
 /**
- * Convert a hex color to RGBA string with specified alpha.
- * @param hex - Hex color string (e.g., '#ff6b6b')
+ * Convert a color to string with specified alpha.
+ * Supports Hex and OKLCH strings.
+ * @param color - Color string (Hex or OKLCH)
  * @param alpha - Alpha value between 0 and 1
- * @returns RGBA color string
+ * @returns Color string with alpha
  */
-export const withAlpha = (hex: string, alpha: number): string => {
-    // Handle shorthand hex colors
-    let fullHex = hex;
-    if (hex.length === 4) {
-        fullHex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+export const withAlpha = (color: string, alpha: number): string => {
+    // Handle OKLCH
+    if (color.startsWith('oklch')) {
+        // oklch(L C H) -> oklch(L C H / alpha)
+        const parts = color.replace('oklch(', '').replace(')', '').split(/\s+/);
+        // Reconstruct with alpha slash
+        // If there was already a slash, we replace the alpha
+        const mainParts = parts.filter(p => !p.includes('/'));
+        // Take first 3 components
+        return `oklch(${mainParts.slice(0, 3).join(' ')} / ${alpha})`;
     }
 
-    const r = parseInt(fullHex.slice(1, 3), 16);
-    const g = parseInt(fullHex.slice(3, 5), 16);
-    const b = parseInt(fullHex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    // Handle Hex (legacy fallback)
+    let fullHex = color;
+    if (color.startsWith('#')) {
+        if (color.length === 4) {
+            fullHex = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+        }
+        const r = parseInt(fullHex.slice(1, 3), 16);
+        const g = parseInt(fullHex.slice(3, 5), 16);
+        const b = parseInt(fullHex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    return color; // Fallback for unknown formats
 };
 
 /**

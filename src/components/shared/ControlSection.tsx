@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { CaretRight } from '@phosphor-icons/react';
+import { clsx } from 'clsx';
 
 interface ControlSectionProps {
     title: string;
@@ -15,24 +17,33 @@ export const ControlSection: React.FC<ControlSectionProps> = ({
     const [expanded, setExpanded] = useState(defaultExpanded);
 
     return (
-        <div className="border-b border-gray-100 dark:border-gray-800 pb-4 mb-4 last:border-0 last:pb-0 last:mb-0">
+        <div className="border-b border-ui-border pb-4 mb-4 last:border-0 last:pb-0 last:mb-0">
             <button
                 type="button"
                 onClick={() => setExpanded(!expanded)}
-                className="w-full flex items-center justify-between text-left group"
+                className="w-full flex items-center justify-between text-left group py-1"
             >
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider group-hover:text-ui-text transition-colors duration-200">
                     {title}
                 </h3>
-                <span className="text-gray-400 text-xs transition-transform duration-200" style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}>
-                    ▼
-                </span>
+                <CaretRight
+                    weight="bold"
+                    className={clsx(
+                        "text-ui-text-muted transition-transform duration-300",
+                        expanded ? "rotate-90" : "rotate-0"
+                    )}
+                />
             </button>
-            {expanded && (
-                <div className="mt-3">
+            <div
+                className={clsx(
+                    "grid transition-all duration-300 ease-in-out overflow-hidden",
+                    expanded ? "grid-rows-[1fr] opacity-100 mt-3" : "grid-rows-[0fr] opacity-0 mt-0"
+                )}
+            >
+                <div className="min-h-0">
                     {children}
                 </div>
-            )}
+            </div>
         </div>
     );
 };

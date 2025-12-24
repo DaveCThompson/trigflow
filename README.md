@@ -13,7 +13,8 @@ An educational web app that makes trigonometric concepts intuitive through inter
 - 📊 **Live Graphs** - Real-time sine, cosine, and tangent waveforms
 - 🎓 **Guided Lessons** - Step-by-step educational content
 - ⌨️ **Keyboard Shortcuts** - Space (play/pause), Arrow keys (angle control)
-- 🌙 **Dark Mode** - Beautiful dark theme with vibrant colors
+- ⌨️ **Keyboard Shortcuts** - Space (play/pause), Arrow keys (angle control)
+- 🌓 **Theme Support** - Light, Dark, and System Sync modes
 
 ## Quick Start
 

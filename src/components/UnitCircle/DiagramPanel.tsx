@@ -28,7 +28,7 @@ export const DiagramPanel: React.FC<DiagramPanelProps> = ({ type, setToggles }) 
     if (type === 'none') return null;
 
     return (
-        <div className="w-full h-full bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center justify-center">
+        <div className="w-full h-full bg-ui-bg-panel rounded-3xl shadow-soft border border-ui-border p-6 flex flex-col items-center justify-center transition-colors duration-300">
             {type === 'general_form' && (
                 <GeneralProofStepper setToggles={setToggles} />
             )}

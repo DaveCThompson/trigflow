@@ -4,9 +4,9 @@ import { formatNumber } from '../../utils/math';
 
 const ValueDisplay: React.FC<{ label: string; value: number; color?: string }> = ({ label, value, color }) => {
     return (
-        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-0 font-mono text-sm">
-            <span className="font-bold opacity-80" style={{ color }}>{label}</span>
-            <span className="text-gray-600 dark:text-gray-400 tabular-nums">{formatNumber(value)}</span>
+        <div className="flex justify-between items-center py-3 border-b border-ui-border last:border-0 font-mono text-sm group hover:bg-ui-bg-hover px-2 rounded-lg transition-colors">
+            <span className="font-bold opacity-80 group-hover:opacity-100 transition-opacity" style={{ color }}>{label}</span>
+            <span className="text-ui-text-muted tabular-nums group-hover:text-ui-text transition-colors">{formatNumber(value)}</span>
         </div>
     );
 };
@@ -17,8 +17,8 @@ export const ReadoutPanel: React.FC<{
     theme: UnitCircleState['theme'];
 }> = ({ trigValues, toggles, theme }) => {
     return (
-        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 h-fit sticky top-6">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+        <div className="w-full bg-ui-bg-panel rounded-3xl shadow-soft border border-ui-border p-6 h-fit sticky top-6 transition-colors duration-300">
+            <h2 className="text-xl font-heading font-extrabold text-ui-text mb-4 border-b border-ui-border pb-4">
                 Values
             </h2>
             <div className="space-y-1">

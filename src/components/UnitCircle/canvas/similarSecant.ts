@@ -15,7 +15,7 @@ export function drawSimilarSecant(c: ProofContext): void {
     const pSec = map(sec, 0);
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(241, 196, 15, 0.1)';
+    ctx.fillStyle = 'rgba(155, 89, 182, 0.15)'; // Secant Lavender Tint
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pCircle.x, pCircle.y);
     ctx.lineTo(pSec.x, pSec.y);
@@ -66,7 +66,7 @@ export function drawSimilarSecant(c: ProofContext): void {
         drawText(ctx, "α", {
             x: pCircle.x + Math.cos(midAlpha) * 30,
             y: pCircle.y + Math.sin(midAlpha) * 30
-        }, theme.text);
+        }, theme.isDark ? '#ffffff' : theme.axis);
     }
 
     // 3. Right Angle at P(cos, sin) for Secant/Tangent Triangle
@@ -118,7 +118,7 @@ export function drawSimilarSecant(c: ProofContext): void {
         drawText(ctx, "α", {
             x: pf.x + Math.cos(angMid) * 35,
             y: pf.y + Math.sin(angMid) * 35
-        }, theme.text);
+        }, theme.isDark ? '#ffffff' : theme.axis);
     }
 
     // --- NEW: Theta Angle at P (Intersection of Tangent and Sine/Vertical) ---
@@ -218,8 +218,9 @@ export function drawSimilarSecant(c: ProofContext): void {
 
     // Label Theta
     const midTheta2 = (angPO + angPPy) / 2;
+    // Fix: Force dark text for labels on pastel fills, or match theme axis
     drawText(ctx, "θ", {
         x: pCircle.x + Math.cos(midTheta2) * 35,
         y: pCircle.y + Math.sin(midTheta2) * 35
-    }, theme.text);
+    }, theme.label_on_fill, "center", "middle", theme.halo);
 }

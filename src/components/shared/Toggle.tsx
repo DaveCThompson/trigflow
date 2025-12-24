@@ -1,36 +1,59 @@
 import React from 'react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 interface ToggleProps {
     label: string;
     checked: boolean;
     onChange: () => void;
-    color?: string;
+    color?: string; // Hex or CSS var
     description?: string;
+    className?: string;
 }
 
-export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color, description }) => (
-    <label className="flex items-center mb-2 cursor-pointer select-none group">
-        <div className="relative flex items-center">
-            <input
-                type="checkbox"
-                checked={checked}
-                onChange={onChange}
-                className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
-            />
-            {color && (
-                <span
-                    className="w-3 h-3 rounded-full mr-3 shadow-sm border border-black/10"
-                    style={{ backgroundColor: color }}
+export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color, description, className }) => {
+    // Determine active color style. If it's a var, use it directly, else assume hex.
+    const activeStyle = checked && color ? { backgroundColor: color, borderColor: color } : {};
+
+    return (
+        <label className={twMerge("flex items-start cursor-pointer select-none group py-2", className)}>
+            <div className="relative flex items-center pt-0.5">
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={onChange}
+                    className="sr-only" // Hide native checkbox
                 />
-            )}
-            <div className="flex flex-col">
-                <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-blue-600 transition-colors">
+
+                {/* Track */}
+                <div
+                    className={clsx(
+                        "w-11 h-6 rounded-full transition-colors duration-300 ease-spring border",
+                        checked ? "border-transparent" : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                    )}
+                    style={activeStyle}
+                ></div>
+
+                {/* Thumb */}
+                <div
+                    className={clsx(
+                        "absolute left-1 top-1.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ease-spring",
+                        checked ? "translate-x-5" : "translate-x-0"
+                    )}
+                ></div>
+            </div>
+
+            <div className="flex flex-col ml-3">
+                <span className={clsx(
+                    "text-sm font-medium transition-colors duration-200",
+                    checked ? "text-ui-text-DEFAULT" : "text-ui-text-muted group-hover:text-ui-text-DEFAULT"
+                )}>
                     {label}
                 </span>
                 {description && (
-                    <span className="text-xs text-gray-400 font-normal">{description}</span>
+                    <span className="text-xs text-ui-text-muted opacity-80 font-normal mt-0.5">{description}</span>
                 )}
             </div>
-        </div>
-    </label>
-);
+        </label>
+    );
+};

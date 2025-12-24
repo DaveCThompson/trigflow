@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { UnitCircleState } from '../../types';
 import { LessonId, LESSONS } from '../../data/lessons';
 import { IdentitiesContent } from './IdentitiesContent';
+import { CaretLeft, CaretRight, BookOpen } from '@phosphor-icons/react';
 
 // Re-export types for backward compatibility
 export type { LessonId } from '../../data/lessons';
@@ -33,23 +34,30 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
     const currentLesson = LESSONS.find(l => l.id === selectedLessonId) || LESSONS[0];
 
     return (
-        <div className="w-full xl:w-[320px] flex-shrink-0 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 flex flex-col gap-6 h-fit sticky top-6">
-            <div className="border-b border-gray-100 dark:border-gray-800 pb-4">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                    Lessons
-                </h2>
-                <select
-                    value={selectedLessonId}
-                    onChange={(e) => onLessonChange(e.target.value as LessonId)}
-                    className="w-full p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    {LESSONS.map(l => (
-                        <option key={l.id} value={l.id}>{l.title}</option>
-                    ))}
-                </select>
+        <div className="w-full xl:w-[320px] flex-shrink-0 bg-ui-bg-panel rounded-3xl shadow-soft border border-ui-border p-6 flex flex-col gap-6 h-fit sticky top-6 transition-colors duration-300">
+            <div className="border-b border-ui-border pb-4">
+                <div className="flex items-center gap-2 mb-2 text-ui-text">
+                    <BookOpen weight="duotone" className="text-xl text-trig-cos" />
+                    <h2 className="text-xl font-heading font-extrabold">
+                        Lessons
+                    </h2>
+                </div>
+
+                <div className="relative">
+                    <select
+                        value={selectedLessonId}
+                        onChange={(e) => onLessonChange(e.target.value as LessonId)}
+                        className="w-full p-3 rounded-xl border border-ui-border bg-ui-bg-hover text-ui-text font-medium focus:outline-none focus:ring-2 focus:ring-trig-cos/20 appearance-none cursor-pointer"
+                    >
+                        {LESSONS.map(l => (
+                            <option key={l.id} value={l.id}>{l.title}</option>
+                        ))}
+                    </select>
+                    <CaretRight weight="bold" className="absolute right-3 top-1/2 -translate-y-1/2 text-ui-text-muted pointer-events-none rotate-90" />
+                </div>
 
                 {/* Navigation Controls */}
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex items-center justify-between mt-4">
                     <button
                         onClick={() => {
                             const currentIndex = LESSONS.findIndex(l => l.id === selectedLessonId);
@@ -58,13 +66,14 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                             }
                         }}
                         disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === 0}
-                        className="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold rounded-xl bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
                     >
-                        ← Previous
+                        <CaretLeft weight="bold" />
+                        Prev
                     </button>
 
-                    <span className="text-xs text-gray-400">
-                        {LESSONS.findIndex(l => l.id === selectedLessonId) + 1} of {LESSONS.length}
+                    <span className="text-xs font-mono font-bold text-ui-text-muted bg-ui-bg-hover px-2 py-1 rounded-md">
+                        {LESSONS.findIndex(l => l.id === selectedLessonId) + 1} / {LESSONS.length}
                     </span>
 
                     <button
@@ -75,16 +84,17 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                             }
                         }}
                         disabled={LESSONS.findIndex(l => l.id === selectedLessonId) === LESSONS.length - 1}
-                        className="px-3 py-1 text-sm rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold rounded-xl bg-ui-bg-hover text-ui-text-muted hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-ui-text disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
                     >
-                        Next →
+                        Next
+                        <CaretRight weight="bold" />
                     </button>
                 </div>
             </div>
 
             <div className="space-y-6">
-                <div className="text-gray-800 dark:text-gray-100">
-                    {currentLesson.quote}
+                <div className="text-ui-text font-medium leading-relaxed italic border-l-4 border-trig-cos pl-4 py-1 bg-ui-bg-hover/50 rounded-r-lg">
+                    "{currentLesson.quote}"
                 </div>
 
                 {/* Render custom content for identities lesson, standard list for others */}
@@ -92,14 +102,14 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
                     <IdentitiesContent theme={theme} />
                 ) : (
                     <div className="space-y-3">
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider">
                             Key Concepts
                         </h3>
                         <ul className="space-y-2">
                             {currentLesson.details.map((detail, i) => (
-                                <li key={i} className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
-                                    <span>{detail}</span>
+                                <li key={i} className="text-sm text-ui-text-muted flex items-start gap-3 group hover:bg-ui-bg-hover/50 p-2 rounded-lg transition-colors">
+                                    <span className="mt-1.5 w-2 h-2 rounded-full bg-trig-cos flex-shrink-0 group-hover:scale-125 transition-transform" />
+                                    <span className="leading-relaxed">{detail}</span>
                                 </li>
                             ))}
                         </ul>

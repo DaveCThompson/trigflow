@@ -49,8 +49,8 @@ src/
 4. **Type Definitions**: Types are defined ONCE in `types/index.ts`. Import from there, never duplicate.
 
 5. **Theme Colors**: Use `ThemeContext` for nested components. Pass theme via props for canvas. Never hardcode hex values.
-
-6. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
+6. **Canvas Text Tokens**: Use `theme.label_primary`, `theme.label_on_fill`, and `theme.halo` for text. Do NOT use `theme.text` for canvas labels unless you're sure of the background.
+7. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
 
 ## Avoiding Common Errors
 

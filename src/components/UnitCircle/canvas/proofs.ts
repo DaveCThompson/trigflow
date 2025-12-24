@@ -37,7 +37,7 @@ export function drawSineTriangleProof(c: ProofContext): void {
     const { ctx, origin, pCircle, pXAxis, cos, rad, theme, map } = c;
 
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(155, 89, 182, 0.2)';
+    ctx.fillStyle = 'rgba(255, 107, 107, 0.15)'; // Sin Color Tint
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(pXAxis.x, pXAxis.y);
     ctx.lineTo(pCircle.x, pCircle.y);
@@ -159,7 +159,7 @@ export function drawPythagoreanSquaresProof(c: ProofContext): void {
     // Square on Sine (Red)
     const sinSize = Math.abs(pCircle.y - pXAxis.y);
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    ctx.fillStyle = 'rgba(255, 107, 107, 0.2)';
     const dir = cos >= 0 ? 1 : -1;
     ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), sinSize * dir, sinSize);
 
@@ -198,7 +198,7 @@ export function drawPythagoreanGeneralProof(c: ProofContext): void {
 
     // Square on Opposite (b)
     const bSize = Math.abs(pCircle.y - pXAxis.y);
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    ctx.fillStyle = 'rgba(255, 107, 107, 0.2)'; // Red/Pink
     ctx.fillRect(pXAxis.x, Math.min(pXAxis.y, pCircle.y), bSize * dir, bSize);
     drawText(ctx, "b²", { x: pXAxis.x + (bSize * dir) / 2, y: (pXAxis.y + pCircle.y) / 2 }, theme.text);
 

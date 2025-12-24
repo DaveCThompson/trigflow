@@ -7,25 +7,58 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
+            fontFamily: {
+                heading: ['Nunito', 'sans-serif'],
+                body: ['Inter', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace'],
+            },
             colors: {
                 trig: {
-                    sin: '#ff6b6b',
-                    cos: '#4dabf7',
-                    tan: '#ff922b',
-                    cot: '#51cf66',
-                    sec: '#cc5de8',
-                    csc: '#fcc419',
+                    sin: 'var(--color-sin)',
+                    cos: 'var(--color-cos)',
+                    tan: 'var(--color-tan)',
+                    cot: 'var(--color-cot)',
+                    sec: 'var(--color-sec)',
+                    csc: 'var(--color-csc)',
                 },
                 ui: {
-                    grid: { light: '#e1e4e8', dark: '#343a40' },
-                    axis: { light: '#333333', dark: '#ced4da' },
-                    text: { light: '#333333', dark: '#f8f9fa' },
-                    bg: { light: '#ffffff', dark: '#212529' },
-                    comp: { light: '#888888', dark: '#adb5bd' },
+                    grid: 'var(--border-subtle)',
+                    axis: 'var(--text-1)', // Fallback, context dep
+                    text: {
+                        DEFAULT: 'var(--text-1)',
+                        muted: 'var(--text-2)'
+                    },
+                    bg: {
+                        main: 'var(--surface-1)',
+                        panel: 'var(--surface-2)',
+                        hover: 'var(--surface-3)'
+                    },
+                    border: 'var(--border-subtle)'
+                },
+                canvas: {
+                    bg: 'var(--canvas-bg)',
+                    grid: 'var(--canvas-grid)'
                 }
+            },
+            backgroundImage: {
+                'page-gradient': 'var(--bg-gradient-page)',
+            },
+            boxShadow: {
+                'soft': '0 8px 30px rgb(0 0 0 / 0.04)',
+                'glow': '0 0 20px -5px var(--shadow-color)', // Dynamic shadow
+                'sin': '0 4px 14px 0 rgba(255, 107, 107, 0.39)',     // Hardcoded fallback or use var if supported in arbitrary values? 
+                // Better to use arbitrary values in code: shadow-[0_4px_14px_0_var(--color-sin)]
+            },
+            borderRadius: {
+                'xl': '12px',
+                '2xl': '16px',
+                '3xl': '24px',
+                '4xl': '32px',
+            },
+            transitionTimingFunction: {
+                'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
             }
         },
     },
     plugins: [],
 }
-

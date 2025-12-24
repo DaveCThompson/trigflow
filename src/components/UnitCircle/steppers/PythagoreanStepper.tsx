@@ -57,14 +57,14 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
             </div>
 
             {/* Step Content */}
-            <div className="flex-grow flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 transition-all">
+            <div className="flex-grow flex flex-col items-center justify-center p-4 bg-ui-bg-hover/50 rounded-2xl border border-ui-border transition-all">
                 <div className="text-center space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <p className="font-semibold text-gray-600 dark:text-gray-300">{current.title}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
+                    <p className="font-semibold text-ui-text">{current.title}</p>
+                    <p className="text-sm text-ui-text-muted px-2">
                         {current.description}
                     </p>
                     {current.equation && (
-                        <div className="text-xl font-serif font-bold text-emerald-500 mt-2">
+                        <div className="text-xl font-serif font-bold text-trig-cot mt-2">
                             {current.equation}
                         </div>
                     )}
@@ -76,19 +76,19 @@ export const PythagoreanStepper: React.FC<PythagoreanStepperProps> = ({ setToggl
                 <button
                     onClick={() => setStep(Math.max(1, step - 1))}
                     disabled={step === 1}
-                    className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50 font-medium transition-colors"
+                    className="px-4 py-2 rounded-xl bg-ui-bg-hover text-ui-text-muted hover:text-ui-text disabled:opacity-50 font-medium transition-colors"
                 >
                     Back
                 </button>
                 <div className="flex gap-1 items-center">
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                        <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? 'bg-trig-cot' : 'bg-ui-border'}`} />
                     ))}
                 </div>
                 <button
                     onClick={() => setStep(Math.min(4, step + 1))}
                     disabled={step === 4}
-                    className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50 font-medium transition-colors shadow-sm"
+                    className="px-4 py-2 rounded-xl bg-trig-cot text-white disabled:opacity-50 font-medium transition-colors shadow-sm"
                 >
                     Next
                 </button>

@@ -14,9 +14,9 @@ type IdentityLevel = 'all' | 'basic' | 'intermediate' | 'advanced';
 const LevelBtn: React.FC<{ level: IdentityLevel; current: IdentityLevel; onClick: () => void }> = ({ level, current, onClick }) => (
     <button
         onClick={onClick}
-        className={`px-2 py-1 text-xs rounded-md transition-colors ${current === level
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+        className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all active:scale-95 ${current === level
+            ? 'bg-ui-bg-hover text-ui-text border-2 border-trig-cos' // Active: Outline/Surface style like Controls
+            : 'bg-ui-bg-hover text-ui-text-muted hover:text-ui-text opacity-70 hover:opacity-100'
             }`}
     >
         {level.charAt(0).toUpperCase() + level.slice(1)}
