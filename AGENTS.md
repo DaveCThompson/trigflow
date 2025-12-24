@@ -48,9 +48,10 @@ src/
 
 4. **Type Definitions**: Types are defined ONCE in `types/index.ts`. Import from there, never duplicate.
 
-5. **Theme Colors**: Use `ThemeContext` for nested components. Pass theme via props for canvas. Never hardcode hex values.
-6. **Canvas Text Tokens**: Use `theme.label_primary`, `theme.label_on_fill`, and `theme.halo` for text. Do NOT use `theme.text` for canvas labels unless you're sure of the background.
-7. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
+5. **Theme Colors**: Use `ThemeContext` for nested components. Pass theme via props for canvas. Never hardcode hex values or Tailwind color classes.
+6. **Semantic Tokens**: Always use semantic tokens (`action_primary`, `surface_selected`, etc.) instead of hardcoded colors. See `STYLING-GUIDE.md` for complete token reference.
+7. **Canvas Text Tokens**: Use `theme.label_primary`, `theme.label_on_fill`, and `theme.halo` for text. Do NOT use `theme.text` for canvas labels unless you're sure of the background.
+8. **Overlay Colors**: Use `withAlpha(theme.color, OVERLAY_ALPHA.fill)` from `theme/overlays.ts` for transparent fills.
 
 ## Avoiding Common Errors
 
@@ -58,7 +59,7 @@ src/
 
 1. **Unused imports**: Remove imports when extracting code to new files
 2. **Duplicate types**: Always import from `types/index.ts`, never redefine
-3. **Hardcoded colors**: Use `theme.sin`, `theme.cos`, etc. from props or context
+3. **Hardcoded colors**: Use semantic tokens (`bg-action-danger`, `text-surface-selected-text`) instead of `bg-red-50`, `bg-gray-200`, etc.
 4. **Wrong import source**: Import `UnitCircleState` from `types`, not from `UnitCircleRenderer`
 5. **Missing props**: When adding props to a component, update all call sites
 
@@ -82,4 +83,4 @@ Use `/add-toggle`, `/add-lesson`, or `/add-proof-visualization` slash commands f
 4. **New Helper**: Add to `canvas/helpers.ts` with JSDoc comment
 
 ---
-*Last updated: 2025-12-24*
+*Last updated: 2025-12-24 (v0.1.0)*

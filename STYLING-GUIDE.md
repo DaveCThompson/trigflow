@@ -34,6 +34,30 @@ Canonical reference for visual design tokens and patterns.
 | `label_on_fill` | Slate 800 (`#1e293b`) | White (`#ffffff`) | Text on filled shapes (wedges) |
 | `halo` | White 85% | Dark Slate 85% (`#212529`) | Text outline/glow for contrast |
 
+### Interactive State Tokens
+
+| Token | Light | Dark | Use Case |
+|-------|-------|------|----------|
+| `action_primary` | `oklch(65% 0.18 250)` | `oklch(75% 0.15 260)` | Main CTA color (cos blue) |
+| `action_primary_hover` | `oklch(60% 0.20 250)` | `oklch(80% 0.18 260)` | Hover state for primary actions |
+| `action_danger` | `oklch(60% 0.20 25)` | `oklch(70% 0.18 25)` | Destructive actions (reset button) |
+| `action_danger_subtle` | `oklch(98% 0.01 25)` | `oklch(25% 0.02 25)` | Danger background with low opacity |
+
+### Selection & Focus Tokens
+
+| Token | Light | Dark | Use Case |
+|-------|-------|------|----------|
+| `surface_selected` | `oklch(100% 0 0)` | `oklch(30% 0.02 260)` | Selected item background |
+| `surface_selected_text` | `oklch(15% 0.02 260)` | `oklch(100% 0 0)` | Text on selected background |
+| `border_focus` | `oklch(65% 0.18 250)` | `oklch(75% 0.15 260)` | Focus ring color |
+| `border_selected` | `oklch(65% 0.18 250)` | `oklch(75% 0.15 260)` | Selected item border |
+
+### Specialized Tokens
+
+| Token | Light | Dark | Use Case |
+|-------|-------|------|----------|
+| `fill_angle_wedge` | Blue @ 15% opacity | Blue @ 12% opacity | Theta angle fill |
+
 ## Typography
 
 - **Root Font**: `Inter, system-ui, Avenir, Helvetica, Arial, sans-serif`
@@ -93,7 +117,7 @@ Colors are available via Tailwind classes:
 
 - **Color definitions**: `src/theme/colors.ts`
 - **Overlay utilities**: `src/theme/overlays.ts`
-- **Theme context**: `src/context/ThemeContext.tsx`
+- **Theme context**: `src/contexts/ThemeContext.tsx`
 - **Tailwind tokens**: `tailwind.config.js`
 - **Types**: `src/types/index.ts`
 
@@ -102,12 +126,12 @@ Colors are available via Tailwind classes:
 ### ❌ Hardcoded Colors
 ```tsx
 // BAD - will break if theme changes
-<Toggle color="#e74c3c" />
+<button className="bg-red-50 text-red-500" />
 ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
 
-// GOOD - uses theme from props/context
-<Toggle color={theme.sin} />
-ctx.fillStyle = withAlpha(theme.cos, OVERLAY_ALPHA.medium);
+// GOOD - uses semantic tokens from theme
+<button className="bg-action-danger-subtle text-action-danger" />
+ctx.fillStyle = theme.fill_angle_wedge;
 ```
 
 ### ❌ Duplicate Type Definitions
@@ -161,4 +185,4 @@ ctx.fillText("θ", x, y);
 5. **Run `npm run build`** to catch TypeScript errors before committing
 
 ---
-*Last updated: 2025-12-24*
+*Last updated: 2025-12-24 (v0.1.0)*
