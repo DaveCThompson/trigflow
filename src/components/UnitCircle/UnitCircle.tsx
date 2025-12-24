@@ -71,6 +71,39 @@ export const UnitCircle: React.FC = () => {
         return () => mediaQuery.removeEventListener('change', handler);
     }, []);
 
+    // Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Ignore if user is typing in an input
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+            switch (e.key) {
+                case ' ':
+                    e.preventDefault();
+                    setIsPlaying(p => !p);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    setAngle(a => {
+                        const newAngle = (a - 5 + 360) % 360;
+                        updateTrace(newAngle);
+                        return newAngle;
+                    });
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    setAngle(a => {
+                        const newAngle = (a + 5) % 360;
+                        updateTrace(newAngle);
+                        return newAngle;
+                    });
+                    break;
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     // Derived Trig Values for UI
     const rad = toRad(angle);
     const trigValues = {
@@ -188,6 +221,15 @@ export const UnitCircle: React.FC = () => {
 
     const onTouchEnd = () => setIsDragging(false);
 
+    // Reset all toggles to defaults
+    const resetToggles = useCallback(() => {
+        setToggles({
+            sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
+            comp: false, geoTan: false, geoCot: false, similarSec: false, similarCsc: false,
+            hypotenuse: false, quadrants: false, showXY: false, axesIntersections: false,
+        });
+    }, []);
+
     const handleSliderChange = (val: number) => {
         setAngle(val);
         updateTrace(val);
@@ -253,6 +295,8 @@ export const UnitCircle: React.FC = () => {
                             setToggles={setToggles}
                             isPlaying={isPlaying}
                             setIsPlaying={setIsPlaying}
+                            theme={theme}
+                            onResetToggles={resetToggles}
                         />
                         <ReadoutPanel
                             trigValues={trigValues}

@@ -20,8 +20,7 @@ src/
 │       ├── TrigGraph.tsx     # Waveform graphs
 │       └── steppers/         # Interactive proof steppers
 ├── hooks/
-│   ├── useCanvas.ts          # Canvas rendering hook
-│   └── useTrigMath.ts        # Trigonometric calculations
+│   └── useCanvas.ts          # Canvas rendering hook
 ├── types/
 │   └── index.ts              # TypeScript interfaces
 └── themes/                   # Color themes

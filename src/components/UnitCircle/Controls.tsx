@@ -13,12 +13,14 @@ interface ControlsProps {
     setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
     isPlaying: boolean;
     setIsPlaying: (playing: boolean) => void;
+    theme: UnitCircleState['theme'];
+    onResetToggles: () => void;
 }
 
 // ControlSection and Toggle are now imported from shared components
 
 export const Controls: React.FC<ControlsProps> = ({
-    angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles, isPlaying, setIsPlaying
+    angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles, isPlaying, setIsPlaying, theme, onResetToggles
 }) => {
 
     const toggle = (key: keyof UnitCircleState['toggles']) => {
@@ -31,12 +33,20 @@ export const Controls: React.FC<ControlsProps> = ({
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white">
                     Controls
                 </h2>
-                <button
-                    onClick={() => setAngleUnit(angleUnit === 'deg' ? 'rad' : 'deg')}
-                    className="text-xs font-mono font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                    {angleUnit === 'deg' ? 'DEG' : 'RAD'}
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={onResetToggles}
+                        className="text-xs font-mono font-bold px-2 py-1 rounded bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                    >
+                        Reset All
+                    </button>
+                    <button
+                        onClick={() => setAngleUnit(angleUnit === 'deg' ? 'rad' : 'deg')}
+                        className="text-xs font-mono font-bold px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        {angleUnit === 'deg' ? 'DEG' : 'RAD'}
+                    </button>
+                </div>
             </div>
 
             <ControlSection title={`Angle: ${angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}`}>
@@ -108,19 +118,19 @@ export const Controls: React.FC<ControlsProps> = ({
                     label="Sine"
                     checked={toggles.sin}
                     onChange={() => toggle('sin')}
-                    color="#e74c3c"
+                    color={theme.sin}
                 />
                 <Toggle
                     label="Tangent"
                     checked={toggles.tan}
                     onChange={() => toggle('tan')}
-                    color="#e67e22"
+                    color={theme.tan}
                 />
                 <Toggle
                     label="Secant"
                     checked={toggles.sec}
                     onChange={() => toggle('sec')}
-                    color="#8e44ad"
+                    color={theme.sec}
                 />
             </ControlSection>
 
@@ -129,19 +139,19 @@ export const Controls: React.FC<ControlsProps> = ({
                     label="Cosine"
                     checked={toggles.cos}
                     onChange={() => toggle('cos')}
-                    color="#3498db"
+                    color={theme.cos}
                 />
                 <Toggle
                     label="Cotangent"
                     checked={toggles.cot}
                     onChange={() => toggle('cot')}
-                    color="#27ae60"
+                    color={theme.cot}
                 />
                 <Toggle
                     label="Cosecant"
                     checked={toggles.csc}
                     onChange={() => toggle('csc')}
-                    color="#f1c40f"
+                    color={theme.csc}
                 />
             </ControlSection>
 

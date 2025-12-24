@@ -5,7 +5,18 @@ export default {
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                trig: {
+                    sin: '#ff6b6b',
+                    cos: '#4dabf7',
+                    tan: '#ff922b',
+                    cot: '#51cf66',
+                    sec: '#cc5de8',
+                    csc: '#fcc419',
+                }
+            }
+        },
     },
     plugins: [],
 }
