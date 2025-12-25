@@ -124,3 +124,14 @@ export interface UnitCircleState {
     toggles: UnitCircleToggles;
     theme: TrigTheme;
 }
+
+/**
+ * Lesson context configuration for declarative control visibility.
+ * Replaces imperative apply() pattern for better maintainability.
+ */
+export interface LessonContext {
+    /** List of toggle controls that should be visible in the sidebar for this lesson */
+    visible: (keyof UnitCircleToggles)[];
+    /** Default toggle states when this lesson is selected */
+    defaults: Partial<UnitCircleToggles>;
+}

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { UnitCircleState } from '../types';
+import { UnitCircleState, LessonContext } from '../types';
 import { DiagramType } from '../components/UnitCircle/DiagramPanel';
 
 export type LessonId = 'unit_circle' | 'sine' | 'cosine' | 'tangent' | 'cotangent' | 'secant' | 'cosecant' | 'tangent_identity' | 'general_form' | 'pythagorean' | 'pythagorean_identity' | 'pythag_identity_2' | 'pythag_identity_3' | 'identities';
@@ -15,7 +15,10 @@ export interface LessonData {
     quote: React.ReactNode;
     details: React.ReactNode[];
     diagram: DiagramType;
+    /** @deprecated Use context.defaults instead. Kept for backward compatibility during migration. */
     apply: (setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>) => void;
+    /** Declarative lesson configuration with visible controls and default states */
+    context?: LessonContext;
 }
 
 export const RESET_DEFAULTS: Partial<UnitCircleState['toggles']> = {
@@ -40,7 +43,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             sin: true, cos: true, hypotenuse: true
-        }))
+        })),
+        context: {
+            visible: ['sin', 'cos', 'hypotenuse', 'quadrants', 'showXY', 'axesIntersections'],
+            defaults: { sin: true, cos: true, hypotenuse: true }
+        }
     },
     {
         id: 'sine',
@@ -60,7 +67,11 @@ export const LESSONS: LessonData[] = [
             sin: true, cos: false, tan: false, cot: false, sec: false, csc: false,
             quadrants: true, comp: false,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
-        }))
+        })),
+        context: {
+            visible: ['sin', 'quadrants', 'hypotenuse', 'showXY'],
+            defaults: { sin: true, quadrants: true, hypotenuse: true }
+        }
     },
     {
         id: 'cosine',
@@ -80,7 +91,11 @@ export const LESSONS: LessonData[] = [
             sin: false, cos: true, tan: false, cot: false, sec: false, csc: false,
             quadrants: true, comp: false,
             hypotenuse: true, geoTan: false, geoCot: false, similarSec: false, similarCsc: false
-        }))
+        })),
+        context: {
+            visible: ['cos', 'quadrants', 'hypotenuse', 'showXY'],
+            defaults: { cos: true, quadrants: true, hypotenuse: true }
+        }
     },
     {
         id: 'tangent',
@@ -99,7 +114,11 @@ export const LESSONS: LessonData[] = [
             sin: false, cos: false, tan: true, cot: false, sec: false, csc: false,
             geoTan: true,
             hypotenuse: true, quadrants: false, similarSec: false, similarCsc: false
-        }))
+        })),
+        context: {
+            visible: ['tan', 'geoTan', 'hypotenuse', 'quadrants'],
+            defaults: { tan: true, geoTan: true, hypotenuse: true }
+        }
     },
     {
         id: 'cotangent',
@@ -118,7 +137,11 @@ export const LESSONS: LessonData[] = [
             sin: false, cos: false, tan: false, cot: true, sec: false, csc: false,
             geoCot: true,
             hypotenuse: true, quadrants: false, geoTan: false, similarSec: false, similarCsc: false
-        }))
+        })),
+        context: {
+            visible: ['cot', 'geoCot', 'hypotenuse'],
+            defaults: { cot: true, geoCot: true, hypotenuse: true }
+        }
     },
     {
         id: 'secant',
@@ -136,7 +159,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             sec: true, similarSec: true, hypotenuse: true
-        }))
+        })),
+        context: {
+            visible: ['sec', 'similarSec', 'hypotenuse', 'geoTan'],
+            defaults: { sec: true, similarSec: true, hypotenuse: true }
+        }
     },
     {
         id: 'cosecant',
@@ -154,6 +181,10 @@ export const LESSONS: LessonData[] = [
             ...RESET_DEFAULTS,
             csc: true, similarCsc: true, hypotenuse: true
         })),
+        context: {
+            visible: ['csc', 'similarCsc', 'hypotenuse', 'geoCot'],
+            defaults: { csc: true, similarCsc: true, hypotenuse: true }
+        }
     },
     {
         id: 'tangent_identity',
@@ -172,7 +203,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             proof_sin_tri: true,
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { proof_sin_tri: true }
+        }
     },
     {
         id: 'general_form',
@@ -191,7 +226,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             proof_general_unit: true
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { proof_general_unit: true }
+        }
     },
     {
         id: 'pythagorean',
@@ -207,7 +246,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             proof_pythag_rearrange: true
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { proof_pythag_rearrange: true }
+        }
     },
     {
         id: 'pythagorean_identity',
@@ -224,7 +267,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             sin: true, cos: true, hypotenuse: true
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { sin: true, cos: true, hypotenuse: true }
+        }
     },
     {
         id: 'pythag_identity_2',
@@ -241,7 +288,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             tan: true, sec: true, hypotenuse: true, geoTan: true
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { tan: true, sec: true, hypotenuse: true, geoTan: true }
+        }
     },
     {
         id: 'pythag_identity_3',
@@ -258,7 +309,11 @@ export const LESSONS: LessonData[] = [
             ...prev,
             ...RESET_DEFAULTS,
             cot: true, csc: true, hypotenuse: true, geoCot: true
-        }))
+        })),
+        context: {
+            visible: [], // DiagramPanel replaces Controls
+            defaults: { cot: true, csc: true, hypotenuse: true, geoCot: true }
+        }
     },
     {
         id: 'identities',
@@ -271,6 +326,10 @@ export const LESSONS: LessonData[] = [
             ...RESET_DEFAULTS,
             sin: true, cos: true, tan: true, cot: true, sec: true, csc: true,
             hypotenuse: true
-        }))
+        })),
+        context: {
+            visible: ['sin', 'cos', 'tan', 'cot', 'sec', 'csc', 'hypotenuse', 'geoTan', 'geoCot', 'similarSec', 'similarCsc'],
+            defaults: { sin: true, cos: true, tan: true, cot: true, sec: true, csc: true, hypotenuse: true }
+        }
     }
 ];

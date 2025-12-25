@@ -5,7 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { UnitCircleState } from '../../types';
-import { LessonId, LESSONS } from '../../data/lessons';
+import { LessonId, LESSONS, RESET_DEFAULTS } from '../../data/lessons';
 import { IdentitiesContent } from './IdentitiesContent';
 import { CaretLeft, CaretRight, BookOpen } from '@phosphor-icons/react';
 import { Button } from '../shared/Button';
@@ -28,7 +28,15 @@ export const LessonPanel: React.FC<LessonPanelProps> = ({ setToggles, selectedLe
     useEffect(() => {
         const lesson = LESSONS.find(l => l.id === selectedLessonId);
         if (lesson) {
-            lesson.apply(setToggles);
+            // Use declarative context if available, fallback to apply() for backward compatibility
+            if (lesson.context) {
+                setToggles({
+                    ...RESET_DEFAULTS,
+                    ...lesson.context.defaults
+                } as UnitCircleState['toggles']);
+            } else {
+                lesson.apply(setToggles);
+            }
         }
     }, [selectedLessonId, setToggles]);
 

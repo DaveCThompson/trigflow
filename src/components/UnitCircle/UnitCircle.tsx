@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useCanvas } from '../../hooks/useCanvas';
 import { drawUnitCircle, UnitCircleState } from './UnitCircleRenderer';
 import { Controls } from './Controls';
+import { CanvasHeader } from './CanvasHeader';
 import { LessonPanel, LessonId, LESSONS } from './LessonPanel';
 import { toRad, toDeg, normalizeAngle } from '../../utils/math';
 import { TrigGraph } from '../TrigGraph';
@@ -216,15 +217,6 @@ export const UnitCircle: React.FC = () => {
 
     const onTouchEnd = () => setIsDragging(false);
 
-    // Reset all toggles to defaults
-    const resetToggles = useCallback(() => {
-        setToggles({
-            sin: false, cos: false, tan: false, cot: false, sec: false, csc: false,
-            comp: false, geoTan: false, geoCot: false, similarSec: false, similarCsc: false,
-            hypotenuse: false, quadrants: false, showXY: false, axesIntersections: false,
-        });
-    }, []);
-
     const handleSliderChange = (val: number) => {
         setAngle(val);
         updateTrace(val);
@@ -233,6 +225,16 @@ export const UnitCircle: React.FC = () => {
     // Determine Diagram Mode
     const currentLesson = LESSONS.find(l => l.id === selectedLessonId);
     const showDiagram = currentLesson && currentLesson.diagram !== 'none';
+    const visibleControls = currentLesson?.context?.visible;
+
+    // Reset to lesson-specific defaults (or global defaults if no lesson context)
+    const resetToggles = useCallback(() => {
+        const { RESET_DEFAULTS } = require('./LessonPanel');
+        setToggles({
+            ...RESET_DEFAULTS,
+            ...currentLesson?.context?.defaults
+        } as UnitCircleState['toggles']);
+    }, [currentLesson]);
 
     return (
         <div className="flex flex-col xl:flex-row gap-6 items-start p-8 min-h-screen text-slate-800 dark:text-slate-200 transition-colors duration-300">
@@ -250,6 +252,16 @@ export const UnitCircle: React.FC = () => {
             {/* 2. Center Column: Canvas & Graphs */}
             <div className="flex-grow w-full flex flex-col gap-6 order-1 xl:order-2">
                 <div className="bg-canvas-bg p-4 rounded-3xl shadow-soft border border-ui-border transition-colors duration-300 relative flex justify-center">
+                    {/* Floating Glass Header */}
+                    <CanvasHeader
+                        angle={angle}
+                        setAngle={handleSliderChange}
+                        angleUnit={angleUnit}
+                        setAngleUnit={setAngleUnit}
+                        isPlaying={isPlaying}
+                        setIsPlaying={setIsPlaying}
+                        theme={theme}
+                    />
                     <canvas
                         ref={canvasRef}
                         onMouseDown={onMouseDown}
@@ -284,15 +296,13 @@ export const UnitCircle: React.FC = () => {
                     <>
                         <Controls
                             angle={angle}
-                            setAngle={handleSliderChange}
                             angleUnit={angleUnit}
-                            setAngleUnit={setAngleUnit}
+                            setAngle={handleSliderChange}
                             toggles={toggles}
                             setToggles={setToggles}
-                            isPlaying={isPlaying}
-                            setIsPlaying={setIsPlaying}
                             theme={theme}
                             onResetToggles={resetToggles}
+                            visibleControls={visibleControls}
                         />
                         <ReadoutPanel
                             trigValues={trigValues}

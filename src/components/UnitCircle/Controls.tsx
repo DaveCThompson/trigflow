@@ -2,29 +2,42 @@ import React from 'react';
 import { UnitCircleState } from '../../types';
 import { Toggle } from '../shared/Toggle';
 import { ControlSection } from '../shared/ControlSection';
-import { ArrowCounterClockwise, PlayCircle, PauseCircle, Gear } from '@phosphor-icons/react';
+import { ArrowCounterClockwise, Gear } from '@phosphor-icons/react';
 import { Button } from '../shared/Button';
 
 interface ControlsProps {
-    angle: number;
-    setAngle: (angle: number) => void;
-    angleUnit: 'deg' | 'rad';
-    setAngleUnit: (unit: 'deg' | 'rad') => void;
+    angle: number;  // For Special Angles display
+    angleUnit: 'deg' | 'rad';  // For Special Angles display
+    setAngle: (angle: number) => void;  // For Special Angles preset buttons
     toggles: UnitCircleState['toggles'];
     setToggles: React.Dispatch<React.SetStateAction<UnitCircleState['toggles']>>;
-    isPlaying: boolean;
-    setIsPlaying: (playing: boolean) => void;
     theme: UnitCircleState['theme'];
     onResetToggles: () => void;
+    /** List of toggle controls that should be visible. If undefined, all controls are shown. */
+    visibleControls?: (keyof UnitCircleState['toggles'])[];
 }
 
 export const Controls: React.FC<ControlsProps> = ({
-    angle, setAngle, angleUnit, setAngleUnit, toggles, setToggles, isPlaying, setIsPlaying, theme, onResetToggles
+    angle, angleUnit, setAngle, toggles, setToggles, theme, onResetToggles, visibleControls
 }) => {
 
     const toggle = (key: keyof UnitCircleState['toggles']) => {
         setToggles(prev => ({ ...prev, [key]: !prev[key] }));
     };
+
+    // Helper function to check if a control should be visible
+    const isVisible = (key: keyof UnitCircleState['toggles']) => {
+        return !visibleControls || visibleControls.includes(key);
+    };
+
+    // Helper function to check if a section has any visible toggles
+    const hasSectionVisibleToggles = (toggleKeys: (keyof UnitCircleState['toggles'])[]) => {
+        if (!visibleControls) return true; // All visible if no filter
+        return toggleKeys.some(key => visibleControls.includes(key));
+    };
+
+    // Check if any toggles are visible at all
+    const hasAnyVisibleToggles = !visibleControls || visibleControls.length > 0;
 
     return (
         <div className="w-full bg-ui-bg-panel rounded-3xl shadow-soft border border-ui-border p-6 transition-colors duration-300">
@@ -35,97 +48,13 @@ export const Controls: React.FC<ControlsProps> = ({
                         Controls
                     </h2>
                 </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={onResetToggles}
-                        title="Reset all toggles"
-                        icon={<ArrowCounterClockwise weight="bold" />}
-                    />
-                    {/* Segmented Deg/Rad Toggle */}
-                    <div className="flex rounded-full bg-ui-bg-hover p-1 gap-1">
-                        <button
-                            onClick={() => setAngleUnit('deg')}
-                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'deg'
-                                ? 'bg-surface-selected text-surface-selected-text shadow-sm'
-                                : 'text-ui-text-muted hover:text-ui-text'
-                                }`}
-                        >
-                            DEG
-                        </button>
-                        <button
-                            onClick={() => setAngleUnit('rad')}
-                            className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'rad'
-                                ? 'bg-surface-selected text-surface-selected-text shadow-sm'
-                                : 'text-ui-text-muted hover:text-ui-text'
-                                }`}
-                        >
-                            RAD
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Angle Control - No longer in accordion */}
-            <div className="pb-4 mb-4 border-b border-ui-border">
-                <h3 className="text-xs font-bold text-ui-text-muted uppercase tracking-wider mb-2">
-                    Angle: {angleUnit === 'deg' ? angle.toFixed(1) + '°' : (angle * Math.PI / 180).toFixed(2) + ' rad'}
-                </h3>
-                <div className="flex items-center gap-3 mt-2 py-3 overflow-visible">
-                    <button
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className={`
-                            flex items-center justify-center p-0 rounded-full transition-all duration-300 hover:scale-105 active:scale-95
-                            ${isPlaying ? 'text-ui-text opacity-50' : 'text-trig-cos shadow-glow'}
-                        `}
-                        title={isPlaying ? 'Pause animation' : 'Play animation'}
-                        style={!isPlaying ? { boxShadow: '0 0 20px -5px oklch(75% 0.15 260 / 0.6)' } : undefined}
-                    >
-                        {isPlaying ? (
-                            <PauseCircle size={42} weight="fill" />
-                        ) : (
-                            <PlayCircle size={42} weight="fill" />
-                        )}
-                    </button>
-
-                    {/* Custom Range Slider */}
-                    <div className="relative flex-1 h-8 flex items-center group overflow-visible">
-                        <input
-                            type="range"
-                            min="0"
-                            max="360"
-                            step="0.1"
-                            value={angle}
-                            onChange={(e) => setAngle(parseFloat(e.target.value))}
-                            className="absolute w-full h-2 bg-ui-bg-hover rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-trig-cos/20 overflow-visible"
-                            disabled={isPlaying}
-                            style={{
-                                background: `linear-gradient(to right, var(--color-cos) 0%, var(--color-cos) ${(angle / 360) * 100}%, var(--surface-3) ${(angle / 360) * 100}%, var(--surface-3) 100%)`
-                            }}
-                        />
-                        <style>{`
-                            input[type=range]::-webkit-slider-thumb {
-                                -webkit-appearance: none;
-                                height: 24px;
-                                width: 24px;
-                                border-radius: 50%;
-                                background: #ffffff;
-                                border: 3px solid var(--color-cos);
-                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                                transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                                margin-top: 0px;
-                            }
-                            input[type=range]::-webkit-slider-thumb:hover {
-                                transform: scale(1.15);
-                                cursor: grab;
-                            }
-                            input[type=range]:active::-webkit-slider-thumb {
-                                cursor: grabbing;
-                            }
-                        `}</style>
-                    </div>
-                </div>
+                <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={onResetToggles}
+                    title="Reset all toggles"
+                    icon={<ArrowCounterClockwise weight="bold" />}
+                />
             </div>
 
             <ControlSection title="Special Angles">
@@ -162,115 +91,164 @@ export const Controls: React.FC<ControlsProps> = ({
                 </div>
             </ControlSection>
 
-            <ControlSection title="Foundational" defaultExpanded={true}>
-                <Toggle
-                    label="Radius (Hypotenuse)"
-                    checked={toggles.hypotenuse}
-                    onChange={() => toggle('hypotenuse')}
-                    color={theme.axis}
-                    description="Unit length = 1"
-                />
-                <Toggle
-                    label="Quadrant Labels"
-                    checked={toggles.quadrants}
-                    onChange={() => toggle('quadrants')}
-                    color={theme.text}
-                    description="Shows I, II, III, IV"
-                />
-                <Toggle
-                    label="Point Coordinates"
-                    checked={toggles.showXY}
-                    onChange={() => toggle('showXY')}
-                    color={theme.text}
-                    description="Shows (x, y) at point"
-                />
-                <Toggle
-                    label="Axis Intersections"
-                    checked={toggles.axesIntersections}
-                    onChange={() => toggle('axesIntersections')}
-                    color={theme.text}
-                    description="(1,0), (0,1), (-1,0), (0,-1)"
-                />
-            </ControlSection>
+            {/* Empty State for lessons with no visible toggles (e.g., proof lessons) */}
+            {!hasAnyVisibleToggles && (
+                <div className="py-8 text-center space-y-2">
+                    <p className="text-ui-text-muted text-sm">
+                        <strong className="block text-base mb-2">👁️ Observe Mode</strong>
+                        This lesson uses a dedicated visualization panel.
+                        <br />
+                        Use the canvas controls above to interact with the angle.
+                    </p>
+                </div>
+            )}
 
-            <ControlSection title="Basic Trig Functions" defaultExpanded={true}>
-                <Toggle
-                    label="Sine"
-                    checked={toggles.sin}
-                    onChange={() => toggle('sin')}
-                    color={theme.sin}
-                />
-                <Toggle
-                    label="Cosine"
-                    checked={toggles.cos}
-                    onChange={() => toggle('cos')}
-                    color={theme.cos}
-                />
-                <Toggle
-                    label="Tangent"
-                    checked={toggles.tan}
-                    onChange={() => toggle('tan')}
-                    color={theme.tan}
-                />
-            </ControlSection>
+            {/* Smart Sections: Only show if section has visible toggles */}
+            {hasSectionVisibleToggles(['hypotenuse', 'quadrants', 'showXY', 'axesIntersections']) && (
+                <ControlSection title="Foundational" defaultExpanded={true}>
+                    {isVisible('hypotenuse') && (
+                        <Toggle
+                            label="Radius (Hypotenuse)"
+                            checked={toggles.hypotenuse}
+                            onChange={() => toggle('hypotenuse')}
+                            color={theme.axis}
+                            description="Unit length = 1"
+                        />
+                    )}
+                    {isVisible('quadrants') && (
+                        <Toggle
+                            label="Quadrant Labels"
+                            checked={toggles.quadrants}
+                            onChange={() => toggle('quadrants')}
+                            color={theme.text}
+                            description="Shows I, II, III, IV"
+                        />
+                    )}
+                    {isVisible('showXY') && (
+                        <Toggle
+                            label="Point Coordinates"
+                            checked={toggles.showXY}
+                            onChange={() => toggle('showXY')}
+                            color={theme.text}
+                            description="Shows (x, y) at point"
+                        />
+                    )}
+                    {isVisible('axesIntersections') && (
+                        <Toggle
+                            label="Axis Intersections"
+                            checked={toggles.axesIntersections}
+                            onChange={() => toggle('axesIntersections')}
+                            color={theme.text}
+                            description="(1,0), (0,1), (-1,0), (0,-1)"
+                        />
+                    )}
+                </ControlSection>
+            )}
 
-            <ControlSection title="Other Functions" defaultExpanded={false}>
-                <Toggle
-                    label="Cotangent"
-                    checked={toggles.cot}
-                    onChange={() => toggle('cot')}
-                    color={theme.cot}
-                />
-                <Toggle
-                    label="Cosecant"
-                    checked={toggles.csc}
-                    onChange={() => toggle('csc')}
-                    color={theme.csc}
-                />
-                <Toggle
-                    label="Secant"
-                    checked={toggles.sec}
-                    onChange={() => toggle('sec')}
-                    color={theme.sec}
-                />
-            </ControlSection>
+            {hasSectionVisibleToggles(['sin', 'cos', 'tan']) && (
+                <ControlSection title="Basic Trig Functions" defaultExpanded={true}>
+                    {isVisible('sin') && (
+                        <Toggle
+                            label="Sine"
+                            checked={toggles.sin}
+                            onChange={() => toggle('sin')}
+                            color={theme.sin}
+                        />
+                    )}
+                    {isVisible('cos') && (
+                        <Toggle
+                            label="Cosine"
+                            checked={toggles.cos}
+                            onChange={() => toggle('cos')}
+                            color={theme.cos}
+                        />
+                    )}
+                    {isVisible('tan') && (
+                        <Toggle
+                            label="Tangent"
+                            checked={toggles.tan}
+                            onChange={() => toggle('tan')}
+                            color={theme.tan}
+                        />
+                    )}
+                </ControlSection>
+            )}
+
+            {hasSectionVisibleToggles(['cot', 'csc', 'sec']) && (
+                <ControlSection title="Other Functions" defaultExpanded={false}>
+                    {isVisible('cot') && (
+                        <Toggle
+                            label="Cotangent"
+                            checked={toggles.cot}
+                            onChange={() => toggle('cot')}
+                            color={theme.cot}
+                        />
+                    )}
+                    {isVisible('csc') && (
+                        <Toggle
+                            label="Cosecant"
+                            checked={toggles.csc}
+                            onChange={() => toggle('csc')}
+                            color={theme.csc}
+                        />
+                    )}
+                    {isVisible('sec') && (
+                        <Toggle
+                            label="Secant"
+                            checked={toggles.sec}
+                            onChange={() => toggle('sec')}
+                            color={theme.sec}
+                        />
+                    )}
+                </ControlSection>
+            )}
 
             <ControlSection title="Advanced Geometry" defaultExpanded={false}>
-                <Toggle
-                    label="Complementary Angle (α)"
-                    checked={toggles.comp}
-                    onChange={() => toggle('comp')}
-                    color={theme.comp}
-                    description="Shows 90° - θ relationship"
-                />
-                <Toggle
-                    label="Tangent Construction"
-                    checked={toggles.geoTan}
-                    onChange={() => toggle('geoTan')}
-                    color={theme.tan}
-                    description="Line from point to x=1"
-                />
-                <Toggle
-                    label="Cotangent Construction"
-                    checked={toggles.geoCot}
-                    onChange={() => toggle('geoCot')}
-                    color={theme.cot}
-                    description="Line from point to y=1"
-                />
-                <Toggle
-                    label="Secant Triangle"
-                    checked={toggles.similarSec}
-                    onChange={() => toggle('similarSec')}
-                    color={theme.sec}
-                    description="Similar triangle visualization"
-                />
-                <Toggle
-                    label="Cosecant Triangle"
-                    checked={toggles.similarCsc}
-                    onChange={() => toggle('similarCsc')}
-                    color={theme.csc}
-                    description="Similar triangle visualization"
-                />
+                {isVisible('comp') && (
+                    <Toggle
+                        label="Complementary Angle (α)"
+                        checked={toggles.comp}
+                        onChange={() => toggle('comp')}
+                        color={theme.comp}
+                        description="Shows 90° - θ relationship"
+                    />
+                )}
+                {isVisible('geoTan') && (
+                    <Toggle
+                        label="Tangent Construction"
+                        checked={toggles.geoTan}
+                        onChange={() => toggle('geoTan')}
+                        color={theme.tan}
+                        description="Line from point to x=1"
+                    />
+                )}
+                {isVisible('geoCot') && (
+                    <Toggle
+                        label="Cotangent Construction"
+                        checked={toggles.geoCot}
+                        onChange={() => toggle('geoCot')}
+                        color={theme.cot}
+                        description="Line from point to y=1"
+                    />
+                )}
+                {isVisible('similarSec') && (
+                    <Toggle
+                        label="Secant Triangle"
+                        checked={toggles.similarSec}
+                        onChange={() => toggle('similarSec')}
+                        color={theme.sec}
+                        description="Similar triangle visualization"
+                    />
+                )}
+                {isVisible('similarCsc') && (
+                    <Toggle
+                        label="Cosecant Triangle"
+                        checked={toggles.similarCsc}
+                        onChange={() => toggle('similarCsc')}
+                        color={theme.csc}
+                        description="Similar triangle visualization"
+                    />
+                )}
             </ControlSection>
         </div>
     );
