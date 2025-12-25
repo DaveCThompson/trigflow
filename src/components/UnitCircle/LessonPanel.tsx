@@ -12,7 +12,7 @@ import { Button } from '../shared/Button';
 
 // Re-export types for backward compatibility
 export type { LessonId } from '../../data/lessons';
-export { LESSONS } from '../../data/lessons';
+export { LESSONS, RESET_DEFAULTS } from '../../data/lessons';
 
 interface LessonPanelProps {
     toggles: UnitCircleState['toggles'];

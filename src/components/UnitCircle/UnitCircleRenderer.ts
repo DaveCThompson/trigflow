@@ -105,15 +105,6 @@ export const drawUnitCircle = (
     // Use semantic tokens from architecture
     drawText(ctx, angleText, map(Math.cos(mid) * 0.25, Math.sin(mid) * 0.25), theme.label_on_fill, "center", "middle", theme.halo);
 
-    // --- 4. Radius (Hypotenuse) ---
-    if (toggles.hypotenuse) {
-        drawLine(ctx, origin, pCircle, theme.axis, 2.5);
-        const rLabelPos = map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5);
-        drawText(ctx, "1", rLabelPos, theme.label_primary, "center", "middle", theme.halo);
-    } else {
-        drawLine(ctx, origin, pCircle, theme.axis, 1.5, [4, 6]);
-    }
-
     // --- Feature: Similar Triangle (Secant) for GEOMETRY Mode ---
     if (toggles.similarSec) {
         drawSimilarSecant(proofCtx);
@@ -134,6 +125,15 @@ export const drawUnitCircle = (
     if (toggles.geoCot) {
         const pCsc = map(0, csc); // Y-axis intercept
         drawLine(ctx, pCircle, pCsc, theme.cot, 2.5, [6, 6]);
+    }
+
+    // --- 4. Radius (Hypotenuse) - Drawn AFTER similar triangles so it's on top ---
+    if (toggles.hypotenuse) {
+        drawLine(ctx, origin, pCircle, theme.axis, 2.5);
+        const rLabelPos = map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5);
+        drawText(ctx, "1", rLabelPos, theme.label_primary, "center", "middle", theme.halo);
+    } else {
+        drawLine(ctx, origin, pCircle, theme.axis, 1.5, [4, 6]);
     }
 
     // --- Cosine (Always Complementary Position) ---

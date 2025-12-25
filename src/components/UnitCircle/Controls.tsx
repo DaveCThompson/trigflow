@@ -39,12 +39,6 @@ export const Controls: React.FC<ControlsProps> = ({
         return !visibleControls || visibleControls.includes(key);
     };
 
-    // Helper function to check if a section has any visible toggles
-    const hasSectionVisibleToggles = (toggleKeys: (keyof UnitCircleState['toggles'])[]) => {
-        if (!visibleControls) return true; // All visible if no filter
-        return toggleKeys.some(key => visibleControls.includes(key));
-    };
-
     // Check if any toggles are visible at all
     const hasAnyVisibleToggles = !visibleControls || visibleControls.length > 0;
 
@@ -105,9 +99,9 @@ export const Controls: React.FC<ControlsProps> = ({
                 </div>
             )}
 
-            {/* Smart Sections: Only show if section has visible toggles */}
-            {hasSectionVisibleToggles(['hypotenuse', 'quadrants', 'showXY', 'axesIntersections']) && (
-                <ControlSection title="Foundational" defaultExpanded={true}>
+            {/* Flat Toggle List (no section groupings) */}
+            {hasAnyVisibleToggles && (
+                <div className="space-y-2">
                     {isVisible('hypotenuse') && (
                         <Toggle
                             label="Radius (Hypotenuse)"
@@ -144,11 +138,6 @@ export const Controls: React.FC<ControlsProps> = ({
                             description="(1,0), (0,1), (-1,0), (0,-1)"
                         />
                     )}
-                </ControlSection>
-            )}
-
-            {hasSectionVisibleToggles(['sin', 'cos', 'tan']) && (
-                <ControlSection title="Basic Trig Functions" defaultExpanded={true}>
                     {isVisible('sin') && (
                         <Toggle
                             label="Sine"
@@ -173,11 +162,6 @@ export const Controls: React.FC<ControlsProps> = ({
                             color={theme.tan}
                         />
                     )}
-                </ControlSection>
-            )}
-
-            {hasSectionVisibleToggles(['cot', 'csc', 'sec']) && (
-                <ControlSection title="Other Functions" defaultExpanded={false}>
                     {isVisible('cot') && (
                         <Toggle
                             label="Cotangent"
@@ -202,56 +186,53 @@ export const Controls: React.FC<ControlsProps> = ({
                             color={theme.sec}
                         />
                     )}
-                </ControlSection>
+                    {isVisible('comp') && (
+                        <Toggle
+                            label="Complementary Angle (α)"
+                            checked={toggles.comp}
+                            onChange={() => toggle('comp')}
+                            color={theme.comp}
+                            description="Shows 90° - θ relationship"
+                        />
+                    )}
+                    {isVisible('geoTan') && (
+                        <Toggle
+                            label="Tangent Construction"
+                            checked={toggles.geoTan}
+                            onChange={() => toggle('geoTan')}
+                            color={theme.tan}
+                            description="Line from point to x=1"
+                        />
+                    )}
+                    {isVisible('geoCot') && (
+                        <Toggle
+                            label="Cotangent Construction"
+                            checked={toggles.geoCot}
+                            onChange={() => toggle('geoCot')}
+                            color={theme.cot}
+                            description="Line from point to y=1"
+                        />
+                    )}
+                    {isVisible('similarSec') && (
+                        <Toggle
+                            label="Secant Triangle"
+                            checked={toggles.similarSec}
+                            onChange={() => toggle('similarSec')}
+                            color={theme.sec}
+                            description="Similar triangle visualization"
+                        />
+                    )}
+                    {isVisible('similarCsc') && (
+                        <Toggle
+                            label="Cosecant Triangle"
+                            checked={toggles.similarCsc}
+                            onChange={() => toggle('similarCsc')}
+                            color={theme.csc}
+                            description="Similar triangle visualization"
+                        />
+                    )}
+                </div>
             )}
-
-            <ControlSection title="Advanced Geometry" defaultExpanded={false}>
-                {isVisible('comp') && (
-                    <Toggle
-                        label="Complementary Angle (α)"
-                        checked={toggles.comp}
-                        onChange={() => toggle('comp')}
-                        color={theme.comp}
-                        description="Shows 90° - θ relationship"
-                    />
-                )}
-                {isVisible('geoTan') && (
-                    <Toggle
-                        label="Tangent Construction"
-                        checked={toggles.geoTan}
-                        onChange={() => toggle('geoTan')}
-                        color={theme.tan}
-                        description="Line from point to x=1"
-                    />
-                )}
-                {isVisible('geoCot') && (
-                    <Toggle
-                        label="Cotangent Construction"
-                        checked={toggles.geoCot}
-                        onChange={() => toggle('geoCot')}
-                        color={theme.cot}
-                        description="Line from point to y=1"
-                    />
-                )}
-                {isVisible('similarSec') && (
-                    <Toggle
-                        label="Secant Triangle"
-                        checked={toggles.similarSec}
-                        onChange={() => toggle('similarSec')}
-                        color={theme.sec}
-                        description="Similar triangle visualization"
-                    />
-                )}
-                {isVisible('similarCsc') && (
-                    <Toggle
-                        label="Cosecant Triangle"
-                        checked={toggles.similarCsc}
-                        onChange={() => toggle('similarCsc')}
-                        color={theme.csc}
-                        description="Similar triangle visualization"
-                    />
-                )}
-            </ControlSection>
         </div>
     );
 };

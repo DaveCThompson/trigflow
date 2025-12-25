@@ -4,7 +4,7 @@ import { useCanvas } from '../../hooks/useCanvas';
 import { drawUnitCircle, UnitCircleState } from './UnitCircleRenderer';
 import { Controls } from './Controls';
 import { CanvasHeader } from './CanvasHeader';
-import { LessonPanel, LessonId, LESSONS } from './LessonPanel';
+import { LessonPanel, LessonId, LESSONS, RESET_DEFAULTS } from './LessonPanel';
 import { toRad, toDeg, normalizeAngle } from '../../utils/math';
 import { TrigGraph } from '../TrigGraph';
 import { DiagramPanel } from './DiagramPanel';
@@ -229,7 +229,6 @@ export const UnitCircle: React.FC = () => {
 
     // Reset to lesson-specific defaults (or global defaults if no lesson context)
     const resetToggles = useCallback(() => {
-        const { RESET_DEFAULTS } = require('./LessonPanel');
         setToggles({
             ...RESET_DEFAULTS,
             ...currentLesson?.context?.defaults
