@@ -99,8 +99,8 @@ export function drawGeneralFormUnitProof(c: ProofContext): void {
     drawLine(ctx, pXAxis, pCircle, theme.sin, 3);
     drawLine(ctx, origin, pCircle, theme.text, 2);
 
-    drawText(ctx, "sin θ", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right");
-    drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text);
+    drawText(ctx, "sin θ", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle", theme.halo);
+    drawText(ctx, "1", map(Math.cos(rad) * 0.5, Math.sin(rad) * 0.5), theme.text, "center", "middle", theme.halo);
 }
 
 /**

@@ -67,7 +67,7 @@ export function drawSimilarSecant(c: ProofContext): void {
         drawText(ctx, "α", {
             x: pCircle.x + Math.cos(midAlpha) * 30,
             y: pCircle.y + Math.sin(midAlpha) * 30
-        }, theme.isDark ? '#ffffff' : theme.axis);
+        }, theme.isDark ? '#ffffff' : theme.axis, "center", "middle", theme.halo);
     }
 
     // 3. Right Angle at P(cos, sin) for Secant/Tangent Triangle
@@ -143,7 +143,7 @@ export function drawSimilarSecant(c: ProofContext): void {
         drawText(ctx, "θ", {
             x: pCircle.x + Math.cos(midTheta) * 35,
             y: pCircle.y + Math.sin(midTheta) * 35
-        }, theme.text);
+        }, theme.text, "center", "middle", theme.halo);
     }
 
     // --- NEW: Supplementary Right Angle at A (pXAxis) ---
@@ -204,7 +204,7 @@ export function drawSimilarSecant(c: ProofContext): void {
     drawText(ctx, "α", {
         x: origin.x + Math.cos(midAlpha) * 35,
         y: origin.y + Math.sin(midAlpha) * 35
-    }, theme.text);
+    }, theme.text, "center", "middle", theme.halo);
 
 
     // 5. Theta Angle at P(cos, sin)

@@ -30,6 +30,7 @@ export const drawLine = (
 /**
  * Draw text with a soft halo for legibility.
  * Updated to use Nunito font.
+ * @param haloColor - REQUIRED: Must pass theme.halo from renderer for dark mode support
  */
 export const drawText = (
     ctx: CanvasRenderingContext2D,
@@ -38,17 +39,16 @@ export const drawText = (
     color: string,
     align: CanvasTextAlign = 'center',
     base: CanvasTextBaseline = 'middle',
-    haloColor?: string
+    haloColor: string  // REQUIRED - no more optional!
 ): void => {
-    // Use provided halo, or fallback to a smart default.
-    // NOTE: In Dark Mode, you MUST provide theme.halo from the renderer, 
-    // otherwise this default 'white' halo will look bad against dark backgrounds.
-    const halo = haloColor || 'rgba(255, 255, 255, 0.8)';
+    // Use provided halo color (no more fallback!)
+    // NOTE: Callers MUST pass theme.halo from their renderer context.
+    // This ensures proper contrast in both light (white halo) and dark (dark halo) modes.
 
     // Nunito Font
     ctx.font = "bold 14px Nunito, sans-serif";
     ctx.lineWidth = 4;
-    ctx.strokeStyle = halo;
+    ctx.strokeStyle = haloColor;
     ctx.textAlign = align;
     ctx.textBaseline = base;
     ctx.lineJoin = "round";

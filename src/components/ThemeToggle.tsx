@@ -13,7 +13,7 @@ export const ThemeToggle: React.FC = () => {
                 onClick={() => setThemePreference('light')}
                 className={clsx(
                     "p-1.5 rounded-full transition-colors text-ui-text-muted hover:text-ui-text",
-                    themePreference === 'light' && "bg-white dark:bg-gray-700 text-trig-sin shadow-sm"
+                    themePreference === 'light' && "bg-surface-selected text-trig-sin shadow-sm"
                 )}
                 title="Light Mode"
             >
@@ -23,7 +23,7 @@ export const ThemeToggle: React.FC = () => {
                 onClick={() => setThemePreference('system')}
                 className={clsx(
                     "p-1.5 rounded-full transition-colors text-ui-text-muted hover:text-ui-text",
-                    themePreference === 'system' && "bg-white dark:bg-gray-700 text-trig-cos shadow-sm"
+                    themePreference === 'system' && "bg-surface-selected text-trig-cos shadow-sm"
                 )}
                 title="System Theme"
             >
@@ -33,7 +33,7 @@ export const ThemeToggle: React.FC = () => {
                 onClick={() => setThemePreference('dark')}
                 className={clsx(
                     "p-1.5 rounded-full transition-colors text-ui-text-muted hover:text-ui-text",
-                    themePreference === 'dark' && "bg-white dark:bg-gray-700 text-trig-sec shadow-sm"
+                    themePreference === 'dark' && "bg-surface-selected text-trig-sec shadow-sm"
                 )}
                 title="Dark Mode"
             >

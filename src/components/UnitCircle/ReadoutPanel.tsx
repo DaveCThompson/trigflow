@@ -1,5 +1,5 @@
 import React from 'react';
-import { UnitCircleState } from './UnitCircleRenderer';
+import { UnitCircleState } from '../../types';
 import { formatNumber } from '../../utils/math';
 
 const ValueDisplay: React.FC<{ label: string; value: number; color?: string }> = ({ label, value, color }) => {

@@ -37,13 +37,15 @@ export default {
                 },
                 canvas: {
                     bg: 'var(--canvas-bg)',
-                    grid: 'var(--canvas-grid)'
+                    grid: 'var(--canvas-grid)',
+                    'dot-bg': 'var(--canvas-dot-bg)',
                 },
                 action: {
                     primary: 'var(--action-primary)',
                     'primary-hover': 'var(--action-primary-hover)',
                     danger: 'var(--action-danger)',
                     'danger-subtle': 'var(--action-danger-subtle)',
+                    'secondary-hover': 'var(--action-secondary-hover)',
                 },
                 surface: {
                     selected: 'var(--surface-selected)',

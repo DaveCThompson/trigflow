@@ -170,16 +170,14 @@ const SingleGraph: React.FC<{
 
             ctx.beginPath();
             ctx.arc(dotX, dotY, 4.5, 0, Math.PI * 2);
-            ctx.fillStyle = theme.bg; // This might be solid color, ideally transparent
+            ctx.fillStyle = theme.canvas_dot_bg;
             ctx.fill();
             ctx.lineWidth = 2;
             ctx.strokeStyle = color;
             ctx.stroke();
 
-            // Re-fill with non-transparent color so wire doesn't show through dot
-            // Use explicit white/black based on theme or just rely on global bg var
-            // since canvas background is transparent now, filling with 'theme.bg' 
-            // from JS context might be solid color.
+            // Canvas dots now use theme-aware background color
+            // that matches the panel background in each mode
         }
 
     }, [trace, theme, angleUnit, color, dataKey, currentAngle]);

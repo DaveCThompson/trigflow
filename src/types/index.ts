@@ -36,6 +36,8 @@ export interface TrigTheme {
     action_danger: string;
     /** Danger bg with low opacity */
     action_danger_subtle: string;
+    /** Hover state for secondary buttons */
+    action_secondary_hover: string;
 
     // Selection & Focus
     /** Selected item background */
@@ -50,6 +52,10 @@ export interface TrigTheme {
     // Wedge/Fill specific
     /** Theta angle fill (darker in light mode) */
     fill_angle_wedge: string;
+
+    // Canvas specific
+    /** Background color for canvas dots/points */
+    canvas_dot_bg: string;
 
     /** Whether this is a dark theme - used for overlay/contrast decisions */
     isDark: boolean;

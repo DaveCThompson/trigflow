@@ -17,6 +17,15 @@ interface ControlsProps {
     visibleControls?: (keyof UnitCircleState['toggles'])[];
 }
 
+// Special angle presets with degree and radian labels
+const SPECIAL_ANGLES = {
+    0: { deg: '0°', rad: '0' },
+    30: { deg: '30°', rad: 'π/6' },
+    45: { deg: '45°', rad: 'π/4' },
+    60: { deg: '60°', rad: 'π/3' },
+    90: { deg: '90°', rad: 'π/2' },
+} as const;
+
 export const Controls: React.FC<ControlsProps> = ({
     angle, angleUnit, setAngle, toggles, setToggles, theme, onResetToggles, visibleControls
 }) => {
@@ -59,18 +68,10 @@ export const Controls: React.FC<ControlsProps> = ({
 
             <ControlSection title="Special Angles">
                 <div className="grid grid-cols-5 gap-3 p-1">
-                    {[0, 30, 45, 60, 90].map(deg => {
+                    {Object.entries(SPECIAL_ANGLES).map(([degStr, labels]) => {
+                        const deg = Number(degStr);
                         const isActive = Math.abs(angle - deg) < 0.1;
-                        let label = `${deg}°`;
-                        if (angleUnit === 'rad') {
-                            switch (deg) {
-                                case 0: label = "0"; break;
-                                case 30: label = "π/6"; break;
-                                case 45: label = "π/4"; break;
-                                case 60: label = "π/3"; break;
-                                case 90: label = "π/2"; break;
-                            }
-                        }
+                        const label = angleUnit === 'rad' ? labels.rad : labels.deg;
 
                         return (
                             <button
@@ -78,6 +79,7 @@ export const Controls: React.FC<ControlsProps> = ({
                                 onClick={() => setAngle(deg)}
                                 className={`
                                     text-xs font-bold py-2 rounded-xl transition-all duration-200 active:scale-95
+                                    focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2
                                     ${isActive
                                         ? 'bg-surface-selected text-surface-selected-text ring-2 ring-border-selected shadow-lg'
                                         : 'bg-ui-bg-hover text-ui-text-muted hover:bg-ui-bg-hover hover:text-ui-text'

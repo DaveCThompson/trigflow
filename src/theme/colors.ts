@@ -26,6 +26,7 @@ export const LIGHT_THEME: TrigTheme = {
     action_primary_hover: 'oklch(60% 0.20 250)',  // darker blue
     action_danger: 'oklch(60% 0.20 25)',          // red
     action_danger_subtle: 'oklch(98% 0.01 25)',   // very light red bg
+    action_secondary_hover: 'oklch(90% 0.01 260)', // subtle gray hover
 
     // Selection & Focus
     surface_selected: 'oklch(100% 0 0)',          // pure white
@@ -35,6 +36,9 @@ export const LIGHT_THEME: TrigTheme = {
 
     // Wedge/Fill specific
     fill_angle_wedge: withAlpha('oklch(65% 0.18 250)', 0.15), // blue 15%
+
+    // Canvas specific
+    canvas_dot_bg: 'oklch(100% 0 0)',             // pure white for dots
 
     isDark: false
 };
@@ -63,6 +67,7 @@ export const DARK_THEME: TrigTheme = {
     action_primary_hover: 'oklch(80% 0.18 260)',
     action_danger: 'oklch(70% 0.18 25)',
     action_danger_subtle: 'oklch(25% 0.02 25)',
+    action_secondary_hover: 'oklch(35% 0.02 260)',  // subtle dark hover
 
     // Selection & Focus
     surface_selected: 'oklch(30% 0.02 260)',
@@ -72,6 +77,9 @@ export const DARK_THEME: TrigTheme = {
 
     // Wedge/Fill specific
     fill_angle_wedge: withAlpha('oklch(75% 0.15 260)', 0.12),
+
+    // Canvas specific
+    canvas_dot_bg: 'oklch(25% 0.02 260)',           // matches panel bg
 
     isDark: true
 };

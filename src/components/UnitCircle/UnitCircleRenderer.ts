@@ -16,6 +16,19 @@ import { drawSimilarCosecant } from './canvas/similarCosecant';
 // Re-export for consumers that import from this file
 export type { UnitCircleState } from '../../types';
 
+// Canvas sizing and positioning constants
+const CIRCLE_PADDING_RATIO = 4.2;  // Provides space for labels outside circle
+const WEDGE_RADIUS = 50;             // Angle indicator arc size
+const COMPLEMENTARY_ARC_RADIUS = 70; // Complementary angle arc size
+const COS_LABEL_OFFSET = 20;         // Distance from cos line to label
+const SIN_LABEL_OFFSET = 20;         // Distance from sin line to label
+const TAN_LABEL_OFFSET = 25;         // Distance from tan line to label
+const SEC_LABEL_OFFSET = 30;         // Distance from sec point to label
+const CSC_LABEL_OFFSET = 20;         // Distance from csc point to label
+const COT_LABEL_OFFSET = 20;         // Distance from cot point to label
+const ALPHA_INDICATOR_RADIUS = 20;   // Small angle indicator at point
+const ALPHA_LABEL_OFFSET = 35;       // Distance from angle arc to label
+
 export const drawUnitCircle = (
     ctx: CanvasRenderingContext2D,
     width: number,
@@ -31,7 +44,7 @@ export const drawUnitCircle = (
     const CY = H / 2;
 
     // Radius
-    const R = Math.min(W, H) / 4.2;
+    const R = Math.min(W, H) / CIRCLE_PADDING_RATIO;
 
     const map = createCoordinateMapper(CX, CY, R);
     const origin = map(0, 0);
@@ -80,7 +93,7 @@ export const drawUnitCircle = (
     ctx.beginPath();
     ctx.fillStyle = theme.fill_angle_wedge;
     ctx.moveTo(CX, CY);
-    ctx.arc(CX, CY, 50, 0, -rad, true);
+    ctx.arc(CX, CY, WEDGE_RADIUS, 0, -rad, true);
     ctx.lineTo(CX, CY);
     ctx.fill();
 
@@ -126,14 +139,14 @@ export const drawUnitCircle = (
     // --- Cosine (Always Complementary Position) ---
     if (toggles.cos) {
         drawLine(ctx, pCircle, pYAxis, theme.cos, 4);
-        const labelX = pYAxis.x - 20;
+        const labelX = pYAxis.x - COS_LABEL_OFFSET;
         const labelY = (pYAxis.y + pCircle.y) / 2;
         drawText(ctx, "cos", { x: labelX, y: labelY }, theme.cos, "right", "middle", theme.halo);
     }
 
     if (toggles.sin) {
         drawLine(ctx, pXAxis, pCircle, theme.sin, 4);
-        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? 20 : -20), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle", theme.halo);
+        drawText(ctx, "sin", { x: pXAxis.x + (cos >= 0 ? SIN_LABEL_OFFSET : -SIN_LABEL_OFFSET), y: (pXAxis.y + pCircle.y) / 2 }, theme.sin, cos >= 0 ? "left" : "right", "middle", theme.halo);
     }
 
     // --- Tan (x=1) ---
@@ -144,8 +157,8 @@ export const drawUnitCircle = (
 
         drawLine(ctx, origin, pEnd, theme.grid, 2, [5, 5]);
         drawLine(ctx, pStart, pEnd, theme.tan, 4);
-        drawPoint(ctx, pEnd, theme.tan, theme.bg);
-        drawText(ctx, "tan", { x: pStart.x + dir * 25, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right", "middle", theme.halo);
+        drawPoint(ctx, pEnd, theme.tan, theme.canvas_dot_bg);
+        drawText(ctx, "tan", { x: pStart.x + dir * TAN_LABEL_OFFSET, y: (pStart.y + pEnd.y) / 2 }, theme.tan, dir > 0 ? "left" : "right", "middle", theme.halo);
     }
 
     // --- Cot (y=1) ---
@@ -156,24 +169,24 @@ export const drawUnitCircle = (
 
         drawLine(ctx, origin, pEnd, theme.grid, 2, [5, 5]);
         drawLine(ctx, pStart, pEnd, theme.cot, 4);
-        drawPoint(ctx, pEnd, theme.cot, theme.bg);
-        drawText(ctx, "cot", { x: (pStart.x + pEnd.x) / 2, y: pStart.y - dir * 20 }, theme.cot, "center", dir > 0 ? "bottom" : "top", theme.halo);
+        drawPoint(ctx, pEnd, theme.cot, theme.canvas_dot_bg);
+        drawText(ctx, "cot", { x: (pStart.x + pEnd.x) / 2, y: pStart.y - dir * COT_LABEL_OFFSET }, theme.cot, "center", dir > 0 ? "bottom" : "top", theme.halo);
     }
 
     // --- Secant ---
     if (toggles.sec) {
         const pSec = map(sec, 0);
         drawLine(ctx, origin, pSec, theme.sec, 4);
-        drawText(ctx, "sec", { x: (CX + pSec.x) / 2, y: CY + 30 }, theme.sec, "center", "top", theme.halo);
-        drawPoint(ctx, pSec, theme.sec, theme.bg);
+        drawText(ctx, "sec", { x: (CX + pSec.x) / 2, y: CY + SEC_LABEL_OFFSET }, theme.sec, "center", "top", theme.halo);
+        drawPoint(ctx, pSec, theme.sec, theme.canvas_dot_bg);
     }
 
     // --- Cosecant ---
     if (toggles.csc) {
         const pCsc = map(0, csc);
         drawLine(ctx, origin, pCsc, theme.csc, 4);
-        drawText(ctx, "csc", { x: CX + 20, y: (CY + pCsc.y) / 2 }, theme.csc, "left", "middle", theme.halo);
-        drawPoint(ctx, pCsc, theme.csc, theme.bg);
+        drawText(ctx, "csc", { x: CX + CSC_LABEL_OFFSET, y: (CY + pCsc.y) / 2 }, theme.csc, "left", "middle", theme.halo);
+        drawPoint(ctx, pCsc, theme.csc, theme.canvas_dot_bg);
     }
 
     // --- Complementary Angle ---
@@ -181,14 +194,14 @@ export const drawUnitCircle = (
         ctx.beginPath();
         ctx.strokeStyle = theme.comp;
         ctx.lineWidth = 1.5;
-        ctx.arc(CX, CY, 70, -Math.PI / 2, -rad, cos < 0);
+        ctx.arc(CX, CY, COMPLEMENTARY_ARC_RADIUS, -Math.PI / 2, -rad, cos < 0);
         ctx.stroke();
 
         const compMid = (rad + Math.PI / 2) / 2;
         drawText(ctx, "α", map(Math.cos(compMid) * 0.45, Math.sin(compMid) * 0.45), theme.comp, "center", "middle", theme.halo);
 
         {
-            const alphaR = 20;
+            const alphaR = ALPHA_INDICATOR_RADIUS;
             const angToO = Math.atan2(origin.y - pCircle.y, origin.x - pCircle.x);
             const angToVert = Math.atan2(pXAxis.y - pCircle.y, pXAxis.x - pCircle.x);
 
@@ -200,8 +213,8 @@ export const drawUnitCircle = (
 
             const midAlpha2 = (angToVert + angToO) / 2;
             drawText(ctx, "α", {
-                x: pCircle.x + Math.cos(midAlpha2) * 35,
-                y: pCircle.y + Math.sin(midAlpha2) * 35
+                x: pCircle.x + Math.cos(midAlpha2) * ALPHA_LABEL_OFFSET,
+                y: pCircle.y + Math.sin(midAlpha2) * ALPHA_LABEL_OFFSET
             }, theme.comp, "center", "middle", theme.halo);
         }
     }
@@ -223,7 +236,7 @@ export const drawUnitCircle = (
             { p: map(0, -1), label: '(0, -1)' },
         ];
         for (const { p, label } of intersections) {
-            drawPoint(ctx, p, theme.text, theme.bg);
+            drawPoint(ctx, p, theme.text, theme.canvas_dot_bg);
             const offsetX = p.x > CX ? 15 : (p.x < CX ? -15 : 0);
             const offsetY = p.y > CY ? 20 : (p.y < CY ? -20 : 0);
             const align = p.x > CX ? 'left' : (p.x < CX ? 'right' : 'center');
@@ -243,6 +256,6 @@ export const drawUnitCircle = (
     }
 
     if (!toggles.proof_general_target && !toggles.proof_tan_tri) {
-        drawPoint(ctx, pCircle, theme.text, theme.bg);
+        drawPoint(ctx, pCircle, theme.text, theme.canvas_dot_bg);
     }
 };

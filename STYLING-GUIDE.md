@@ -225,5 +225,45 @@ ctx.fillText("θ", x, y);
 - **Contrast**: Selected items must use `surface-selected` (high contrast) background with `surface-selected-text`.
 - **Borders**: selected items should distinguish via border AND background.
 
+## Text Sizing Scale
+
+Document text scale for consistent typography across the application.
+
+### Canvas Text
+- **Labels (Primary)**: 14px bold Nunito - Main labels (theta, coordinates, function names)
+- **Labels (Secondary)**: 12px medium Nunito - Subtitles, annotations (rarely used)
+
+### UI Components  
+- **Headings (Large)**: `text-xl` (20px) - Panel headers (font-extrabold)
+- **Headings (Small)**: `text-xs` (12px) - Section headers (font-bold uppercase)
+- **Body (Regular)**: `text-sm` (14px) - List items, descriptions
+- **Body (Small)**: `text-xs` (12px) - Captions, metadata
+- **Mono (Numbers)**: `text-sm` (14px) - Tabular data, readouts
+
+### Usage Guidelines
+- Use `text-xl` + `font-extrabold` for top-level panel headers (Controls, Lessons, Values)
+- Use `text-xs` + `font-bold` + `uppercase` for collapsible section headers
+- Use `text-sm` for primary readable content in lists and descriptions
+- Use `text-xs` for secondary/supporting text like hints or meta info
+- Always use `font-mono` for numerical values to maintain tabular alignment
+
+## Transition Durations
+
+Standard animation timing for consistent feel across the application.
+
+### Duration Scale
+- **Quick Interactions** (`duration-200`): Buttons, toggles, hover states
+- **State Changes** (`duration-300`): Collapsible sections, theme switches, toggle animations
+- **Animations** (`duration-500`): Page loads, major layout shifts (rarely used)
+
+### Easing Functions
+- **Standard**: `ease-in-out` - Most transitions
+- **Spring**: `cubic-bezier(0.175, 0.885, 0.32, 1.275)` - Toggles, playful interactions
+- **Smooth**: `ease-out` - Enter animations
+
+### Usage
+Prefer shorter durations (200ms) for user-triggered interactions to maintain responsiveness.
+Use longer durations (300-500ms) for automated/system-driven changes.
+
 ---
-*Last updated: 2025-12-24 (v0.3.0)*
+*Last updated: 2025-12-24 (v0.3.1)*

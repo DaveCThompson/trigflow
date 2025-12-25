@@ -37,7 +37,7 @@ export const IdentitiesContent: React.FC<IdentitiesContentProps> = ({ theme }) =
     return (
         <div className="space-y-1">
             {/* Level Filter Toggle */}
-            <div className="flex gap-1 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex gap-1 mb-3 pb-3 border-b border-ui-border">
                 <LevelBtn level="all" current={levelFilter} onClick={() => setLevelFilter('all')} />
                 <LevelBtn level="basic" current={levelFilter} onClick={() => setLevelFilter('basic')} />
                 <LevelBtn level="intermediate" current={levelFilter} onClick={() => setLevelFilter('intermediate')} />
@@ -88,7 +88,7 @@ export const IdentitiesContent: React.FC<IdentitiesContentProps> = ({ theme }) =
                                 <Fn name="tan" /> = <Frac n="1" d={<Fn name="cot" />} />
                             </Card>
                         </div>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+                        <p className="text-[10px] text-ui-text-muted opacity-70 mt-1 italic">
                             Flip the fraction upside down
                         </p>
                     </>
@@ -121,7 +121,7 @@ export const IdentitiesContent: React.FC<IdentitiesContentProps> = ({ theme }) =
                                 1 + <Fn name="cot" sup="²" />θ = <Fn name="csc" sup="²" />θ
                             </Card>
                         </div>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+                        <p className="text-[10px] text-ui-text-muted opacity-70 mt-1 italic">
                             From a² + b² = c² on the unit circle
                         </p>
 
@@ -138,7 +138,7 @@ export const IdentitiesContent: React.FC<IdentitiesContentProps> = ({ theme }) =
                                 <Fn name="sec" />θ = <Fn name="csc" />(90° − θ)
                             </Card>
                         </div>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1 italic">
+                        <p className="text-[10px] text-ui-text-muted opacity-70 mt-1 italic">
                             "co-" = complementary angle (90° − θ)
                         </p>
                     </>

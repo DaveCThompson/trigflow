@@ -9,19 +9,27 @@ interface ToggleProps {
     color?: string; // Hex or CSS var
     description?: string;
     className?: string;
+    disabled?: boolean;
 }
 
-export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color, description, className }) => {
+export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color, description, className, disabled = false }) => {
     // Determine active color style. If it's a var, use it directly, else assume hex.
     const activeStyle = checked && color ? { backgroundColor: color, borderColor: color } : {};
 
     return (
-        <label className={twMerge("flex items-start cursor-pointer select-none group py-2", className)}>
+        <label className={twMerge(
+            "flex items-start select-none group py-2",
+            disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer",
+            className
+        )}>
             <div className="relative flex items-center pt-0.5">
                 <input
                     type="checkbox"
                     checked={checked}
-                    onChange={onChange}
+                    onChange={disabled ? undefined : onChange}
+                    disabled={disabled}
+                    aria-checked={checked}
+                    aria-disabled={disabled}
                     className="sr-only" // Hide native checkbox
                 />
 
@@ -36,7 +44,8 @@ export const Toggle: React.FC<ToggleProps> = ({ label, checked, onChange, color,
                     {/* Thumb */}
                     <div
                         className={clsx(
-                            "w-4 h-4 rounded-full shadow-md transition-all duration-300 ease-spring group-hover:scale-110",
+                            "w-4 h-4 rounded-full shadow-md transition-all duration-300 ease-spring",
+                            disabled ? "" : "group-hover:scale-110",
                             "bg-white dark:bg-ui-bg-panel" // Invert thumb in dark mode
                         )}
                     ></div>

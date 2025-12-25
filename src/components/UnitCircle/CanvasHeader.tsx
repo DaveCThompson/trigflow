@@ -76,7 +76,7 @@ export const CanvasHeader: React.FC<CanvasHeaderProps> = ({
                         height: 24px;
                         width: 24px;
                         border-radius: 50%;
-                        background: #ffffff;
+                        background: ${theme.isDark ? 'oklch(25% 0.02 260)' : '#ffffff'};
                         border: 3px solid var(--color-cos);
                         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                         transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -93,7 +93,7 @@ export const CanvasHeader: React.FC<CanvasHeaderProps> = ({
                         height: 24px;
                         width: 24px;
                         border-radius: 50%;
-                        background: #ffffff;
+                        background: ${theme.isDark ? 'oklch(25% 0.02 260)' : '#ffffff'};
                         border: 3px solid var(--color-cos);
                         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                         cursor: pointer;
@@ -106,8 +106,8 @@ export const CanvasHeader: React.FC<CanvasHeaderProps> = ({
                 <button
                     onClick={() => setAngleUnit('deg')}
                     className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'deg'
-                            ? 'bg-surface-selected text-surface-selected-text shadow-sm'
-                            : 'text-ui-text-muted hover:text-ui-text'
+                        ? 'bg-surface-selected text-surface-selected-text shadow-sm'
+                        : 'text-ui-text-muted hover:text-ui-text'
                         }`}
                     aria-label="Switch to degrees"
                     aria-pressed={angleUnit === 'deg'}
@@ -117,8 +117,8 @@ export const CanvasHeader: React.FC<CanvasHeaderProps> = ({
                 <button
                     onClick={() => setAngleUnit('rad')}
                     className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full transition-all active:scale-95 ${angleUnit === 'rad'
-                            ? 'bg-surface-selected text-surface-selected-text shadow-sm'
-                            : 'text-ui-text-muted hover:text-ui-text'
+                        ? 'bg-surface-selected text-surface-selected-text shadow-sm'
+                        : 'text-ui-text-muted hover:text-ui-text'
                         }`}
                     aria-label="Switch to radians"
                     aria-pressed={angleUnit === 'rad'}
