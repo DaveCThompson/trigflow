@@ -1,6 +1,6 @@
 {
-    "name": "visual-trig",
-    "homepage": "https://DaveCThompson.github.io/visual-trig",
+    "name": "trigflow",
+    "homepage": "https://DaveCThompson.github.io/trigflow",
     "private": true,
     "version": "0.1.0",
     "type": "module",
